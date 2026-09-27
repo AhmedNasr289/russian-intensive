@@ -1,9 +1,10 @@
 // Content validation rules. Used by scripts/validate-content.ts (authors run it after every edit)
 // and by the test suite. Every rule reports "d<day> <where>: <problem>" so an author can find it.
 
-import type { Bi, Day, DayKind, Exercise, Tri, Word, SyllabusDay } from "../content/types.ts";
+import type { Bi, Day, Exercise, Tri, Word, SyllabusDay } from "../content/types.ts";
 import { TOPIC_SET } from "../content/topics.ts";
 import { checkStress, countVowels, hasCyrillic, normalizeAnswer, stripStress } from "./text.ts";
+import { kindOf, weekOf } from "./schedule.ts";
 
 export type ValidateOptions = {
   /** Require the whole course: days 1..56 and the course-wide word total. */
@@ -24,8 +25,7 @@ const POS = new Set(["noun", "verb", "adj", "adv", "pron", "num", "prep", "conj"
 const ARABIC = /[؀-ۿ]/;
 const GAP = "___";
 
-export const kindOf = (n: number): DayKind => (n % 7 === 6 ? "immersion" : n % 7 === 0 ? "review" : "lesson");
-export const weekOf = (n: number): number => Math.ceil(n / 7);
+export { kindOf, weekOf };
 
 export function minWords(n: number): number {
   const kind = kindOf(n);
