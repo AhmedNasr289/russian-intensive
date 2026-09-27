@@ -1,0 +1,27 @@
+{
+  "name": "russian-intensive",
+  "version": "1.0.0",
+  "description": "Russian in 56 Days: an intensive zero-to-A2 course app with audio, speaking practice, spaced repetition, a daily schedule and AI tutors (English + Arabic).",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p .",
+    "test": "node --test tests/",
+    "validate": "node scripts/validate-content.ts",
+    "build": "node scripts/build.ts",
+    "check:links": "node scripts/check-links.ts",
+    "check:stress": "node scripts/verify-stress.ts",
+    "verify": "node scripts/verify.ts all",
+    "day": "node scripts/day.ts",
+    "vocab": "node scripts/vocab.ts"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.0",
+    "esbuild-wasm": "0.28.2",
+    "typescript": "6.0.3"
+  }
+}
