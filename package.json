@@ -10,7 +10,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p .",
-    "test": "node --test tests/",
+    "test": "node --test \"tests/**/*.test.ts\"",
     "validate": "node scripts/validate-content.ts",
     "build": "node scripts/build.ts",
     "check:links": "node scripts/check-links.ts",

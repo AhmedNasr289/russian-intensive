@@ -101,7 +101,8 @@ function checkExercise(c: Collector, where: string, ex: Exercise): void {
     case "fill": {
       if (c.text(`${where}.ru`, ex.ru)) {
         if (ex.ru.split(GAP).length !== 2) c.err(where, `ru must contain exactly one ${GAP}`);
-        c.stress(`${where}.ru`, ex.ru.split(GAP).join(" "));
+        // Check the sentence as the learner will see it once the gap is filled with the first answer.
+        c.stress(`${where}.ru`, ex.ru.split(GAP).join(ex.answers[0] ?? " "));
       }
       if (ex.answers.length === 0) c.err(where, "needs at least one answer");
       ex.answers.forEach((a, i) => c.text(`${where}.answers[${i}]`, a));
