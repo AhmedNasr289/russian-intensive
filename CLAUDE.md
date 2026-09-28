@@ -1,0 +1,48 @@
+# Russian in 56 Days
+
+A static, dependency-free web app that teaches Russian from zero in 56 days, with explanations in English
+and Arabic. One build makes two pages from the same code: `dist/index.html` for GitHub Pages (installable,
+works offline) and `dist/artifact.html` for claude.ai, where a live AI tutor and synced progress exist.
+
+## Commands
+
+```
+npm ci                      # install the three dev dependencies
+npm run typecheck           # strict tsc, no emit
+npm test                    # node --test over tests/**/*.test.ts
+npm run validate            # content rules for all 56 days
+npm run build               # dist/: index.html, artifact.html, manifest, sw.js, icons
+node scripts/verify.ts all  # every local gate, one VERDICT line each
+node scripts/day.ts today   # a day as Markdown (--brief, --lang en|ar, --start YYYY-MM-DD)
+node scripts/vocab.ts --upto 14 [--tsv]
+```
+
+Node 24 runs the TypeScript directly (type stripping). Relative imports carry `.ts`, type-only imports use
+`import type`, and there are no enums or parameter properties.
+
+## Layout
+
+- `src/content/`: the course. `syllabus.ts` is the 56-day backbone, `weeks/weekN.ts` the lessons,
+  `media.ts` the verified video and resource library, `alphabet.ts` the 33 letters.
+- `src/core/`: pure logic with tests: stress and answer checking, SM-2 flashcards, the schedule and
+  calendar export, progress and storage, speech, tutor prompts, content validation.
+- `src/app/`: the browser app. `main.ts` boots, `shell.ts` is the frame, `views/` the screens,
+  `components/` shared widgets, `styles.css` the Gzhel porcelain design.
+- `scripts/`: build, verify, validator, link checker, stress checker, day and vocabulary printers, icons.
+- `.claude/agents/` and `.claude/commands/`: the study agents and slash commands.
+
+## Rules that are easy to break
+
+- Every Russian word of two or more vowels carries U+0301 after its stressed vowel; one-vowel words and
+  words with ё carry none. Read `docs/content-style-guide.md` before editing content, and run
+  `node scripts/validate-content.ts --week N` after.
+- Edit content with exact-string edits, never sed or regex rewrites: the files hold combining characters
+  and Arabic.
+- Every learner-facing text is bilingual `{ en, ar }` in Modern Standard Arabic.
+- Hash routes are bare tokens (`#day-12-grammar`): claude.ai forwards nothing else.
+- No `alert`, `confirm` or `prompt`, no `innerHTML` with content or model text, no iframes or service
+  worker in the claude.ai page, and every `localStorage` call inside try/catch.
+- `journal/` and `progress/` hold the learner's private files and are git-ignored. No credentials, email
+  addresses or local paths in tracked files (`node scripts/verify.ts secrets` checks).
+- After a UI change, rebuild and open `dist/index.html` with a query string (`index.html?v=<build id>`):
+  changing only the `#hash` does not reload the page, so it keeps running the previous build.
