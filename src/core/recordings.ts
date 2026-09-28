@@ -27,7 +27,8 @@ export type RecordingIndex = Readonly<Record<string, Recording>>;
 /** The recording for a text, if the course has one. */
 export function recordingFor(text: string, index: RecordingIndex = RECORDINGS): Recording | null {
   const key = recordingKey(text);
-  return key ? (index[key] ?? null) : null;
+  // Own keys only: the index is a plain object, so "constructor" would find Object.prototype's.
+  return key && Object.prototype.hasOwnProperty.call(index, key) ? (index[key] ?? null) : null;
 }
 
 export type RecordingInfo = { key: string; pack: string; offset: number; length: number; source: RecordingSource; file: string; page: string };

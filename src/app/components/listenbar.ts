@@ -12,7 +12,6 @@ import { tr } from "../context.ts";
 import { h, replace } from "../dom.ts";
 import { icon } from "../ui.ts";
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const report = (e: unknown) => console.error("The listen bar failed:", e);
 
 export type ListenBar = {
@@ -70,6 +69,8 @@ export function createListenBar(getCtx: () => Ctx): ListenBar {
   };
 
   const describe = (spoken: Spoken) => {
+    // Interrupted by a newer sound: that sound's own control reports it.
+    if (spoken.kind === "stopped") return;
     const ctx = getCtx();
     if (spoken.kind === "recording") {
       replace(
@@ -112,8 +113,9 @@ export function createListenBar(getCtx: () => Ctx): ListenBar {
           unmark();
           letters[step.index]?.classList.add("on");
           replace(caption, h("span", { class: "lb-letter", lang: "ru" }, `${step.letter.toUpperCase()}${step.letter.toLowerCase()}`), h("span", { class: "lb-dot", "aria-hidden": "true" }, "→"), h("span", { lang: "ru" }, step.name.split(ACUTE).join("")));
-          await ctx.speak(step.name);
-          await sleep(220);
+          const said = await ctx.speak(step.name);
+          // Another sound started (a button elsewhere on the page): stop spelling rather than cut it off.
+          if (said.kind === "stopped" || !(await ctx.pause(220))) return;
         }
         if (!alive()) return;
         unmark();
@@ -126,7 +128,7 @@ export function createListenBar(getCtx: () => Ctx): ListenBar {
           unmark();
           w.el.classList.add("on");
           last = await ctx.speak(w.span.word, { slow: true });
-          await sleep(320);
+          if (last.kind === "stopped" || !(await ctx.pause(320))) return;
         }
         if (alive() && last) describe(last);
       }

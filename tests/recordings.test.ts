@@ -25,6 +25,11 @@ test("a text finds its recording through the key, and only then", () => {
   assert.deepEqual(recordingFor(`Приве${ACUTE}т!`, index), index["привет"]);
   assert.equal(recordingFor("пока", index), null);
   assert.equal(recordingFor("", index), null);
+  // The index is a plain object: a key that names one of Object.prototype's members is not a recording.
+  for (const inherited of ["constructor", "__proto__", "toString"]) {
+    assert.equal(recordingFor(inherited, index), null, inherited);
+    assert.equal(recordingFor(inherited), null, `${inherited} in the real index`);
+  }
 });
 
 test("a recording is described with its pack, source and Commons page", () => {

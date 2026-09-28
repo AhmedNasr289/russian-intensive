@@ -150,23 +150,33 @@ async function boot(root: HTMLElement): Promise<void> {
     return { main: pick.main, male: pick.male, female: pick.female, all: ruVoices, total: voicesTotal };
   };
 
+  /** Moves on every sound request and every stop: a request or a sequence that sees it move was interrupted. */
+  let turn = 0;
+  const STOPPED: Spoken = { kind: "stopped" };
+
   const stopAudio = () => {
+    turn++;
     stopSpeaking();
     stopRecording();
     for (const finish of [...pendingSpeech]) finish();
   };
 
   const speakRu = async (text: string, opts: { slow?: boolean; who?: "A" | "B" } = {}): Promise<Spoken> => {
+    // The newest request wins: whatever is sounding, or still loading, stops first.
+    stopAudio();
+    const mine = turn;
     const settings = store.progress.settings;
     const pick = pickVoices(ruVoices, settings.voiceURI);
     // A native speaker beats a synthetic voice for a word. A slowed word goes to the voice when
     // there is one: a recording can only slow down by dropping its pitch.
     const rec = settings.recordings && !opts.who ? recordingInfo(text) : null;
     if (rec && !(opts.slow && pick.main)) {
-      stopAudio();
-      if (await playRecording(rec)) {
+      const outcome = await playRecording(rec);
+      if (outcome === "played") {
         return { kind: "recording", author: rec.source.author, license: rec.source.license, licenseUrl: rec.source.licenseUrl, page: rec.page };
       }
+      // Stopped, or replaced by a newer request, while it played or loaded: the voice must not take over.
+      if (outcome === "stopped" || turn !== mine) return STOPPED;
     }
     if (!speechSupported()) {
       warnOnce("no-speech", { en: "This browser cannot speak. Open the course in Chrome or Edge.", ar: "هذا المتصفح لا ينطق. افتح الدورة في Chrome أو Edge." });
@@ -197,7 +207,13 @@ async function boot(root: HTMLElement): Promise<void> {
       pendingSpeech.add(finish);
       void say(text, { rate, voice: role.voice, pitch: role.pitch }).then(finish);
     });
-    return { kind: "voice", name: role.voice?.name ?? "ru-RU" };
+    return turn === mine ? { kind: "voice", name: role.voice?.name ?? "ru-RU" } : STOPPED;
+  };
+
+  const pause = async (ms: number): Promise<boolean> => {
+    const at = turn;
+    await new Promise((resolve) => setTimeout(resolve, ms));
+    return turn === at;
   };
 
   const bar = createListenBar(() => {
@@ -240,6 +256,7 @@ async function boot(root: HTMLElement): Promise<void> {
       rerender: () => render(false),
       toast,
       speak: speakRu,
+      pause,
       // Called from buttons (spell, Pronounce, sound check): the bar takes keyboard focus.
       listen: (text, play) => bar.open(text, play, { focus: true }),
       onLeave: (fn) => {

@@ -86,11 +86,12 @@ export function browserOf(ua: string): BrowserKind {
   return "other";
 }
 
-export function platformOf(ua: string): PlatformKind {
+/** `touchPoints` is navigator.maxTouchPoints: an iPad asks for the desktop site with a Mac user agent. */
+export function platformOf(ua: string, touchPoints = 0): PlatformKind {
   if (/Android/i.test(ua)) return "android";
   if (/iPhone|iPad|iPod/i.test(ua)) return "ios";
   if (/Windows/i.test(ua)) return "windows";
-  if (/Mac OS X|Macintosh/i.test(ua)) return "mac";
+  if (/Mac OS X|Macintosh/i.test(ua)) return touchPoints > 1 ? "ios" : "mac";
   if (/Linux|X11/i.test(ua)) return "linux";
   return "other";
 }
@@ -204,8 +205,10 @@ export function speak(text: string, opts: SpeakOptions): Promise<void> {
   });
 }
 
+/** Cancels speech that is playing or queued, and only then: Chrome can drop an utterance queued right after a needless cancel. */
 export function stopSpeaking(): void {
-  synth()?.cancel();
+  const s = synth();
+  if (s && (s.speaking || s.pending)) s.cancel();
   live.clear();
 }
 

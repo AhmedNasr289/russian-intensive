@@ -33,6 +33,8 @@ test("the platform is read from the user agent, Android before Linux", () => {
   assert.equal(platformOf(UA.android), "android");
   assert.equal(platformOf(UA.iphone), "ios");
   assert.equal(platformOf(UA.mac), "mac");
+  assert.equal(platformOf(UA.mac, 0), "mac");
+  assert.equal(platformOf(UA.mac, 5), "ios", "an iPad asks for the desktop site with a Mac user agent");
   assert.equal(platformOf("Mozilla/5.0 (X11; Linux x86_64)"), "linux");
 });
 
@@ -51,10 +53,17 @@ test("the advice fits the device, and a natural voice needs none", () => {
   assert.match(voiceAdvice("chrome", "android", "none")?.en ?? "", /Install voice data/);
   assert.match(voiceAdvice("firefox", "windows", "none")?.en ?? "", /Chrome|Edge/);
   assert.match(voiceAdvice("edge", "windows", "standard")?.en ?? "", /robotic/);
+  // On a phone another browser has the same voices, so a basic voice gets the download, not "use Chrome".
+  assert.match(voiceAdvice("safari", "ios", "standard")?.en ?? "", /Milena \(Enhanced\)/);
+  assert.doesNotMatch(voiceAdvice("chrome", "ios", "standard")?.en ?? "", /Chrome|Edge/);
+  assert.match(voiceAdvice("chrome", "android", "standard")?.en ?? "", /Speech Services by Google/);
+  assert.doesNotMatch(voiceAdvice("chrome", "android", "standard")?.en ?? "", /Chrome has/);
   for (const b of ["app", "edge", "chrome", "firefox", "safari", "other"] as const) {
     for (const p of ["windows", "mac", "ios", "android", "linux", "other"] as const) {
-      const a = voiceAdvice(b, p, "none");
-      assert.ok(a && a.en.length > 20 && /[؀-ۿ]/.test(a.ar), `${b}/${p}`);
+      for (const tier of ["none", "standard"] as const) {
+        const a = voiceAdvice(b, p, tier);
+        assert.ok(a && a.en.length > 20 && /[؀-ۿ]/.test(a.ar), `${b}/${p}/${tier}`);
+      }
     }
   }
 });

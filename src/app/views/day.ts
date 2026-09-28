@@ -57,8 +57,6 @@ const POS_LABEL: Record<Word["pos"], { en: string; ar: string }> = {
 
 const GENDER_LABEL = { m: { en: "masc.", ar: "مذكّر" }, f: { en: "fem.", ar: "مؤنّث" }, n: { en: "neut.", ar: "محايد" }, pl: { en: "plural", ar: "جمع" } } as const;
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
 // ── Words ─────────────────────────────────────────────────────────────────────
 
 function wordCard(ctx: Ctx, w: Word): HTMLElement {
@@ -102,9 +100,10 @@ function wordsSection(ctx: Ctx, day: Day, today: number): HTMLElement {
       for (const w of day.words) {
         if (!playing) break;
         document.getElementById(w.id)?.classList.add("speaking");
-        await ctx.speak(w.ru);
+        const said = await ctx.speak(w.ru);
         document.getElementById(w.id)?.classList.remove("speaking");
-        await sleep(700);
+        // A tap on a word (or any other sound) ends the run instead of being cut off by its next word.
+        if (said.kind === "stopped" || !(await ctx.pause(700))) break;
       }
       playing = false;
     },
@@ -173,7 +172,8 @@ function grammarCard(ctx: Ctx, g: GrammarPoint): HTMLElement {
 
 function dialogueBlock(ctx: Ctx, d: Dialogue): HTMLElement {
   let showTr = true;
-  let running = false;
+  /** Each Play all or Shadow run takes a new number; a run that sees the number change ends. */
+  let run = 0;
   const lines = d.lines.map((l) =>
     h(
       "li",
@@ -184,42 +184,27 @@ function dialogueBlock(ctx: Ctx, d: Dialogue): HTMLElement {
   );
   const mark = (i: number) => lines.forEach((li, k) => li.classList.toggle("speaking", k === i));
   const stopAll = () => {
-    running = false;
+    run++;
     ctx.stopAudio();
     mark(-1);
   };
-  const playAll = btn([icon("play", 18), tr(ctx, { en: "Play all", ar: "شغّل الكل" })], {
-    class: "primary",
-    onClick: async () => {
-      stopAll();
-      running = true;
-      for (let i = 0; i < d.lines.length && running; i++) {
-        const l = d.lines[i];
-        if (!l) continue;
-        mark(i);
-        await ctx.speak(l.ru, { who: l.who });
-        await sleep(450);
-      }
-      mark(-1);
-      running = false;
-    },
-  });
-  const shadow = btn([icon("repeat", 18), tr(ctx, { en: "Shadow: listen and repeat", ar: "الترديد: استمع وردّد" })], {
-    class: "ghost",
-    onClick: async () => {
-      stopAll();
-      running = true;
-      for (let i = 0; i < d.lines.length && running; i++) {
-        const l = d.lines[i];
-        if (!l) continue;
-        mark(i);
-        await ctx.speak(l.ru, { who: l.who, slow: true });
-        await sleep(Math.max(1800, [...stripStress(l.ru)].length * 120));
-      }
-      mark(-1);
-      running = false;
-    },
-  });
+  /** Speaks every line in turn; shadowing speaks slowly and leaves time to repeat each line aloud. */
+  const playLines = async (slow: boolean) => {
+    stopAll();
+    const mine = run;
+    for (let i = 0; i < d.lines.length; i++) {
+      const l = d.lines[i];
+      if (!l) continue;
+      mark(i);
+      const said = await ctx.speak(l.ru, slow ? { who: l.who, slow: true } : { who: l.who });
+      const gap = slow ? Math.max(1800, [...stripStress(l.ru)].length * 120) : 450;
+      // A newer run, the Stop button or any other sound ends this run; only the run still current clears the marks.
+      if (mine !== run || said.kind === "stopped" || !(await ctx.pause(gap))) break;
+    }
+    if (mine === run) mark(-1);
+  };
+  const playAll = btn([icon("play", 18), tr(ctx, { en: "Play all", ar: "شغّل الكل" })], { class: "primary", onClick: () => void playLines(false) });
+  const shadow = btn([icon("repeat", 18), tr(ctx, { en: "Shadow: listen and repeat", ar: "الترديد: استمع وردّد" })], { class: "ghost", onClick: () => void playLines(true) });
   const stop = btn([icon("stop", 18), tr(ctx, { en: "Stop", ar: "إيقاف" })], { class: "ghost", onClick: stopAll });
   const list = h("ol", { class: "dialogue" }, lines);
   const toggle = btn([icon("eye", 18), tr(ctx, { en: "Translations", ar: "الترجمات" })], {

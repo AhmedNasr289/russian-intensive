@@ -16,6 +16,20 @@ import { biCtx, btn, icon } from "../ui.ts";
 export function voiceAdvice(browser: BrowserKind, platform: PlatformKind, tier: VoiceTier): Bi | null {
   if (tier === "natural") return null;
   if (tier === "standard") {
+    // Every browser on an iPhone or iPad uses Apple's voices, and Android's use the phone's speech
+    // engine, so there another browser changes nothing: the better voice is a download.
+    if (platform === "ios") {
+      return {
+        en: "This voice works but sounds robotic. For a natural one: Settings > Accessibility > Spoken Content > Voices > Russian > Milena (Enhanced), then reload.",
+        ar: "هذا الصوت يعمل لكنه آلي. لصوت طبيعي: الإعدادات > تسهيلات الاستخدام > المحتوى المنطوق > الأصوات > الروسية > Milena (محسّن)، ثم أعد التحميل.",
+      };
+    }
+    if (platform === "android") {
+      return {
+        en: "For the clearest Russian voice use Google's speech engine: Settings > Accessibility > Text-to-speech output > Preferred engine > Speech Services by Google, then Install voice data > Russian, and reload.",
+        ar: "لأوضح صوت روسي استخدم محرّك Google للنطق: الإعدادات > إمكانية الوصول > تحويل النص إلى كلام > المحرّك المفضّل > Speech Services by Google، ثم تثبيت بيانات الصوت > الروسية، وأعد التحميل.",
+      };
+    }
     return {
       en: "This voice works but sounds robotic. Chrome has Google's Russian voice (the one Google Translate uses) and Edge has Microsoft's natural voices, Svetlana and Dmitry.",
       ar: "هذا الصوت يعمل لكنه آلي. في Chrome صوت Google الروسي (نفس صوت ترجمة Google)، وفي Edge أصوات Microsoft الطبيعية سفيتلانا ودميتري.",
@@ -48,7 +62,7 @@ export function voiceAdvice(browser: BrowserKind, platform: PlatformKind, tier: 
 export function soundCheck(ctx: Ctx): HTMLElement {
   const ua = typeof navigator === "undefined" ? "" : navigator.userAgent;
   const browser = browserOf(ua);
-  const platform = platformOf(ua);
+  const platform = platformOf(ua, typeof navigator === "undefined" ? 0 : navigator.maxTouchPoints);
   const voice = ctx.voices.main;
   const tier = voiceTier(voice);
   const recordings = ctx.store.progress.settings.recordings ? recordingCount() : 0;
@@ -67,7 +81,9 @@ export function soundCheck(ctx: Ctx): HTMLElement {
 
   // Only a certain "no voice" deserves the fix; an unlisted voice list may still speak by language.
   const advice = voice || listed ? voiceAdvice(browser, platform, tier) : null;
-  const elsewhere = advice !== null && (browser === "app" || browser === "firefox" || browser === "other" || tier !== "natural");
+  // A link can only open the course in another browser from an app window (its links open in the
+  // system browser); in a browser it would open a second tab of the same one.
+  const elsewhere = advice !== null && browser === "app";
 
   return h(
     "div",
