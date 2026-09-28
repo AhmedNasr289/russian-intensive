@@ -275,10 +275,14 @@ async function boot(root: HTMLElement): Promise<void> {
         if (saved && saved.updatedAt >= mine.updatedAt) {
           await local.save(saved);
           store.replace(saved, false);
-        } else {
+          needsRender = false; // replace() already re-rendered
+        } else if (mine.updatedAt > 0) {
+          // Progress made in this browser before the account copy existed (or newer than it).
           store.replace(mine);
+          needsRender = false;
+        } else {
+          needsRender = true; // a new learner: the first real change creates the account copy
         }
-        needsRender = false; // replace() already re-rendered
       } catch (e) {
         console.warn("claude.ai storage is unavailable here:", errorCode(e));
       }
