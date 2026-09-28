@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Type-check
+        run: node scripts/verify.ts typecheck
+      - name: Unit tests
+        run: node scripts/verify.ts test
+      - name: Course content rules
+        run: node scripts/verify.ts content
+      - name: Build both pages
+        run: node scripts/verify.ts build
+      - name: Agents and commands
+        run: node scripts/verify.ts agents
+      - name: No credentials or personal data
+        run: node scripts/verify.ts secrets
+      - name: README
+        run: node scripts/verify.ts readme
