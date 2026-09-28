@@ -54,7 +54,7 @@ const DAY_36: Day = {
       note: { en: "Say 'skUshna': here чн sounds like шн.", ar: "تُنطق «skUshna»: يُنطق чн هنا مثل шн." },
     },
     {
-      id: "d36-07", ru: "ве́село", say: "vYEsila", en: "(it is) fun; мне ве́село = I'm having fun", ar: "ممتع؛ мне ве́село = أنا مستمتع", pos: "adv",
+      id: "d36-07", ru: "ве́село", say: "vyEsila", en: "(it is) fun; мне ве́село = I'm having fun", ar: "ممتع؛ мне ве́село = أنا مستمتع", pos: "adv",
       ex: { ru: "На пра́зднике бы́ло о́чень ве́село.", en: "The celebration was great fun.", ar: "كان الاحتفال ممتعًا جدًّا." },
     },
     {
@@ -97,7 +97,7 @@ const DAY_36: Day = {
       ex: { ru: "Мне хо́лодно.", en: "I'm cold.", ar: "أشعر بالبرد." },
     },
     {
-      id: "d36-16", ru: "тебе́", say: "tibYE", en: "(to, for) you — the dative of ты", ar: "لكَ / لكِ — الضمير ты في حالة المستفيد", pos: "pron",
+      id: "d36-16", ru: "тебе́", say: "tibyE", en: "(to, for) you — the dative of ты", ar: "لكَ / لكِ — الضمير ты في حالة المستفيد", pos: "pron",
       ex: { ru: "Тебе́ нра́вится чай?", en: "Do you like tea?", ar: "هل يعجبك الشاي؟" },
     },
     {
@@ -121,7 +121,7 @@ const DAY_36: Day = {
       ex: { ru: "Им нра́вятся мультфи́льмы.", en: "They like cartoons.", ar: "تعجبهم الرسوم المتحركة." },
     },
     {
-      id: "d36-22", ru: "Ско́лько тебе́ лет?", say: "skOl'ka tibYE lyet?", en: "How old are you? (informal)", ar: "كم عمرك؟ (غير رسمي)", pos: "phrase",
+      id: "d36-22", ru: "Ско́лько тебе́ лет?", say: "skOl'ka tibyE lyet?", en: "How old are you? (informal)", ar: "كم عمرك؟ (غير رسمي)", pos: "phrase",
       note: { en: "Formal: Ско́лько вам лет?", ar: "بصيغة الاحترام: Ско́лько вам лет؟" },
     },
   ],
@@ -136,7 +136,7 @@ const DAY_36: Day = {
       ],
       ar: [
         "حالة المستفيد (да́тельный паде́ж) هي حالة الشخص الذي يُعطى له شيء أو يحدث له شيء — «لي، من أجلي». وهي اليوم تدلّ على الشخص الذي يعجبه شيء أو يشعر به أو يحتاج إليه. ابدأ بالضمائر: мне، тебе́، ему́، ей، нам، вам، им.",
-        "لا يقول الروس «أنا أحبّ هذا»، بل «هذا يعجبني»: Мне нра́вится Москва́. الفاعل هنا Москва́، لذلك يتّفق الفعل معه: شيء واحد ← нра́вится، وأشياء عدّة ← нра́вятся (Мне нра́вятся фи́льмы).",
+        "لا يقول الروس «أنا معجب بهذا»، بل «هذا يعجبني»: Мне нра́вится Москва́. الفاعل هنا Москва́، لذلك يتّفق الفعل معه: شيء واحد ← нра́вится، وأشياء عدّة ← нра́вятся (Мне нра́вятся фи́льмы).",
         "والعربية تعمل بالطريقة نفسها: في «يعجبني الفيلم» الفيلمُ هو الفاعل، وياء المتكلّم مفعول به. وللنفي أضف не فقط: Мне не нра́вится футбо́л.",
       ],
       tables: [
@@ -370,7 +370,7 @@ const DAY_36: Day = {
     {
       kind: "translate",
       prompt: { en: "You can't eat here.", ar: "لا يجوز الأكل هنا." },
-      answers: ["Здесь нельзя́ есть.", "Тут нельзя́ есть.", "Здесь есть нельзя́."],
+      answers: ["Здесь нельзя́ есть.", "Тут нельзя́ есть.", "Здесь есть нельзя́.", "Тут есть нельзя́."],
       why: { en: "нельзя́ + infinitive with no person states a general rule.", ar: "нельзя́ + المصدر من دون ذكر شخص تعبّر عن قاعدة عامة." },
     },
     {
@@ -474,7 +474,7 @@ const DAY_37: Day = {
       ex: { ru: "Почему́ ты мне не отвеча́ешь?", en: "Why aren't you answering me?", ar: "لماذا لا تردّ عليّ؟" },
     },
     {
-      id: "d37-05", ru: "сове́товать", say: "savYEtavat'", en: "to advise, to recommend (+ dative)", ar: "ينصح", pos: "verb",
+      id: "d37-05", ru: "сове́товать", say: "savyEtavat'", en: "to advise, to recommend (+ dative)", ar: "ينصح", pos: "verb",
       forms: "сове́тую, сове́туешь",
       ex: { ru: "Что ты мне сове́туешь?", en: "What do you advise me?", ar: "بماذا تنصحني؟" },
       note: {
@@ -517,7 +517,7 @@ const DAY_37: Day = {
       ex: { ru: "Мы ча́сто говори́м по телефо́ну.", en: "We often talk on the phone.", ar: "كثيرًا ما نتحدّث بالهاتف." },
     },
     {
-      id: "d37-13", ru: "день рожде́ния", say: "dyen' razhdYEniya", en: "birthday", ar: "عيد الميلاد", pos: "noun", g: "m",
+      id: "d37-13", ru: "день рожде́ния", say: "dyen' razhdyEniya", en: "birthday", ar: "عيد الميلاد", pos: "noun", g: "m",
       forms: "на день рожде́ния",
       ex: { ru: "У меня́ за́втра день рожде́ния!", en: "It's my birthday tomorrow!", ar: "غدًا عيد ميلادي!" },
     },
@@ -538,7 +538,7 @@ const DAY_37: Day = {
       },
     },
     {
-      id: "d37-17", ru: "Тебе́ помо́чь?", say: "tibYE pamOch'?", en: "Can I help you? Shall I help?", ar: "هل أساعدك؟", pos: "phrase",
+      id: "d37-17", ru: "Тебе́ помо́чь?", say: "tibyE pamOch'?", en: "Can I help you? Shall I help?", ar: "هل أساعدك؟", pos: "phrase",
       note: { en: "Formal: Вам помо́чь?", ar: "بصيغة الاحترام: Вам помо́чь؟" },
     },
     {
@@ -546,7 +546,7 @@ const DAY_37: Day = {
       note: { en: "Formal, or to several people: Позвони́те мне!", ar: "بصيغة الاحترام أو للجمع: Позвони́те мне!" },
     },
     {
-      id: "d37-19", ru: "С днём рожде́ния!", say: "z dnyom razhdYEniya!", en: "Happy birthday!", ar: "عيد ميلاد سعيد!", pos: "phrase",
+      id: "d37-19", ru: "С днём рожде́ния!", say: "z dnyom razhdyEniya!", en: "Happy birthday!", ar: "عيد ميلاد سعيد!", pos: "phrase",
       note: { en: "The с sounds like 'z' before the voiced д.", ar: "يُنطق с هنا «z» لأنه قبل д المجهور." },
     },
   ],
@@ -556,12 +556,12 @@ const DAY_37: Day = {
       title: { en: "Nouns in the dative: бра́ту, сестре́", ar: "الأسماء في حالة المستفيد: бра́ту، сестре́" },
       en: [
         "The dative answers кому́? — 'to whom? for whom?'. Masculine and neuter nouns take -у, or -ю when the word ends in -ь, -й or -е: брат → бра́ту, Ива́н → Ива́ну, врач → врачу́, окно́ → окну́, but учи́тель → учи́телю, мо́ре → мо́рю.",
-        "Nouns in -а / -я take -е, whether they are feminine or men's names: сестра́ → сестре́, ма́ма → ма́ме, А́нна → А́нне, па́па → па́пе, де́душка → де́душке. Nouns in -ия take -ии (Мари́я → Мари́и), and мать, дочь become ма́тери, до́чери.",
+        "Nouns in -а / -я take -е, whether they are feminine or men's names: сестра́ → сестре́, ма́ма → ма́ме, А́нна → А́нне, па́па → па́пе, де́душка → де́душке. Nouns in -ия take -ии (Мари́я → Мари́и), feminine nouns in -ь take -и (тетра́дь → тетра́ди), and мать, дочь become ма́тери, до́чери.",
         "In the plural the ending is -ам / -ям: роди́телям, студе́нтам, де́тям, лю́дям.",
       ],
       ar: [
         "حالة المستفيد تجيب عن السؤال кому́؟ أي «لِمَن؟». الأسماء المذكّرة والمحايدة تأخذ -у، أو -ю إذا انتهت الكلمة بـ -ь أو -й أو -е: брат ← бра́ту، Ива́н ← Ива́ну، врач ← врачу́، окно́ ← окну́، لكن учи́тель ← учи́телю، мо́ре ← мо́рю.",
-        "الأسماء المنتهية بـ -а / -я تأخذ -е، سواء كانت مؤنّثة أو أسماء رجال: сестра́ ← сестре́، ма́ма ← ма́ме، А́нна ← А́нне، па́па ← па́пе، де́душка ← де́душке. والأسماء المنتهية بـ -ия تأخذ -ии (Мари́я ← Мари́и)، وتصبح мать و дочь: ма́тери و до́чери.",
+        "الأسماء المنتهية بـ -а / -я تأخذ -е، سواء كانت مؤنّثة أو أسماء رجال: сестра́ ← сестре́، ма́ма ← ма́ме، А́нна ← А́нне، па́па ← па́пе، де́душка ← де́душке. والأسماء المنتهية بـ -ия تأخذ -ии (Мари́я ← Мари́и)، والأسماء المؤنّثة المنتهية بـ -ь تأخذ -и (тетра́дь ← тетра́ди)، وتصبح мать و дочь: ма́тери و до́чери.",
         "وفي الجمع تكون النهاية -ам / -ям: роди́телям، студе́нтам، де́тям، лю́дям.",
       ],
       tables: [
@@ -675,11 +675,11 @@ const DAY_37: Day = {
     title: { en: "к sticks to the next word", ar: "к تلتصق بالكلمة التالية" },
     en: [
       "A one-letter preposition has no vowel, so it is pronounced together with the next word, as one word: к ма́ме sounds 'kmAmye'.",
-      "It can also change its sound: before a voiced consonant к sounds like 'g' — к дру́гу is 'gdrUgu', к бра́ту is 'gbrAtu'. Before в it stays 'k': к врачу́ is 'kvrachU'.",
+      "It can also change its sound: before б, г, д, ж and з, к sounds like 'g' — к дру́гу is 'gdrUgu', к бра́ту is 'gbrAtu'. Before в, м, н, л and р it stays 'k': к врачу́ is 'kvrachU'.",
     ],
     ar: [
       "حرف الجر المكوّن من حرف واحد لا يحتوي على حرف صوتي، لذلك يُنطق مع الكلمة التالية كأنهما كلمة واحدة: к ма́ме تُنطق «kmAmye».",
-      "وقد يتغيّر صوته أيضًا: قبل الحرف الساكن المجهور يُنطق к مثل «g»: к дру́гу ← «gdrUgu»، к бра́ту ← «gbrAtu». أمّا قبل в فيبقى «k»: к врачу́ ← «kvrachU».",
+      "وقد يتغيّر صوته أيضًا: قبل б و г و д و ж و з يُنطق к مثل «g»: к дру́гу ← «gdrUgu»، к бра́ту ← «gbrAtu». أمّا قبل в و м و н و л و р فيبقى «k»: к врачу́ ← «kvrachU».",
     ],
     drills: [
       { ru: "к ма́ме", say: "kmAmye", focus: { en: "One word: 'kmAmye'.", ar: "كلمة واحدة: «kmAmye»." } },
@@ -760,13 +760,13 @@ const DAY_37: Day = {
       kind: "order",
       prompt: { en: "Build the polite question: May I come in?", ar: "كوّن السؤال المهذّب: هل يمكنني الدخول؟" },
       tokens: ["вам", "Мо́жно", "к"],
-      answers: ["Мо́жно к вам?"],
+      answers: ["Мо́жно к вам?", "К вам мо́жно?"],
       why: { en: "к + dative: к вам — 'to you, to your place'.", ar: "к + حالة المستفيد: к вам أي «إليكم»." },
     },
     {
       kind: "translate",
       prompt: { en: "Call me! (informal)", ar: "اتصل بي! (غير رسمي)" },
-      answers: ["Позвони́ мне!"],
+      answers: ["Позвони́ мне!", "Звони́ мне!"],
       why: { en: "позвони́ть + dative: мне.", ar: "позвони́ть + حالة المستفيد: мне." },
     },
     {
@@ -862,7 +862,7 @@ const DAY_38: Day = {
       },
     },
     {
-      id: "d38-04", ru: "сле́дующий", say: "slYEduyushchiy", en: "next, following", ar: "التالي، القادم", pos: "adj",
+      id: "d38-04", ru: "сле́дующий", say: "slyEduyushchiy", en: "next, following", ar: "التالي، القادم", pos: "adj",
       forms: "сле́дующая, сле́дующее, сле́дующие",
       ex: { ru: "В сле́дующий понеде́льник я рабо́таю.", en: "Next Monday I'm working.", ar: "يوم الاثنين القادم أعمل." },
     },
@@ -881,7 +881,7 @@ const DAY_38: Day = {
       },
     },
     {
-      id: "d38-07", ru: "наде́яться", say: "nadYEyitsa", en: "to hope", ar: "يأمل", pos: "verb",
+      id: "d38-07", ru: "наде́яться", say: "nadyEyitsa", en: "to hope", ar: "يأمل", pos: "verb",
       forms: "наде́юсь, наде́ешься",
       ex: { ru: "Наде́юсь, за́втра бу́дет тепло́.", en: "I hope it will be warm tomorrow.", ar: "آمل أن يكون الجو دافئًا غدًا." },
     },
@@ -895,7 +895,7 @@ const DAY_38: Day = {
       ex: { ru: "Я обяза́тельно позвоню́!", en: "I'll definitely call!", ar: "سأتصل حتمًا!" },
     },
     {
-      id: "d38-10", ru: "мо́жет быть", say: "mOzhit byt'", en: "maybe, perhaps", ar: "ربّما", pos: "phrase",
+      id: "d38-10", ru: "мо́жет быть", say: "mOzhyt byt'", en: "maybe, perhaps", ar: "ربّما", pos: "phrase",
       ex: { ru: "Мо́жет быть, я бу́ду до́ма.", en: "Maybe I'll be at home.", ar: "ربّما أكون في البيت." },
     },
     {
@@ -919,7 +919,7 @@ const DAY_38: Day = {
       ex: { ru: "Я зако́нчу рабо́ту в шесть часо́в.", en: "I'll finish work at six o'clock.", ar: "سأنهي العمل في الساعة السادسة." },
     },
     {
-      id: "d38-15", ru: "Что ты бу́дешь де́лать?", say: "shto ty bUdish' dYElat'?", en: "What will you do? What are you going to do?", ar: "ماذا ستفعل؟", pos: "phrase",
+      id: "d38-15", ru: "Что ты бу́дешь де́лать?", say: "shto ty bUdish' dyElat'?", en: "What will you do? What are you going to do?", ar: "ماذا ستفعل؟", pos: "phrase",
       note: { en: "Add a time: Что ты бу́дешь де́лать в суббо́ту?", ar: "أضف زمنًا: Что ты бу́дешь де́лать в суббо́ту؟" },
     },
     {
@@ -930,11 +930,11 @@ const DAY_38: Day = {
       },
     },
     {
-      id: "d38-17", ru: "на сле́дующей неде́ле", say: "na slYEduyushchey nidYElye", en: "next week", ar: "في الأسبوع القادم", pos: "phrase",
+      id: "d38-17", ru: "на сле́дующей неде́ле", say: "na slyEduyushchey nidyElye", en: "next week", ar: "في الأسبوع القادم", pos: "phrase",
       ex: { ru: "На сле́дующей неде́ле я бу́ду в Каи́ре.", en: "Next week I'll be in Cairo.", ar: "في الأسبوع القادم سأكون في القاهرة." },
     },
     {
-      id: "d38-18", ru: "в сле́дующем году́", say: "f slYEduyushchim gadU", en: "next year", ar: "في العام القادم", pos: "phrase",
+      id: "d38-18", ru: "в сле́дующем году́", say: "f slyEduyushchim gadU", en: "next year", ar: "في العام القادم", pos: "phrase",
       note: { en: "году́ has a special stressed ending, like в саду́.", ar: "لكلمة году́ نهاية خاصة منبورة، مثل в саду́." },
     },
     {
@@ -1103,7 +1103,7 @@ const DAY_38: Day = {
     ],
     drills: [
       {
-        ru: "Я скажу́. Что ты ска́жешь?", say: "ya skazhU. shto ty skAzhish'?",
+        ru: "Я скажу́. Что ты ска́жешь?", say: "ya skazhU. shto ty skAzhysh'?",
         focus: { en: "скажу́ — stress on the ending; ска́жешь — on the stem.", ar: "скажу́: النبر على النهاية؛ ска́жешь: على الجذر." },
       },
       {
@@ -1111,7 +1111,7 @@ const DAY_38: Day = {
         focus: { en: "The stress jumps back: куплю́ — ку́пишь.", ar: "يقفز النبر إلى الوراء: куплю́ — ку́пишь." },
       },
       {
-        ru: "Я напишу́ тебе́. Ты мне напи́шешь?", say: "ya napishU tibYE. ty mnye napIshish'?",
+        ru: "Я напишу́ тебе́. Ты мне напи́шешь?", say: "ya napishU tibyE. ty mnye napIshysh'?",
         focus: { en: "The stress jumps back: напишу́ — напи́шешь.", ar: "يقفز النبر إلى الوراء: напишу́ — напи́шешь." },
       },
       {
@@ -1188,13 +1188,13 @@ const DAY_38: Day = {
       kind: "order",
       prompt: { en: "Build the sentence: Next week I'll be in Cairo.", ar: "كوّن الجملة: في الأسبوع القادم سأكون في القاهرة." },
       tokens: ["неде́ле", "бу́ду", "На", "в", "сле́дующей", "я", "Каи́ре"],
-      answers: ["На сле́дующей неде́ле я бу́ду в Каи́ре.", "Я бу́ду в Каи́ре на сле́дующей неде́ле."],
+      answers: ["На сле́дующей неде́ле я бу́ду в Каи́ре.", "Я бу́ду в Каи́ре на сле́дующей неде́ле.", "Я на сле́дующей неде́ле бу́ду в Каи́ре."],
       why: { en: "Time expressions usually come first.", ar: "تأتي تعبيرات الزمن عادةً في أول الجملة." },
     },
     {
       kind: "translate",
       prompt: { en: "The day after tomorrow I'll be at home.", ar: "بعد غد سأكون في البيت." },
-      answers: ["Послеза́втра я бу́ду до́ма.", "Я бу́ду до́ма послеза́втра.", "Послеза́втра бу́ду до́ма."],
+      answers: ["Послеза́втра я бу́ду до́ма.", "Я бу́ду до́ма послеза́втра.", "Послеза́втра бу́ду до́ма.", "Я послеза́втра бу́ду до́ма."],
       why: { en: "бу́ду on its own means 'I'll be'.", ar: "бу́ду وحدها تعني «سأكون»." },
     },
     {
@@ -1206,6 +1206,8 @@ const DAY_38: Day = {
         "Обяза́тельно тебе́ позвоню́.",
         "Я обяза́тельно вам позвоню́.",
         "Я обяза́тельно позвоню́ вам.",
+        "Я тебе́ обяза́тельно позвоню́.",
+        "Я вам обяза́тельно позвоню́.",
       ],
       why: { en: "A promise of one result: perfective позвоню́.", ar: "وعد بنتيجة واحدة: الفعل التام позвоню́." },
     },
@@ -1685,7 +1687,7 @@ const DAY_40: Day = {
   ],
   words: [
     {
-      id: "d40-01", ru: "пря́мо", say: "prYAma", en: "straight on, straight ahead", ar: "إلى الأمام مباشرة", pos: "adv",
+      id: "d40-01", ru: "пря́мо", say: "pryAma", en: "straight on, straight ahead", ar: "إلى الأمام مباشرة", pos: "adv",
       ex: { ru: "Иди́те пря́мо.", en: "Go straight on.", ar: "امشِ إلى الأمام مباشرة." },
     },
     {
@@ -1697,7 +1699,7 @@ const DAY_40: Day = {
       },
     },
     {
-      id: "d40-03", ru: "нале́во", say: "nalYEva", en: "to the left", ar: "إلى اليسار", pos: "adv",
+      id: "d40-03", ru: "нале́во", say: "nalyEva", en: "to the left", ar: "إلى اليسار", pos: "adv",
       ex: { ru: "Пото́м нале́во.", en: "Then left.", ar: "ثم إلى اليسار." },
     },
     {
@@ -1752,7 +1754,7 @@ const DAY_40: Day = {
       ex: { ru: "Как дое́хать до вокза́ла?", en: "How do I get to the railway station?", ar: "كيف أصل إلى محطة القطارات؟" },
     },
     {
-      id: "d40-15", ru: "Вы не подска́жете…?", say: "vy ni patskAzhitye…?", en: "Could you tell me…? (polite)", ar: "هل يمكن أن تدلّني…؟ (بأدب)", pos: "phrase",
+      id: "d40-15", ru: "Вы не подска́жете…?", say: "vy ni patskAzhytye…?", en: "Could you tell me…? (polite)", ar: "هل يمكن أن تدلّني…؟ (بأدب)", pos: "phrase",
       ex: { ru: "Вы не подска́жете, где апте́ка?", en: "Could you tell me where the pharmacy is?", ar: "هل يمكن أن تدلّني أين الصيدلية؟" },
     },
     {
@@ -1896,7 +1898,7 @@ const DAY_40: Day = {
         en: "Over there, by the traffic lights. Take the tram and get off at the 'Vokzal' stop.", ar: "هناك، عند إشارة المرور. اركب الترام وانزل في موقف «فوكزال» (المحطة).",
       },
       { who: "A", name: "Ахме́д", ru: "Трамва́й, остано́вка «Вокза́л». Спаси́бо большо́е!", en: "Tram, the 'Vokzal' stop. Thank you very much!", ar: "الترام، موقف «فوكزال». شكرًا جزيلًا!" },
-      { who: "B", name: "Же́нщина", ru: "Пожа́луйста! До вокза́ла пять мину́т.", en: "You're welcome! It's five minutes to the station.", ar: "عفوًا! إلى المحطة خمس دقائق فقط." },
+      { who: "B", name: "Же́нщина", ru: "Пожа́луйста! До вокза́ла пять мину́т.", en: "You're welcome! It's five minutes to the station.", ar: "عفوًا! إلى المحطة خمس دقائق." },
     ],
   },
   pronunciation: {
@@ -1910,8 +1912,8 @@ const DAY_40: Day = {
       "أمّا الاتجاهات نفسها فجمل خبرية هادئة: ينخفض الصوت في نهاية كل خطوة — Иди́те пря́мо. Пото́м нале́во. والوقفات القصيرة بين الخطوات تجعلها سهلة الفهم.",
     ],
     drills: [
-      { ru: "Вы не подска́жете, где апте́ка?", say: "vy ni patskAzhitye, gdye aptYEka?", focus: { en: "Rise on подска́жете.", ar: "ارفع صوتك على подска́жете." } },
-      { ru: "Иди́те пря́мо.", say: "idItye prYAma.", focus: { en: "A calm fall at the end.", ar: "انخفاض هادئ في النهاية." } },
+      { ru: "Вы не подска́жете, где апте́ка?", say: "vy ni patskAzhytye, gdye aptyEka?", focus: { en: "Rise on подска́жете.", ar: "ارفع صوتك على подска́жете." } },
+      { ru: "Иди́те пря́мо.", say: "idItye pryAma.", focus: { en: "A calm fall at the end.", ar: "انخفاض هادئ في النهاية." } },
       {
         ru: "Поверни́те напра́во.", say: "pavirnItye naprAva.",
         focus: { en: "The unstressed е in поверни́те is a short 'i'.", ar: "حرف е غير المنبور في поверни́те يُنطق «i» قصيرة." },
@@ -1992,7 +1994,13 @@ const DAY_40: Day = {
     {
       kind: "translate",
       prompt: { en: "Go straight on, then turn left. (formal)", ar: "امشِ مباشرة، ثم انعطف يسارًا. (بصيغة الاحترام)" },
-      answers: ["Иди́те пря́мо, пото́м поверни́те нале́во.", "Иди́те пря́мо, а пото́м поверни́те нале́во.", "Иди́те пря́мо, пото́м нале́во."],
+      answers: [
+        "Иди́те пря́мо, пото́м поверни́те нале́во.",
+        "Иди́те пря́мо, а пото́м поверни́те нале́во.",
+        "Иди́те пря́мо, пото́м нале́во.",
+        "Пройди́те пря́мо, пото́м поверни́те нале́во.",
+        "Пройди́те пря́мо, а пото́м поверни́те нале́во.",
+      ],
       why: { en: "Imperatives with -те for вы: иди́те, поверни́те.", ar: "صيغة الأمر مع -те لـ вы: иди́те، поверни́те." },
     },
     {
@@ -2004,7 +2012,7 @@ const DAY_40: Day = {
     {
       kind: "translate",
       prompt: { en: "Excuse me, how do I get to the centre? (by transport)", ar: "عفوًا، كيف أصل إلى وسط المدينة؟ (بوسيلة نقل)" },
-      answers: ["Извини́те, как дое́хать до це́нтра?", "Извини́те, вы не подска́жете, как дое́хать до це́нтра?"],
+      answers: ["Извини́те, как дое́хать до це́нтра?", "Извини́те, вы не подска́жете, как дое́хать до це́нтра?", "Извини́те, как мне дое́хать до це́нтра?"],
       why: { en: "дое́хать до + genitive: до це́нтра.", ar: "дое́хать до + حالة الإضافة: до це́нтра." },
     },
     {
@@ -2094,15 +2102,15 @@ const DAY_41: Day = {
       ex: { ru: "Осторо́жно! Здесь эскала́тор.", en: "Careful! There's an escalator here.", ar: "انتبه! هنا سلّم متحرّك." },
     },
     {
-      id: "d41-05", ru: "Две́ри закрыва́ются.", say: "dvYEri zakryvAyutsa.", en: "The doors are closing.", ar: "الأبواب تُغلق.", pos: "phrase",
+      id: "d41-05", ru: "Две́ри закрыва́ются.", say: "dvyEri zakryvAyutsa.", en: "The doors are closing.", ar: "الأبواب تُغلق.", pos: "phrase",
       note: { en: "The full announcement: Осторо́жно, две́ри закрыва́ются!", ar: "الإعلان كاملًا: Осторо́жно, две́ри закрыва́ются!" },
     },
     {
-      id: "d41-06", ru: "Сле́дующая ста́нция…", say: "slYEduyushchaya stAntsyya…", en: "The next station is…", ar: "المحطة التالية…", pos: "phrase",
+      id: "d41-06", ru: "Сле́дующая ста́нция…", say: "slyEduyushchaya stAntsyya…", en: "The next station is…", ar: "المحطة التالية…", pos: "phrase",
       ex: { ru: "Сле́дующая ста́нция — «Парк культу́ры».", en: "The next station is Park Kultury.", ar: "المحطة التالية: «بارك كولتوري»." },
     },
     {
-      id: "d41-07", ru: "пассажи́р", say: "pasazhIr", en: "passenger", ar: "راكب", pos: "noun", g: "m",
+      id: "d41-07", ru: "пассажи́р", say: "pasazhYr", en: "passenger", ar: "راكب", pos: "noun", g: "m",
       forms: "мн. ч. пассажи́ры",
       ex: { ru: "Пассажи́ры выхо́дят из ваго́на.", en: "The passengers get out of the carriage.", ar: "الركّاب ينزلون من العربة." },
     },
@@ -2605,7 +2613,7 @@ const DAY_42: Day = {
             kind: "order",
             prompt: { en: "Build: Next week I'll travel.", ar: "كوّن: في الأسبوع القادم سأسافر." },
             tokens: ["бу́ду", "неде́ле", "я", "На", "путеше́ствовать", "сле́дующей"],
-            answers: ["На сле́дующей неде́ле я бу́ду путеше́ствовать.", "Я бу́ду путеше́ствовать на сле́дующей неде́ле."],
+            answers: ["На сле́дующей неде́ле я бу́ду путеше́ствовать.", "Я бу́ду путеше́ствовать на сле́дующей неде́ле.", "Я на сле́дующей неде́ле бу́ду путеше́ствовать."],
             why: { en: "бу́ду + an imperfective infinitive for an activity.", ar: "бу́ду + مصدر فعل غير تام لنشاط." },
           },
           {
@@ -2637,6 +2645,7 @@ const DAY_42: Day = {
               "Я позвоню́ вам за́втра.",
               "За́втра я вам позвоню́.",
               "За́втра я позвоню́ вам.",
+              "Я вам позвоню́ за́втра.",
             ],
             why: { en: "One promised call: perfective позвоню́ + dative.", ar: "اتصال واحد موعود: الفعل التام позвоню́ + حالة المستفيد." },
           },
@@ -2649,7 +2658,7 @@ const DAY_42: Day = {
           {
             kind: "translate",
             prompt: { en: "How do I get to the railway station? (by transport)", ar: "كيف أصل إلى محطة القطارات؟ (بوسيلة نقل)" },
-            answers: ["Как дое́хать до вокза́ла?"],
+            answers: ["Как дое́хать до вокза́ла?", "Как мне дое́хать до вокза́ла?"],
             why: { en: "дое́хать до + genitive.", ar: "дое́хать до + حالة الإضافة." },
           },
         ],
