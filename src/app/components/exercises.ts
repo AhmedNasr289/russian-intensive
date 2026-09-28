@@ -226,7 +226,7 @@ function renderExercise(ctx: Ctx, ex: Exercise, seed: number, finish: (r: Result
   }
 
   // fill and translate: a typed answer
-  const input = h("input", { type: "text", class: "answer", lang: "ru", autocomplete: "off", autocapitalize: "off", spellcheck: "false", "aria-label": tr(ctx, { en: "Your answer", ar: "إجابتك" }) });
+  const input = h("input", { type: "text", class: "answer", lang: "ru", dir: "ltr", autocomplete: "off", autocapitalize: "off", spellcheck: "false", "aria-label": tr(ctx, { en: "Your answer", ar: "إجابتك" }) });
   if (ex.kind === "fill") {
     const [before = "", after = ""] = ex.ru.split("___");
     box.appendChild(h("div", { class: "ex-ru fill-line" }, ru(before), input, ru(after)));

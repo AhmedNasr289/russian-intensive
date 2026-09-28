@@ -85,14 +85,14 @@ function liveChat(ctx: Ctx, day: Day, mode: TutorMode, rules: string): HTMLEleme
 
   const log = h("div", { class: "chat-log", "aria-live": "polite" });
   const status = h("div", { class: "chat-status muted" });
-  const input = h("textarea", { id: `chat-${day.n}-${mode}`, class: "chat-input", rows: 2, lang: "ru", placeholder: tr(ctx, { en: "Write in Russian (or ask in English/Arabic)…", ar: "اكتب بالروسية (أو اسأل بالإنجليزية/العربية)…" }), "aria-label": tr(ctx, { en: "Message to the tutor", ar: "رسالة إلى المعلّم" }) });
+  const input = h("textarea", { id: `chat-${day.n}-${mode}`, class: "chat-input", rows: 2, lang: "ru", dir: "auto", placeholder: tr(ctx, { en: "Write in Russian (or ask in English/Arabic)…", ar: "اكتب بالروسية (أو اسأل بالإنجليزية/العربية)…" }), "aria-label": tr(ctx, { en: "Message to the tutor", ar: "رسالة إلى المعلّم" }) });
   input.value = unsent.get(key) ?? "";
   input.addEventListener("input", () => unsent.set(key, input.value));
   const send = btn([icon("right", 18), tr(ctx, { en: "Send", ar: "أرسل" })], { class: "primary" });
   const stop = btn([icon("stop", 18), tr(ctx, { en: "Stop", ar: "إيقاف" })], { class: "ghost", hidden: true, onClick: () => controller?.abort() });
 
   const bubble = (role: "user" | "assistant", text: string, hidden = false) =>
-    hidden ? null : h("div", { class: `msg ${role}` }, h("div", { class: "msg-body" }, mixed(text)), role === "assistant" ? h("div", { class: "msg-actions" }, btn([icon("speaker", 16)], { class: "ghost tiny", "aria-label": tr(ctx, { en: "Read aloud", ar: "اقرأ بصوت عالٍ" }), onClick: () => void ctx.speak(russianOnly(text)) })) : null);
+    hidden ? null : h("div", { class: `msg ${role}` }, h("div", { class: "msg-body", dir: "auto" }, mixed(text)), role === "assistant" ? h("div", { class: "msg-actions" }, btn([icon("speaker", 16)], { class: "ghost tiny", "aria-label": tr(ctx, { en: "Read aloud", ar: "اقرأ بصوت عالٍ" }), onClick: () => void ctx.speak(russianOnly(text)) })) : null);
 
   const redraw = () => {
     replace(
@@ -110,7 +110,7 @@ function liveChat(ctx: Ctx, day: Day, mode: TutorMode, rules: string): HTMLEleme
     turns.push({ role: "user", content: message });
     while (turns.length > MAX_TURNS) turns.splice(0, 2);
     redraw();
-    const live = h("div", { class: "msg assistant streaming" }, h("div", { class: "msg-body" }, tr(ctx, { en: "Thinking…", ar: "يفكّر…" })));
+    const live = h("div", { class: "msg assistant streaming" }, h("div", { class: "msg-body", dir: "auto" }, tr(ctx, { en: "Thinking…", ar: "يفكّر…" })));
     log.appendChild(live);
     log.scrollTop = log.scrollHeight;
     controller = new AbortController();

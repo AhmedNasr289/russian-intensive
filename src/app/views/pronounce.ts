@@ -31,6 +31,7 @@ export function pronounceView(ctx: Ctx): HTMLElement {
     class: "pronounce-input",
     rows: 3,
     lang: "ru",
+    dir: "ltr",
     maxlength: LIMIT,
     spellcheck: "false",
     placeholder: "Приве́т! Как дела́?",

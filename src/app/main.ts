@@ -240,7 +240,8 @@ async function boot(root: HTMLElement): Promise<void> {
       rerender: () => render(false),
       toast,
       speak: speakRu,
-      listen: (text, play) => bar.open(text, play),
+      // Called from buttons (spell, Pronounce, sound check): the bar takes keyboard focus.
+      listen: (text, play) => bar.open(text, play, { focus: true }),
       onLeave: (fn) => {
         leaveFns.push(fn);
       },

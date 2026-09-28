@@ -204,11 +204,12 @@ export function splitStress(s: string): StressSegment[] {
 const RU_LETTERS = `А-Яа-яЁё${GRAVE}${ACUTE}`;
 const RU_WORD = `[${RU_LETTERS}]+(?:-[${RU_LETTERS}]+)*`;
 /**
- * A Russian phrase inside explanation text. Words joined by spaces or Latin punctuation stay one run,
- * so a quoted sentence keeps its word order on an Arabic page; an Arabic comma (،) ends a run, so a
- * list of words reads right to left there. Sentence punctuation at the end belongs to the run.
+ * A Russian phrase inside explanation text. Words joined by spaces, digits or Latin punctuation stay
+ * one run, so a quoted sentence or address ("у́лица Пу́шкина, дом 10, кварти́ра 25") keeps its order
+ * on an Arabic page; an Arabic comma (،) ends a run, so a list of words reads right to left there.
+ * A trailing number ("кв. 25") and sentence punctuation at the end belong to the run.
  */
-const RU_RUN = new RegExp(String.raw`${RU_WORD}(?:[\s,.!?;:…—–-]+${RU_WORD})*[.!?…]*`, "g");
+const RU_RUN = new RegExp(String.raw`${RU_WORD}(?:[\s\d,.!?;:…—–-]+${RU_WORD})*(?:[\s.]+\d+)?[.!?…]*`, "g");
 
 export type TextRun = { text: string; russian: boolean };
 

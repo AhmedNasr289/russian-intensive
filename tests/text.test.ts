@@ -140,5 +140,15 @@ test("a Russian sentence inside Arabic stays one run; an Arabic comma splits a l
     russianRuns(english).filter((r) => r.russian).map((r) => r.text),
     [a("ма*ма, метро*"), a("по-ру*сски")],
   );
-  for (const s of [arabic, list, english, "no Russian here", ""]) assert.equal(russianRuns(s).map((r) => r.text).join(""), s);
+  // An address with numbers stays whole, including its last number; an English number after a comma does not join.
+  const address = a("ثم الشقة: у*лица Пу*шкина, дом 10, кварти*ра 25 — وتُكتب: ул. Пу*шкина, д. 10, кв. 25. انتهى");
+  assert.deepEqual(
+    russianRuns(address).filter((r) => r.russian).map((r) => r.text),
+    [a("у*лица Пу*шкина, дом 10, кварти*ра 25"), a("ул. Пу*шкина, д. 10, кв. 25.")],
+  );
+  assert.deepEqual(
+    russianRuns(a("Say Москва*, 3 times")).filter((r) => r.russian).map((r) => r.text),
+    [a("Москва*")],
+  );
+  for (const s of [arabic, list, english, address, "no Russian here", ""]) assert.equal(russianRuns(s).map((r) => r.text).join(""), s);
 });

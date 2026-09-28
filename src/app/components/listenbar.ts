@@ -17,7 +17,11 @@ const report = (e: unknown) => console.error("The listen bar failed:", e);
 
 export type ListenBar = {
   el: HTMLElement;
-  open(text: string, play?: ListenMode): void;
+  /**
+   * Show a text and optionally play it. `focus` moves keyboard focus into the bar (when a button
+   * opened it) and returns it to that button on close; a tap on text leaves focus where it is.
+   */
+  open(text: string, play?: ListenMode, opts?: { focus?: boolean }): void;
   close(): void;
   readonly isOpen: boolean;
 };
@@ -40,6 +44,8 @@ export function createListenBar(getCtx: () => Ctx): ListenBar {
   );
 
   let text = "";
+  /** The control that opened the bar from the keyboard, to return focus to on close. */
+  let opener: HTMLElement | null = null;
   /** One entry per grapheme of the text; spaces and punctuation are holes (undefined). */
   let letters: Array<HTMLElement | undefined> = [];
   let words: Array<{ span: WordSpan; el: HTMLElement }> = [];
@@ -207,13 +213,16 @@ export function createListenBar(getCtx: () => Ctx): ListenBar {
     get isOpen() {
       return !el.hidden;
     },
-    open(next, mode) {
+    open(next, mode, opts = {}) {
       const trimmed = next.trim();
       if (!trimmed) return;
       run++;
       getCtx().stopAudio();
       setActive(null);
       text = trimmed;
+      const from = document.activeElement;
+      if (opts.focus && from instanceof HTMLElement && !el.contains(from)) opener = from;
+      else if (!opts.focus) opener = null;
       render();
       if (el.hidden) {
         el.hidden = false;
@@ -222,6 +231,7 @@ export function createListenBar(getCtx: () => Ctx): ListenBar {
       el.classList.remove("pulse");
       void el.offsetWidth;
       el.classList.add("pulse");
+      if (opts.focus) (buttons.get(mode ?? "say") ?? closeBtn).focus({ preventScroll: true });
       if (mode) void play(mode).catch(report);
     },
     close() {
@@ -229,8 +239,12 @@ export function createListenBar(getCtx: () => Ctx): ListenBar {
       run++;
       getCtx().stopAudio();
       setActive(null);
+      const hadFocus = el.contains(document.activeElement);
       el.hidden = true;
       document.body.classList.remove("listen-open");
+      // Give focus back to the button that opened the bar, if it is still on the page.
+      if (hadFocus && opener?.isConnected) opener.focus({ preventScroll: true });
+      opener = null;
     },
   };
   return bar;

@@ -292,7 +292,7 @@ function correctionView(ctx: Ctx, c: JournalCorrection): HTMLElement {
 const journalDrafts = new Map<number, string>();
 
 function journalSection(ctx: Ctx, day: Day): HTMLElement {
-  const area = h("textarea", { id: `journal-${day.n}`, class: "journal-input", rows: 6, lang: "ru", placeholder: "Меня́ зову́т…", "aria-label": tr(ctx, { en: "Your journal entry in Russian", ar: "يومياتك بالروسية" }) });
+  const area = h("textarea", { id: `journal-${day.n}`, class: "journal-input", rows: 6, lang: "ru", dir: "ltr", placeholder: "Меня́ зову́т…", "aria-label": tr(ctx, { en: "Your journal entry in Russian", ar: "يومياتك بالروسية" }) });
   area.value = journalDrafts.get(day.n) ?? "";
   area.addEventListener("input", () => journalDrafts.set(day.n, area.value));
   const out = h("div", { class: "journal-out", "aria-live": "polite" });
@@ -350,7 +350,7 @@ function journalSection(ctx: Ctx, day: Day): HTMLElement {
           "div",
           { class: "card" },
           h("h3", null, tr(ctx, { en: "Earlier entries for this day", ar: "إدخالات سابقة لهذا اليوم" })),
-          h("ul", { class: "journal-list" }, entries.map((e) => h("li", null, h("p", { lang: "ru" }, e.text), e.corrected ? h("p", { class: "corrected" }, ru(e.corrected)) : null))),
+          h("ul", { class: "journal-list" }, entries.map((e) => h("li", null, h("p", { lang: "ru", dir: "auto" }, e.text), e.corrected ? h("p", { class: "corrected" }, ru(e.corrected)) : null))),
         )
       : null,
   );

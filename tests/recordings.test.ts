@@ -55,6 +55,34 @@ test("credits group the words by who recorded them, largest group first", () => 
   );
 });
 
+/** The word a Commons pronunciation file is named after: Ru-кот.ogg, Ru-ru-нет.ogg, LL-Q7737 (rus)-Speaker-кот.wav, Ru-01-буква-А.ogg. */
+function namedWord(file: string): string {
+  const base = file.replace(/\.[a-z0-9]+$/i, "");
+  const letter = base.match(/^Ru-\d+-буква-(.+)$/i);
+  if (letter?.[1]) return letter[1];
+  const lingua = base.match(/-([А-Яа-яЁё́̀ -]+)$/);
+  if (base.startsWith("LL-") && lingua?.[1]) return lingua[1];
+  return base.replace(/^(Ru-)+(ru-)?/i, "").replace(/\d+$/, "");
+}
+
+test("every recording's file name names the word that plays it (a check independent of the stress matcher)", () => {
+  // The name reader itself, on each file-name shape the packs hold.
+  assert.equal(namedWord("Ru-кот.ogg"), "кот");
+  assert.equal(namedWord("Ru-ru-нет.ogg"), "нет");
+  assert.equal(namedWord("LL-Q7737 (rus)-Tatiana Kerbush-ветер.wav"), "ветер");
+  assert.equal(namedWord("Ru-01-буква-А.ogg"), "А");
+  // Negative control: an entry whose file names another word must be reported.
+  const planted = { ...RECORDINGS, дом: [0, 0, 1, 0, "Ru-кот.ogg"] as Recording };
+  assert.deepEqual(
+    Object.entries(planted).filter(([key, r]) => recordingKey(namedWord(r[4])) !== key).map(([key]) => key),
+    ["дом"],
+  );
+  const differ = Object.entries(RECORDINGS)
+    .filter(([key, r]) => recordingKey(namedWord(r[4])) !== key)
+    .map(([key, r]) => `${key} <- ${r[4]}`);
+  assert.deepEqual(differ, []);
+});
+
 test("the generated index is whole: every entry points into a real pack and source, packed back to back", () => {
   const byPack = new Map<number, Array<[number, number]>>();
   for (const [key, r] of Object.entries(RECORDINGS)) {
