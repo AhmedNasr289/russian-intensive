@@ -4,8 +4,10 @@ import {
   ACUTE,
   checkStress,
   countVowels,
+  hasArabic,
   levenshtein,
   normalizeAnswer,
+  splitBilingual,
   similarity,
   splitStress,
   stripStress,
@@ -109,4 +111,13 @@ test("splitStress isolates the stressed vowel for colouring", () => {
   ]);
   assert.equal(splitStress("ещё").filter((s) => s.stressed).length, 1);
   assert.equal(splitStress("кот").filter((s) => s.stressed).length, 0);
+});
+
+test("options written as English · Arabic split into their two halves", () => {
+  assert.deepEqual(splitBilingual("mum, mom · ماما، أمّ"), { en: "mum, mom", ar: "ماما، أمّ" });
+  assert.deepEqual(splitBilingual("ё is always stressed · لأن ё منبورة دائمًا"), { en: "ё is always stressed", ar: "لأن ё منبورة دائمًا" });
+  assert.equal(splitBilingual("кот · кошка"), null, "Russian on both sides is not a translation pair");
+  assert.equal(splitBilingual("ماما · mum"), null, "Arabic first is not the English · Arabic form");
+  assert.equal(splitBilingual("no separator here"), null);
+  assert.ok(hasArabic("أمّ") && !hasArabic("١٢٣") && !hasArabic("mum"));
 });

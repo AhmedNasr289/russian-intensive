@@ -3,7 +3,7 @@
 
 import type { Bi, Choice, Exercise, Word } from "../../content/types.ts";
 import { checkOrder, checkTyped, shuffle } from "../../core/answers.ts";
-import { hasCyrillic } from "../../core/text.ts";
+import { hasCyrillic, splitBilingual } from "../../core/text.ts";
 import type { Ctx } from "../context.ts";
 import { tr } from "../context.ts";
 import { h, replace } from "../dom.ts";
@@ -20,7 +20,12 @@ export type RunnerOptions = {
 
 type Result = { ok: boolean; close: boolean };
 
-const optionText = (s: string): Node => (hasCyrillic(s) && !/[A-Za-z]/.test(s) ? ru(s) : mixed(s));
+/** An answer option. "English · Arabic" options follow the learner's language setting, one line each. */
+function optionText(ctx: Ctx, s: string): Node {
+  const pair = splitBilingual(s);
+  if (pair) return biCtx(ctx, pair, "span");
+  return hasCyrillic(s) && !/[A-Za-z]/.test(s) ? ru(s) : mixed(s);
+}
 
 /** Meaning and listening questions generated from a day's words. */
 export function wordQuestions(words: readonly Word[], pool: readonly Word[], seed: number, count = 6): Choice[] {
@@ -107,7 +112,7 @@ export function exerciseRunner(ctx: Ctx, opts: RunnerOptions): HTMLElement {
                 "details",
                 { class: "missed" },
                 h("summary", null, tr(ctx, { en: `Review ${missed.length} mistakes`, ar: `راجع ${missed.length} من الأخطاء` })),
-                h("ul", null, missed.map(({ ex }) => h("li", null, biCtx(ctx, ex.prompt, "div", "missed-q"), h("div", { class: "missed-a" }, answerNode(ex))))),
+                h("ul", null, missed.map(({ ex }) => h("li", null, biCtx(ctx, ex.prompt, "div", "missed-q"), h("div", { class: "missed-a" }, answerNode(ctx, ex))))),
               )
             : null,
           h(
@@ -132,10 +137,10 @@ export function exerciseRunner(ctx: Ctx, opts: RunnerOptions): HTMLElement {
   return root;
 }
 
-function answerNode(ex: Exercise): Node {
+function answerNode(ctx: Ctx, ex: Exercise): Node {
   switch (ex.kind) {
     case "choice":
-      return optionText(ex.options[ex.answer] ?? "");
+      return optionText(ctx, ex.options[ex.answer] ?? "");
     case "fill":
       return ru(ex.ru.replace("___", ex.answers[0] ?? ""));
     case "order":
@@ -179,7 +184,7 @@ function renderExercise(ctx: Ctx, ex: Exercise, seed: number, finish: (r: Result
             finish({ ok: i === ex.answer, close: false }, null);
           }),
         },
-        optionText(ex.options[i] ?? ""),
+        optionText(ctx, ex.options[i] ?? ""),
       ),
     );
     box.appendChild(h("div", { class: "options" }, buttons));

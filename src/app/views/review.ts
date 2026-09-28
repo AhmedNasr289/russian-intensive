@@ -75,7 +75,8 @@ export function reviewView(ctx: Ctx): HTMLElement {
     const back = h(
       "div",
       { class: "card-back", hidden: true },
-      h("div", { class: "prompt-ru" }, ru(word.ru, "huge"), playButtons(ctx, word.ru)),
+      // A recognition card already shows the word on its front.
+      production ? h("div", { class: "prompt-ru" }, ru(word.ru, "huge"), playButtons(ctx, word.ru)) : null,
       settings.showSay ? h("div", { class: "say" }, word.say) : null,
       h("div", { class: "meaning" }, biCtx(ctx, { en: word.en, ar: word.ar }, "div")),
       word.ex ? h("div", { class: "example" }, h("div", { class: "ex-line" }, ru(word.ex.ru), playButtons(ctx, word.ex.ru, { slow: false })), biCtx(ctx, { en: word.ex.en, ar: word.ex.ar }, "div", "ex-tr")) : null,

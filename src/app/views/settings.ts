@@ -30,11 +30,20 @@ function toggle(ctx: Ctx, key: "showSay" | "sounds" | "autoplay", label: { en: s
   );
 }
 
-function segmented<T extends string>(ctx: Ctx, name: string, value: T, options: ReadonlyArray<{ value: T; label: string }>, onPick: (v: T) => void): HTMLElement {
+/**
+ * One choice among a few, as a row of toggle buttons under a visible label. A <label> must not
+ * wrap it: clicking the label text would press the first button.
+ */
+function choice<T extends string>(label: string, value: T, options: ReadonlyArray<{ value: T; label: string }>, onPick: (v: T) => void): HTMLElement {
   return h(
     "div",
-    { class: "segmented", role: "radiogroup", "aria-label": name },
-    options.map((o) => h("button", { type: "button", role: "radio", "aria-checked": String(o.value === value), class: o.value === value ? "on" : "", onClick: () => onPick(o.value) }, o.label)),
+    { class: "field", role: "group", "aria-label": label },
+    h("span", { class: "field-label", "aria-hidden": "true" }, label),
+    h(
+      "div",
+      { class: "segmented" },
+      options.map((o) => h("button", { type: "button", "aria-pressed": String(o.value === value), class: o.value === value ? "on" : "", onClick: () => onPick(o.value) }, o.label)),
+    ),
   );
 }
 
@@ -108,15 +117,19 @@ export function settingsView(ctx: Ctx): HTMLElement {
       "section",
       { class: "card" },
       h("h3", null, tr(ctx, { en: "Language and display", ar: "اللغة والعرض" })),
-      field(
+      choice<ExplainLang>(
         tr(ctx, { en: "Explanations", ar: "الشروحات" }),
-        segmented<ExplainLang>(ctx, "Explanations", s.explain, [{ value: "en", label: "English" }, { value: "ar", label: "العربية" }, { value: "both", label: "English + العربية" }], (v) => setSetting(ctx, "explain", v)),
+        s.explain,
+        [{ value: "en", label: "English" }, { value: "ar", label: "العربية" }, { value: "both", label: "English + العربية" }],
+        (v) => setSetting(ctx, "explain", v),
       ),
       ctx.host === "artifact"
         ? null
-        : field(
+        : choice<Theme>(
             tr(ctx, { en: "Theme", ar: "المظهر" }),
-            segmented<Theme>(ctx, "Theme", s.theme, [{ value: "system", label: tr(ctx, { en: "System", ar: "النظام" }) }, { value: "light", label: tr(ctx, { en: "Light", ar: "فاتح" }) }, { value: "dark", label: tr(ctx, { en: "Dark", ar: "داكن" }) }], (v) => setSetting(ctx, "theme", v)),
+            s.theme,
+            [{ value: "system", label: tr(ctx, { en: "System", ar: "النظام" }) }, { value: "light", label: tr(ctx, { en: "Light", ar: "فاتح" }) }, { value: "dark", label: tr(ctx, { en: "Dark", ar: "داكن" }) }],
+            (v) => setSetting(ctx, "theme", v),
           ),
       h("div", { class: "switches" }, toggle(ctx, "showSay", { en: "Show pronunciation respelling", ar: "اعرض كتابة النطق باللاتينية" }), toggle(ctx, "autoplay", { en: "Speak each flashcard", ar: "انطق كل بطاقة" }), toggle(ctx, "sounds", { en: "Sound effects", ar: "المؤثرات الصوتية" })),
     ),

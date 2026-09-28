@@ -9,7 +9,8 @@ import { tr } from "../context.ts";
 import { h } from "../dom.ts";
 import { chip, icon, ring, ru, sectionTitle } from "../ui.ts";
 
-type Point = { date: string; label: string; value: number };
+/** `label` names the day in full (tooltips, the table); `tick` is the short axis text. */
+type Point = { date: string; label: string; tick: string; value: number };
 
 const DAILY_GOAL_MIN = 120;
 
@@ -38,6 +39,8 @@ function barChart(ctx: Ctx, opts: { title: string; unit: string; points: Point[]
       "div",
       { class: "plot", role: "img", "aria-label": `${opts.title}. ${opts.points.map((p) => `${p.label}: ${p.value}`).join(", ")}` },
       h("div", { class: "gridline", style: `bottom:50%` }),
+      h("span", { class: "tick", style: "bottom:50%", "aria-hidden": "true" }, String(Math.round(max / 2))),
+      h("span", { class: "tick", style: "bottom:100%", "aria-hidden": "true" }, String(max)),
       opts.goal ? h("div", { class: "goal", style: `bottom:${pct(opts.goal.value)}` }, h("span", null, opts.goal.label)) : null,
       h(
         "div",
@@ -51,7 +54,7 @@ function barChart(ctx: Ctx, opts: { title: string; unit: string; points: Point[]
         ),
       ),
     ),
-    h("div", { class: "axis" }, opts.points.map((p, i) => h("span", { class: i % 2 === 0 || i === opts.points.length - 1 ? "" : "thin" }, p.label))),
+    h("div", { class: "axis", "aria-hidden": "true" }, opts.points.map((p, i) => h("span", { class: (opts.points.length - 1 - i) % 2 === 0 ? "" : "thin" }, p.tick))),
     h(
       "details",
       { class: "chart-table" },
@@ -69,8 +72,9 @@ export function progressView(ctx: Ctx): HTMLElement {
   const today = isoDate(new Date(now));
   const ret = retention(p, 7, today);
   const days = lastDays(14, now);
-  const minutes = days.map((d) => ({ date: d, label: shortLabel(d, lang), value: p.studyLog[d] ?? 0 }));
-  const reviews = days.map((d) => ({ date: d, label: shortLabel(d, lang), value: p.reviewLog[d]?.n ?? 0 }));
+  const tick = (d: string) => String(Number(d.slice(8)));
+  const minutes = days.map((d) => ({ date: d, label: shortLabel(d, lang), tick: tick(d), value: p.studyLog[d] ?? 0 }));
+  const reviews = days.map((d) => ({ date: d, label: shortLabel(d, lang), tick: tick(d), value: p.reviewLog[d]?.n ?? 0 }));
   const totalMinutes = Object.values(p.studyLog).reduce((a, b) => a + b, 0);
   const tests = Object.entries(p.tests).sort(([a], [b]) => Number(a.slice(1)) - Number(b.slice(1)));
 

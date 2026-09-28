@@ -11,6 +11,19 @@ export const isRuVowel = (ch: string): boolean => ch.length === 1 && VOWELS.incl
 
 export const hasCyrillic = (s: string): boolean => /[А-Яа-яЁё]/.test(s);
 
+// Arabic LETTERS (not digits or punctuation): a field of Arabic-Indic digits alone is not a translation.
+const isArabicLetter = (cp: number): boolean => (cp >= 0x0621 && cp <= 0x063a) || (cp >= 0x0641 && cp <= 0x064a);
+export const hasArabic = (s: string): boolean => [...s].some((ch) => isArabicLetter(ch.codePointAt(0) ?? 0));
+
+/** Splits option text written as "English · Arabic" into its halves, or returns null. */
+export function splitBilingual(s: string): { en: string; ar: string } | null {
+  const at = s.lastIndexOf(" · ");
+  if (at <= 0) return null;
+  const en = s.slice(0, at).trim();
+  const ar = s.slice(at + 3).trim();
+  return en && hasArabic(ar) && !hasArabic(en) ? { en, ar } : null;
+}
+
 export const stripStress = (s: string): string => s.split(ACUTE).join("").split(GRAVE).join("");
 
 export function countVowels(word: string): number {

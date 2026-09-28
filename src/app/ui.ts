@@ -151,7 +151,8 @@ export function ring(fraction: number, size = 64, label?: Child): HTMLElement {
         class: "ring-fill",
         fill: "none",
         "stroke-width": 6,
-        "stroke-linecap": "round",
+        // A round cap would draw a dot at 0%.
+        "stroke-linecap": f > 0 ? "round" : "butt",
         "stroke-dasharray": `${c * f} ${c}`,
         transform: `rotate(-90 ${size / 2} ${size / 2})`,
       }),

@@ -3,7 +3,7 @@
 
 import type { Bi, Day, Exercise, Tri, Word, SyllabusDay } from "../content/types.ts";
 import { TOPIC_SET } from "../content/topics.ts";
-import { checkStress, countVowels, hasCyrillic, normalizeAnswer, stripStress } from "./text.ts";
+import { checkStress, countVowels, hasArabic, hasCyrillic, normalizeAnswer, stripStress } from "./text.ts";
 import { kindOf, weekOf } from "./schedule.ts";
 
 export type ValidateOptions = {
@@ -22,9 +22,6 @@ export type ValidationResult = { days: number; errors: string[]; warnings: strin
 export const COURSE_DAYS = 56;
 export const MIN_UNIQUE_WORDS = 700;
 const POS = new Set(["noun", "verb", "adj", "adv", "pron", "num", "prep", "conj", "part", "interj", "phrase"]);
-// Arabic LETTERS (not digits or punctuation): a field of Arabic-Indic digits alone is not a translation.
-const isArabicLetter = (cp: number): boolean => (cp >= 0x0621 && cp <= 0x063a) || (cp >= 0x0641 && cp <= 0x064a);
-const hasArabic = (s: string): boolean => [...s].some((ch) => isArabicLetter(ch.codePointAt(0) ?? 0));
 const GAP = "___";
 
 export { kindOf, weekOf };
