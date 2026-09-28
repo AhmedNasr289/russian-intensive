@@ -180,8 +180,8 @@ export function settingsView(ctx: Ctx): HTMLElement {
         btn([icon("download", 18), tr(ctx, { en: "Export progress", ar: "صدّر التقدّم" })], {
           class: "ghost",
           onClick: async () => {
-            const ok = await saveFile(ctx, `russian-progress-${new Date(ctx.now()).toISOString().slice(0, 10)}.json`, JSON.stringify(ctx.store.progress, null, 1), "application/json");
-            if (!ok) ctx.toast({ en: "Export isn't available in this view.", ar: "التصدير غير متاح في هذا العرض." }, "error");
+            const outcome = await saveFile(ctx, `russian-progress-${new Date(ctx.now()).toISOString().slice(0, 10)}.json`, JSON.stringify(ctx.store.progress, null, 1), "application/json");
+            if (outcome === "unavailable") ctx.toast({ en: "Export isn't available in this view.", ar: "التصدير غير متاح في هذا العرض." }, "error");
           },
         }),
         h("label", { class: "btn ghost", for: "set-import" }, icon("upload", 18), tr(ctx, { en: "Import progress", ar: "استورد التقدّم" })),

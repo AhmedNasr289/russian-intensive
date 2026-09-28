@@ -125,9 +125,10 @@ export function stopSpeaking(): void {
   live.clear();
 }
 
-/** Speak one item now, interrupting whatever is playing. */
+/** Speak one item now, interrupting whatever is playing (and only then: Chrome can drop an utterance queued right after a needless cancel). */
 export function say(text: string, opts: SpeakOptions): Promise<void> {
-  stopSpeaking();
+  const s = synth();
+  if (s && (s.speaking || s.pending)) stopSpeaking();
   return speak(text, opts);
 }
 

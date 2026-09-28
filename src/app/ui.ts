@@ -220,18 +220,21 @@ export async function copyText(text: string): Promise<boolean> {
   }
 }
 
+export type SaveOutcome = "saved" | "declined" | "unavailable";
+
 /**
  * Offer a file. On the web a normal download; inside claude.ai through the downloads capability,
- * which accepts only some extensions (json, txt, md, csv…, not ics).
+ * which accepts only some extensions (json, txt, md, csv…, not ics) and asks the viewer first.
  */
-export async function saveFile(ctx: Ctx, filename: string, data: string, mime: string): Promise<boolean> {
+export async function saveFile(ctx: Ctx, filename: string, data: string, mime: string): Promise<SaveOutcome> {
   if (ctx.host === "artifact") {
-    if (!ctx.caps.downloads) return false;
+    if (!ctx.caps.downloads) return "unavailable";
     try {
       await ctx.caps.downloads.save({ filename, data });
-      return true;
-    } catch {
-      return false;
+      return "saved";
+    } catch (e) {
+      const code = typeof e === "object" && e !== null && "code" in e ? String((e as { code: unknown }).code) : "";
+      return code === "declined" || code === "rate_limited" ? "declined" : "unavailable";
     }
   }
   const url = URL.createObjectURL(new Blob([data], { type: mime }));
@@ -240,5 +243,5 @@ export async function saveFile(ctx: Ctx, filename: string, data: string, mime: s
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 2000);
-  return true;
+  return "saved";
 }
