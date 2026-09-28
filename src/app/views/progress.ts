@@ -39,8 +39,8 @@ function barChart(ctx: Ctx, opts: { title: string; unit: string; points: Point[]
       "div",
       { class: "plot", role: "img", "aria-label": `${opts.title}. ${opts.points.map((p) => `${p.label}: ${p.value}`).join(", ")}` },
       h("div", { class: "gridline", style: `bottom:50%` }),
-      h("span", { class: "tick", style: "bottom:50%", "aria-hidden": "true" }, String(Math.round(max / 2))),
-      h("span", { class: "tick", style: "bottom:100%", "aria-hidden": "true" }, String(max)),
+      h("span", { class: "axis-tick", style: "bottom:50%", "aria-hidden": "true" }, String(Math.round(max / 2))),
+      h("span", { class: "axis-tick", style: "bottom:100%", "aria-hidden": "true" }, String(max)),
       opts.goal ? h("div", { class: "goal", style: `bottom:${pct(opts.goal.value)}` }, h("span", null, opts.goal.label)) : null,
       h(
         "div",

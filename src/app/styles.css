@@ -2937,7 +2937,8 @@ details[open] > summary::before {
   border-top: 1px dashed var(--line);
 }
 
-.tick {
+/* Not ".tick": that name is the checklist's round tick, and sharing it pinned every checklist tick to the page edge. */
+.axis-tick {
   position: absolute;
   inset-inline-start: 0;
   z-index: 2;
