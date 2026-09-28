@@ -25,8 +25,11 @@ export class MultiStore implements ProgressStore {
     return null;
   }
 
+  /** Writes every store even when one fails (the local cache must not depend on the network). */
   async save(p: Progress): Promise<void> {
-    for (const s of this.stores) await s.save(p);
+    const results = await Promise.allSettled(this.stores.map((s) => s.save(p)));
+    const failed = results.find((r): r is PromiseRejectedResult => r.status === "rejected");
+    if (failed) throw failed.reason;
   }
 }
 

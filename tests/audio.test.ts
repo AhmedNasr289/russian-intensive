@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { guessGender, isRussian, pickVoices, rankVoice, speakableText } from "../src/core/audio.ts";
+import { guessGender, isRussian, pickVoices, rankVoice, roleVoice, speakableText } from "../src/core/audio.ts";
 
 const v = (name: string, lang = "ru-RU", localService = true) => ({ name, lang, localService, voiceURI: name });
 
@@ -38,6 +38,22 @@ test("the dialogue gets a male voice for A and a female voice for B when both ex
   const chosen = pickVoices(voices, "Microsoft Irina - Russian (Russia)");
   assert.equal(chosen.main?.name, "Microsoft Irina - Russian (Russia)");
   assert.deepEqual(pickVoices([v("Samantha", "en-US")], null), { main: null, male: null, female: null });
+});
+
+test("dialogue roles use two voices when they exist, and two pitches of one voice when they do not", () => {
+  const both = pickVoices([v("Microsoft Dmitry Online (Natural)", "ru-RU", false), v("Microsoft Svetlana Online (Natural)", "ru-RU", false)], null);
+  assert.deepEqual(roleVoice(both, "A"), { voice: both.male, pitch: 1 });
+  assert.deepEqual(roleVoice(both, "B"), { voice: both.female, pitch: 1 });
+
+  const one = pickVoices([v("Voice 7")], null);
+  const a = roleVoice(one, "A");
+  const b = roleVoice(one, "B");
+  assert.equal(a.voice, b.voice);
+  assert.ok(a.pitch < 1 && b.pitch > 1, `${a.pitch} ${b.pitch}`);
+
+  const none = pickVoices([v("Samantha", "en-US")], null);
+  assert.equal(roleVoice(none, "A").voice, null);
+  assert.notEqual(roleVoice(none, "A").pitch, roleVoice(none, "B").pitch);
 });
 
 test("speakable text drops stress marks and editorial symbols", () => {

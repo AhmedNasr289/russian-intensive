@@ -3,7 +3,7 @@
 // debounced saver that keeps one write in flight and always ends on the newest state.
 
 import { validateProgress } from "./progress.ts";
-import type { Progress } from "./progress.ts";
+import type { JournalEntry, Progress } from "./progress.ts";
 
 export type StoreKind = "local" | "artifact" | "memory";
 
@@ -82,6 +82,18 @@ export type DocSnapshotLike = { exists: boolean; data(): Record<string, unknown>
 export type DocRefLike = { get(): Promise<DocSnapshotLike>; set(data: Record<string, unknown>): Promise<void> };
 export type DbLike = { doc(path: string): DocRefLike };
 
+/** The database refuses documents over 256 KiB; the journal document stays under this. */
+export const JOURNAL_DOC_BYTES = 200_000;
+
+const utf8Length = (s: string): number => new TextEncoder().encode(s).length;
+
+/** The newest journal entries whose JSON fits in `maxBytes` (older ones stay only in the local copy). */
+export function fitJournal(entries: readonly JournalEntry[], maxBytes = JOURNAL_DOC_BYTES): JournalEntry[] {
+  let kept = [...entries];
+  while (kept.length > 0 && utf8Length(JSON.stringify(kept)) > maxBytes) kept = kept.slice(1);
+  return kept;
+}
+
 /**
  * Progress in the artifact's database, under the viewer's private `data/users/<id>/` subtree.
  * The journal is kept in its own document so the main document stays small, and it is only
@@ -115,7 +127,7 @@ export class ArtifactDbStore implements ProgressStore {
   async save(p: Progress): Promise<void> {
     const { journal, ...rest } = p;
     await this.ref("progress").set(JSON.parse(JSON.stringify(rest)) as Record<string, unknown>);
-    const serialized = JSON.stringify(journal);
+    const serialized = JSON.stringify(fitJournal(journal));
     if (serialized !== this.lastJournal) {
       await this.ref("journal").set({ entries: JSON.parse(serialized) as unknown[] });
       this.lastJournal = serialized;

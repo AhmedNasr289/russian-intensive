@@ -37,6 +37,11 @@ export function parseRoute(hash: string): Route {
   return TODAY;
 }
 
+/** The navigation entry a route belongs to (a lesson day lives under the course). */
+export function navTokenOf(r: Route): PlainView | "tutor" {
+  return r.view === "day" ? "course" : r.view;
+}
+
 export function routeToken(r: Route): string {
   switch (r.view) {
     case "day":

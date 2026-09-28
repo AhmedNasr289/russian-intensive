@@ -49,10 +49,13 @@ const ICONS = {
 
 export type IconName = keyof typeof ICONS;
 
+/** Arrows that point along the reading direction; they mirror when the page is right-to-left. */
+const DIRECTIONAL: ReadonlySet<IconName> = new Set(["left", "right"]);
+
 export function icon(name: IconName, size = 20): SVGSVGElement {
   return s(
     "svg",
-    { viewBox: "0 0 24 24", width: size, height: size, fill: "none", stroke: "currentColor", "stroke-width": name === "more" ? 3.2 : 1.8, "stroke-linecap": "round", "stroke-linejoin": "round", "aria-hidden": "true", class: "icon" },
+    { viewBox: "0 0 24 24", width: size, height: size, fill: "none", stroke: "currentColor", "stroke-width": name === "more" ? 3.2 : 1.8, "stroke-linecap": "round", "stroke-linejoin": "round", "aria-hidden": "true", class: DIRECTIONAL.has(name) ? "icon dir" : "icon" },
     s("path", { d: ICONS[name] }),
   );
 }

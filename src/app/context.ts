@@ -1,7 +1,7 @@
 // What every screen receives: the store, the route, the host's abilities and a few services.
 
 import type { Bi } from "../content/types.ts";
-import type { Playback, Sfx } from "../core/audio.ts";
+import type { Sfx } from "../core/audio.ts";
 import type { ExplainLang } from "../core/progress.ts";
 import type { DownloadsCap, SampleCap } from "./claude.ts";
 import type { Host } from "./env.ts";
@@ -35,7 +35,8 @@ export type Ctx = {
   toast(message: Bi, kind?: ToastKind): void;
   /** Speak Russian with the learner's voice and rate (slow = 0.65×). */
   speak(text: string, opts?: { slow?: boolean; who?: "A" | "B" }): Promise<void>;
-  speakLines(lines: ReadonlyArray<{ text: string; who: "A" | "B" }>, onLine: (i: number) => void, gapMs?: number): Playback;
+  /** Run when the learner leaves the current screen (detach listeners, stop timers). */
+  onLeave(cleanup: () => void): void;
   stopAudio(): void;
   sfx(kind: Sfx): void;
   now(): number;

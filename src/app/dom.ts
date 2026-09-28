@@ -34,7 +34,7 @@ export function appendChildren(parent: Node, children: readonly Child[]): void {
 
 export function h<K extends keyof HTMLElementTagNameMap>(tag: K, attrs?: Attrs | null, ...children: Child[]): HTMLElementTagNameMap[K] {
   const el = document.createElement(tag);
-  if (attrs) for (const [k, v] of Object.entries(attrs)) setAttr(el, k.startsWith("on") && typeof v === "function" ? k : k, v);
+  if (attrs) for (const [k, v] of Object.entries(attrs)) setAttr(el, k, v);
   appendChildren(el, children);
   return el;
 }

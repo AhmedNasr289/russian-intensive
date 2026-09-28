@@ -157,6 +157,19 @@ test("the syllabus has 56 days whose kinds and topics are valid", () => {
   });
 });
 
+test("the alphabet has 33 distinct letters with stress-clean examples and Arabic text", async () => {
+  const { ALPHABET } = await import("../src/content/alphabet.ts");
+  const { checkStress } = await import("../src/core/text.ts");
+  assert.equal(ALPHABET.length, 33);
+  assert.equal(new Set(ALPHABET.map((l) => l.upper)).size, 33);
+  const groups = ALPHABET.reduce<Record<string, number>>((acc, l) => ({ ...acc, [l.group]: (acc[l.group] ?? 0) + 1 }), {});
+  assert.deepEqual(groups, { friend: 5, "false-friend": 7, new: 19, sign: 2 });
+  for (const l of ALPHABET) {
+    assert.deepEqual(checkStress(`${l.example.ru} ${l.name}`), [], l.upper);
+    assert.ok(/[ء-ي]/.test(l.sound.ar) && /[ء-ي]/.test(l.example.ar), l.upper);
+  }
+});
+
 test("syllabus words are unique across the course", () => {
   const seen = new Map<string, number>();
   const dupes: string[] = [];

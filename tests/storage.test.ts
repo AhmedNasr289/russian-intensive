@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { defaultProgress, addJournal } from "../src/core/progress.ts";
 import type { Progress } from "../src/core/progress.ts";
-import { ArtifactDbStore, LocalStore, createSaver } from "../src/core/storage.ts";
+import { ArtifactDbStore, JOURNAL_DOC_BYTES, LocalStore, createSaver, fitJournal } from "../src/core/storage.ts";
 import type { DbLike, ProgressStore, StorageLike } from "../src/core/storage.ts";
 
 const T0 = Date.parse("2026-09-28T19:00:00Z");
@@ -127,4 +127,23 @@ test("the artifact store keeps the journal in its own document and skips unchang
   assert.deepEqual(db.writes.slice(2), ["data/users/u_abc/progress"]);
   const loaded = await new ArtifactDbStore(db, "u_abc").load();
   assert.deepEqual(loaded, p);
+});
+
+test("a journal too big for one database document keeps its newest entries under the size limit", async () => {
+  const long = "Сего́дня я чита́л кни́гу. ".repeat(160); // about 4,000 characters, ~7 KB of UTF-8
+  let p = defaultProgress(T0);
+  for (let i = 0; i < 60; i++) p = addJournal(p, { day: 1 + (i % 56), at: T0 + i, text: long, corrected: long });
+  assert.ok(new TextEncoder().encode(JSON.stringify(p.journal)).length > JOURNAL_DOC_BYTES, "the fixture must exceed the limit");
+
+  const fitted = fitJournal(p.journal);
+  assert.ok(fitted.length > 0 && fitted.length < p.journal.length);
+  assert.ok(new TextEncoder().encode(JSON.stringify(fitted)).length <= JOURNAL_DOC_BYTES);
+  assert.deepEqual(fitted, p.journal.slice(-fitted.length), "the newest entries survive, in order");
+
+  const db = fakeDb();
+  await new ArtifactDbStore(db, "u_big").save(p);
+  const stored = db.docs.get("data/users/u_big/journal")?.["entries"];
+  assert.ok(Array.isArray(stored));
+  assert.equal(stored.length, fitted.length);
+  assert.deepEqual(fitJournal([]), []);
 });

@@ -50,6 +50,17 @@ export function pickVoices<V extends VoiceLike>(voices: readonly V[], preferredU
   return { main, male, female };
 }
 
+/**
+ * The voice for a dialogue role: A is the male voice, B the female one. When both roles fall on the
+ * same voice (or on none), a lower and a higher pitch keep the two speakers apart.
+ */
+export function roleVoice<V>(pick: VoicePick<V>, who: "A" | "B"): { voice: V | null; pitch: number } {
+  const a = pick.male ?? pick.main;
+  const b = pick.female ?? pick.main;
+  const shared = a === b;
+  return who === "A" ? { voice: a, pitch: shared ? 0.85 : 1 } : { voice: b, pitch: shared ? 1.12 : 1 };
+}
+
 /** What the synthesizer should read: no stress marks, no leading dialogue dash, no bracket notation. */
 export function speakableText(s: string): string {
   return stripStress(s)
@@ -86,7 +97,8 @@ export function loadVoices(timeoutMs = 2500): Promise<SpeechSynthesisVoice[]> {
 // Chrome drops utterances that are garbage-collected mid-speech; keep them referenced until they end.
 const live = new Set<SpeechSynthesisUtterance>();
 
-export type SpeakOptions = { rate: number; voice: SpeechSynthesisVoice | null };
+/** `pitch` (0–2) separates two dialogue roles when only one Russian voice exists. */
+export type SpeakOptions = { rate: number; voice: SpeechSynthesisVoice | null; pitch?: number };
 
 export function speak(text: string, opts: SpeakOptions): Promise<void> {
   const s = synth();
@@ -95,6 +107,7 @@ export function speak(text: string, opts: SpeakOptions): Promise<void> {
   u.lang = opts.voice?.lang ?? "ru-RU";
   if (opts.voice) u.voice = opts.voice;
   u.rate = opts.rate;
+  if (opts.pitch !== undefined) u.pitch = opts.pitch;
   live.add(u);
   return new Promise((resolve) => {
     const finish = () => {
