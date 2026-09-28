@@ -14,8 +14,9 @@ import { ARTIFACT_URL } from "../env.ts";
 import { biCtx, btn, copyText, icon, mixed } from "../ui.ts";
 import { keyboardFor } from "./keyboard.ts";
 
-/** Conversations survive re-renders and navigation for the life of the page. */
+/** Conversations, and any unsent message, survive re-renders and navigation for the life of the page. */
 const conversations = new Map<string, SampleTurn[]>();
+const unsent = new Map<string, string>();
 
 const KICKOFF: Record<TutorMode, string> = {
   roleplay: "Please start the role-play now: greet me in character with your first line.",
@@ -84,7 +85,9 @@ function liveChat(ctx: Ctx, day: Day, mode: TutorMode, rules: string): HTMLEleme
 
   const log = h("div", { class: "chat-log", "aria-live": "polite" });
   const status = h("div", { class: "chat-status muted" });
-  const input = h("textarea", { class: "chat-input", rows: 2, lang: "ru", placeholder: tr(ctx, { en: "Write in Russian (or ask in English/Arabic)…", ar: "اكتب بالروسية (أو اسأل بالإنجليزية/العربية)…" }), "aria-label": tr(ctx, { en: "Message to the tutor", ar: "رسالة إلى المعلّم" }) });
+  const input = h("textarea", { id: `chat-${day.n}-${mode}`, class: "chat-input", rows: 2, lang: "ru", placeholder: tr(ctx, { en: "Write in Russian (or ask in English/Arabic)…", ar: "اكتب بالروسية (أو اسأل بالإنجليزية/العربية)…" }), "aria-label": tr(ctx, { en: "Message to the tutor", ar: "رسالة إلى المعلّم" }) });
+  input.value = unsent.get(key) ?? "";
+  input.addEventListener("input", () => unsent.set(key, input.value));
   const send = btn([icon("right", 18), tr(ctx, { en: "Send", ar: "أرسل" })], { class: "primary" });
   const stop = btn([icon("stop", 18), tr(ctx, { en: "Stop", ar: "إيقاف" })], { class: "ghost", hidden: true, onClick: () => controller?.abort() });
 
@@ -143,6 +146,7 @@ function liveChat(ctx: Ctx, day: Day, mode: TutorMode, rules: string): HTMLEleme
     const text = input.value.trim();
     if (!text) return;
     input.value = "";
+    unsent.delete(key);
     void ask(text);
   });
   input.addEventListener("keydown", (e) => {

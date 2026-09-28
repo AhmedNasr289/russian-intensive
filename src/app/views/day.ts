@@ -285,8 +285,13 @@ function correctionView(ctx: Ctx, c: JournalCorrection): HTMLElement {
   );
 }
 
+/** Unsaved journal text per day, so a redraw of the screen never loses what the learner typed. */
+const journalDrafts = new Map<number, string>();
+
 function journalSection(ctx: Ctx, day: Day): HTMLElement {
-  const area = h("textarea", { class: "journal-input", rows: 6, lang: "ru", placeholder: "Меня́ зову́т…", "aria-label": tr(ctx, { en: "Your journal entry in Russian", ar: "يومياتك بالروسية" }) });
+  const area = h("textarea", { id: `journal-${day.n}`, class: "journal-input", rows: 6, lang: "ru", placeholder: "Меня́ зову́т…", "aria-label": tr(ctx, { en: "Your journal entry in Russian", ar: "يومياتك بالروسية" }) });
+  area.value = journalDrafts.get(day.n) ?? "";
+  area.addEventListener("input", () => journalDrafts.set(day.n, area.value));
   const out = h("div", { class: "journal-out", "aria-live": "polite" });
   const entries = ctx.store.progress.journal.filter((e) => e.day === day.n);
 
