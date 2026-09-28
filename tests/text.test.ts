@@ -7,6 +7,7 @@ import {
   hasArabic,
   levenshtein,
   normalizeAnswer,
+  russianRuns,
   splitBilingual,
   similarity,
   splitStress,
@@ -120,4 +121,24 @@ test("options written as English · Arabic split into their two halves", () => {
   assert.equal(splitBilingual("ماما · mum"), null, "Arabic first is not the English · Arabic form");
   assert.equal(splitBilingual("no separator here"), null);
   assert.ok(hasArabic("أمّ") && !hasArabic("١٢٣") && !hasArabic("mum"));
+});
+
+test("a Russian sentence inside Arabic stays one run; an Arabic comma splits a list; joining returns the input", () => {
+  const a = (s: string) => s.split("*").join(ACUTE);
+  const arabic = a("أن تشير إلى الأشياء: Вот метро*! Теа*тр там.");
+  assert.deepEqual(
+    russianRuns(arabic).filter((r) => r.russian).map((r) => r.text),
+    [a("Вот метро*! Теа*тр там.")],
+  );
+  const list = a("الضمائر: я، ты، он، она*.");
+  assert.deepEqual(
+    russianRuns(list).filter((r) => r.russian).map((r) => r.text),
+    ["я", "ты", "он", a("она*.")],
+  );
+  const english = a("Read ма*ма, метро* — with stress (по-ру*сски)");
+  assert.deepEqual(
+    russianRuns(english).filter((r) => r.russian).map((r) => r.text),
+    [a("ма*ма, метро*"), a("по-ру*сски")],
+  );
+  for (const s of [arabic, list, english, "no Russian here", ""]) assert.equal(russianRuns(s).map((r) => r.text).join(""), s);
 });

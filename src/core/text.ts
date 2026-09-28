@@ -200,3 +200,28 @@ export function splitStress(s: string): StressSegment[] {
   flush();
   return out;
 }
+
+const RU_LETTERS = `А-Яа-яЁё${GRAVE}${ACUTE}`;
+const RU_WORD = `[${RU_LETTERS}]+(?:-[${RU_LETTERS}]+)*`;
+/**
+ * A Russian phrase inside explanation text. Words joined by spaces or Latin punctuation stay one run,
+ * so a quoted sentence keeps its word order on an Arabic page; an Arabic comma (،) ends a run, so a
+ * list of words reads right to left there. Sentence punctuation at the end belongs to the run.
+ */
+const RU_RUN = new RegExp(String.raw`${RU_WORD}(?:[\s,.!?;:…—–-]+${RU_WORD})*[.!?…]*`, "g");
+
+export type TextRun = { text: string; russian: boolean };
+
+/** Splits explanation text into Russian runs and the text between them; joining them returns the input. */
+export function russianRuns(text: string): TextRun[] {
+  const out: TextRun[] = [];
+  let last = 0;
+  for (const m of text.matchAll(RU_RUN)) {
+    const at = m.index ?? 0;
+    if (at > last) out.push({ text: text.slice(last, at), russian: false });
+    out.push({ text: m[0], russian: true });
+    last = at + m[0].length;
+  }
+  if (last < text.length) out.push({ text: text.slice(last), russian: false });
+  return out;
+}

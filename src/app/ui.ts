@@ -4,7 +4,7 @@
 import type { Bi } from "../content/types.ts";
 import type { ExplainLang } from "../core/progress.ts";
 import { canSpell } from "../core/spelling.ts";
-import { splitStress } from "../core/text.ts";
+import { russianRuns, splitStress } from "../core/text.ts";
 import type { Ctx, ToastKind } from "./context.ts";
 import { explainOf, tr } from "./context.ts";
 import { h, s } from "./dom.ts";
@@ -77,19 +77,10 @@ export function ru(text: string, cls = ""): HTMLSpanElement {
   return span;
 }
 
-const CYRILLIC_RUN = /[А-Яа-яЁё̀́]+(?:-[А-Яа-яЁё̀́]+)*/g;
-
-/** Text that may contain Russian words: each Cyrillic run gets painted stress and lang="ru". */
+/** Text that may contain Russian: each Russian run gets painted stress, lang="ru" and tap-to-hear. */
 export function mixed(text: string): DocumentFragment {
   const f = document.createDocumentFragment();
-  let last = 0;
-  for (const m of text.matchAll(CYRILLIC_RUN)) {
-    const at = m.index ?? 0;
-    if (at > last) f.appendChild(document.createTextNode(text.slice(last, at)));
-    f.appendChild(ru(m[0]));
-    last = at + m[0].length;
-  }
-  if (last < text.length) f.appendChild(document.createTextNode(text.slice(last)));
+  for (const run of russianRuns(text)) f.appendChild(run.russian ? ru(run.text) : document.createTextNode(run.text));
   return f;
 }
 
