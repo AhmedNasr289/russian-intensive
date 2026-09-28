@@ -51,7 +51,7 @@ const DAY_43: Day = {
       ex: { ru: "Ве́чером я разгова́риваю с ма́мой по телефо́ну.", en: "In the evening I talk to my mum on the phone.", ar: "في المساء أتحدّث مع أمّي بالهاتف." },
     },
     {
-      id: "d43-06", ru: "дружи́ть", say: "druzhIt'", en: "to be friends (с + instrumental)", ar: "يصادق، تجمعه صداقة بـ (с + حالة الأداة)", pos: "verb",
+      id: "d43-06", ru: "дружи́ть", say: "druzhYt'", en: "to be friends (с + instrumental)", ar: "يصادق، تجمعه صداقة بـ (с + حالة الأداة)", pos: "verb",
       forms: "дружу́, дру́жишь",
       ex: { ru: "Я дружу́ с Макси́мом.", en: "I'm friends with Maxim.", ar: "أنا صديق مكسيم." },
     },
@@ -417,7 +417,7 @@ const DAY_44: Day = {
       note: { en: "It never changes its ending: с хо́бби, о хо́бби.", ar: "لا تتغيّر نهايتها أبدًا: с хо́бби، о хо́бби." },
     },
     {
-      id: "d44-05", ru: "жи́вопись", say: "zhIvapis'", en: "painting (the art)", ar: "فنّ الرسم (التصوير)", pos: "noun", g: "f",
+      id: "d44-05", ru: "жи́вопись", say: "zhYvapis'", en: "painting (the art)", ar: "فنّ الرسم (التصوير)", pos: "noun", g: "f",
       ex: { ru: "Я люблю́ ру́сскую жи́вопись.", en: "I love Russian painting.", ar: "أحبّ فنّ الرسم الروسي." },
     },
     {
@@ -610,7 +610,7 @@ const DAY_44: Day = {
       { ru: "Он занима́ется спо́ртом.", say: "on zanimAyitsa spOrtam.", focus: { en: "-тся is also 'tsa'; -ом is a short 'am'.", ar: "-тся تُنطق «تسا» أيضًا، و -ом تُنطق «ام» قصيرة." } },
       { ru: "интересова́ться", say: "intirisavAtsa", focus: { en: "A long word with one stress, on -ва-.", ar: "كلمة طويلة بنبر واحد على -ва-." } },
       { ru: "Я интересу́юсь му́зыкой.", say: "ya intirisUyus' mUzykay.", focus: { en: "-ова- became -у-, and the stress is on -су-.", ar: "تحوّل -ова- إلى -у-، والنبر على -су-." } },
-      { ru: "Она́ увлека́ется жи́вописью.", say: "anA uvlikAyitsa zhIvapis'yu.", focus: { en: "The unstressed е sounds like 'i': uvli-.", ar: "حرف е غير المنبور يُنطق «i»: uvli-." } },
+      { ru: "Она́ увлека́ется жи́вописью.", say: "anA uvlikAyitsa zhYvapis'yu.", focus: { en: "The unstressed е sounds like 'i': uvli-.", ar: "حرف е غير المنبور يُنطق «i»: uvli-." } },
     ],
   },
   exercises: [
@@ -1159,7 +1159,7 @@ const DAY_46: Day = {
     },
     {
       id: "d46-16", ru: "краси́вее", say: "krasIviye", en: "more beautiful", ar: "أجمل", pos: "adv",
-      ex: { ru: "Но́чью го́род ещё краси́вее.", en: "At night the city is even more beautiful.", ar: "في الليل تصبح المدينة أجمل." },
+      ex: { ru: "Но́чью го́род ещё краси́вее.", en: "At night the city is even more beautiful.", ar: "في الليل تزداد المدينة جمالًا." },
     },
     {
       id: "d46-17", ru: "гора́здо", say: "garAzda", en: "much, far (+ comparative)", ar: "بكثير (مع صيغة المقارنة)", pos: "adv",
@@ -1395,8 +1395,8 @@ const DAY_46: Day = {
       kind: "order",
       prompt: { en: "Build the sentence: In my opinion, tea is better than coffee.", ar: "كوّن الجملة: في رأيي، الشاي أفضل من القهوة." },
       tokens: ["чем", "ко́фе", "По-мо́ему", "лу́чше", "чай"],
-      answers: ["По-мо́ему, чай лу́чше, чем ко́фе."],
-      why: { en: "по-мо́ему opens the sentence, and чем links the two things you compare.", ar: "по-мо́ему تفتتح الجملة، و чем تربط بين الشيئين المقارَنين." },
+      answers: ["По-мо́ему, чай лу́чше, чем ко́фе.", "Чай, по-мо́ему, лу́чше, чем ко́фе."],
+      why: { en: "по-мо́ему usually opens the sentence, and чем links the two things you compare.", ar: "по-мо́ему تفتتح الجملة عادةً، و чем تربط بين الشيئين المقارَنين." },
     },
     {
       kind: "translate",
@@ -1558,7 +1558,7 @@ const DAY_47: Day = {
       ex: { ru: "Зимо́й в Москве́ ча́сто ми́нус де́сять.", en: "In winter it's often minus ten in Moscow.", ar: "في الشتاء تنخفض الحرارة في موسكو غالبًا إلى عشر درجات تحت الصفر." },
     },
     {
-      id: "d47-20", ru: "живо́т", say: "zhivOt", en: "stomach, belly", ar: "بطن، معدة", pos: "noun", g: "m",
+      id: "d47-20", ru: "живо́т", say: "zhyvOt", en: "stomach, belly", ar: "بطن، معدة", pos: "noun", g: "m",
       ex: { ru: "У ребёнка боли́т живо́т.", en: "The child has a stomach ache.", ar: "بطن الطفل يؤلمه." },
     },
     {

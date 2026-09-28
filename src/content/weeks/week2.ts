@@ -624,7 +624,7 @@ const DAY_9: Day = {
       { ru: "столы́", say: "stalY", focus: { en: "A stressed ы; the unstressed о sounds like 'a'.", ar: "ы منبورة، وо غير المنبورة تُنطق «a»." } },
       { ru: "ко́мнаты", say: "kOmnaty", focus: { en: "ы in an unstressed ending: short but still ы.", ar: "ы في نهاية غير منبورة: قصيرة لكنّها تبقى ы." } },
       { ru: "карандаши́", say: "karandashY", focus: { en: "Written и, heard ы after ш.", ar: "تُكتب и وتُسمع ы بعد ш." } },
-      { ru: "кни́ги и ру́чки", say: "knIgi i rUchki", focus: { en: "After г and ч: a clear 'i'.", ar: "بعد г وч: «i» واضحة." } },
+      { ru: "кни́ги и ру́чки", say: "knIgi i rUchki", focus: { en: "After г and к: a clear 'i'.", ar: "بعد г وк: «i» واضحة." } },
       { ru: "Э́то мои́ очки́.", say: "Eta maI achkI.", focus: { en: "мои́ has two separate vowels: ma-I.", ar: "في мои́ حرفان صوتيان منفصلان: ma-I." } },
     ],
   },
@@ -1360,7 +1360,7 @@ const DAY_11: Day = {
     drills: [
       { ru: "стол, ла́мпа", say: "stol, lAmpa", focus: { en: "A dark, heavy л.", ar: "لام مفخّمة غليظة." } },
       { ru: "люблю́", say: "lyublyU", focus: { en: "Two light, soft л's.", ar: "لامان مرقّقتان." } },
-      { ru: "ме́дленно", say: "myEdlinna", focus: { en: "Soft д and soft л, then a long нн.", ar: "д ليّنة وл ليّنة، ثم нн ممدودة." } },
+      { ru: "ме́дленно", say: "myEdlinna", focus: { en: "Soft м and soft л, then a long нн.", ar: "м ليّنة وл ليّنة، ثم нн ممدودة." } },
       {
         ru: "Я люблю́ говори́ть по-ру́сски.", say: "ya lyublyU gavarIt' pa-rUski.",
         focus: { en: "A soft л in люблю́ and a soft т at the end of говори́ть.", ar: "л ليّنة في люблю́، وт ليّنة في آخر говори́ть." },
@@ -1438,7 +1438,7 @@ const DAY_11: Day = {
     {
       kind: "translate",
       prompt: { en: "Do you speak English? (formal)", ar: "هل تتكلّم حضرتك الإنجليزية؟" },
-      answers: ["Вы говори́те по-англи́йски?"],
+      answers: ["Вы говори́те по-англи́йски?", "Вы по-англи́йски говори́те?"],
       why: { en: "говори́ть + по-англи́йски, with the polite вы.", ar: "говори́ть + по-англи́йски، مع вы للاحترام." },
     },
     {
@@ -1708,7 +1708,7 @@ const DAY_12: Day = {
       { who: "B", name: "А́нна", ru: "А у тебя́ есть сестра́?", en: "And do you have a sister?", ar: "وهل لديك أخت؟" },
       { who: "A", name: "Ахме́д", ru: "Да, есть. Она́ студе́нтка. А у тебя́?", en: "Yes, I do. She's a student. And you?", ar: "نعم، لديّ. هي طالبة. وأنتِ؟" },
       {
-        who: "B", name: "А́нна", ru: "У меня́ есть брат, Макси́м. Ты зна́ешь! А мой па́па — инжене́р, как ты.",
+        who: "B", name: "А́нна", ru: "У меня́ есть брат, Макси́м. Ты его́ зна́ешь! А мой па́па — инжене́р, как ты.",
         en: "I have a brother, Maxim. You know him! And my dad is an engineer, like you.", ar: "لديّ أخ، مكسيم. أنت تعرفه! وأبي مهندس، مثلك.",
       },
       { who: "A", name: "Ахме́д", ru: "Инжене́р? Отли́чно!", en: "An engineer? Great!", ar: "مهندس؟ رائع!" },
@@ -1718,12 +1718,12 @@ const DAY_12: Day = {
     title: { en: "Unstressed е and я: a short 'i'", ar: "е وя غير المنبورتين: «i» قصيرة" },
     en: [
       "When е or я is not stressed, it loses its full sound and becomes a short 'i': сестра́ sounds 'sistrA', семья́ — 'simyA', роди́тели — 'radItili'.",
-      "At the start of a word an unstressed я sounds 'yi': язы́к is 'yizYk'. Under the stress both keep their full sound: оте́ц — 'atyEts', мать — 'mat''.",
+      "At the start of a word an unstressed я sounds 'yi': язы́к is 'yizYk'. Under the stress both keep their full sound: оте́ц — 'atyEts', меня́ — 'minyA'.",
       "After ж, ш and ц an unstressed е sounds closer to ы: жена́ is 'zhynA'.",
     ],
     ar: [
       "حين لا تكون е أو я منبورة تفقد صوتها الكامل وتصبح «i» قصيرة: сестра́ تُنطق «sistrA»، وсемья́ «simyA»، وроди́тели «radItili».",
-      "وفي أول الكلمة تُنطق я غير المنبورة «yi»: язы́к تُنطق «yizYk». أمّا تحت النبر فتحتفظ كلتاهما بصوتها الكامل: оте́ц — «atyEts»، мать — «mat'».",
+      "وفي أول الكلمة تُنطق я غير المنبورة «yi»: язы́к تُنطق «yizYk». أمّا تحت النبر فتحتفظ كلتاهما بصوتها الكامل: оте́ц — «atyEts»، меня́ — «minyA».",
       "وبعد ж وш وц تقترب е غير المنبورة من ы: жена́ تُنطق «zhynA».",
     ],
     drills: [
@@ -2032,7 +2032,7 @@ const DAY_13: Day = {
   speaking: {
     scenario: {
       en: "Retell who is who in Anna's family photos (or in the video you watched), then describe your own grandparents, uncles, aunts and cousins.",
-      ar: "أعد سرد مَن هو كلّ شخص في صور عائلة آنا (أو في الفيديو الذي شاهدته)، ثم صِف أجدادك وأعمامك وأخوالك وأبناءهم.",
+      ar: "أعد سرد مَن هو كلّ شخص في صور عائلة آنا (أو في الفيديو الذي شاهدته)، ثم صِف أجدادك وأعمامك وأخوالك وعمّاتك وخالاتك وأبناءهم.",
     },
     tutorBrief:
       "Play Olga Petrovna (Ольга Петровна), the teacher, and use вы. First ask the learner to retell who is who in Anna's family photos (дедушка Виктор — инженер, бабушка Нина — учитель, дядя Сергей — врач, тётя Лена — учитель, Дима — двоюродный брат, Максим — внук, Анна — внучка), using Кто это? Как его / её зовут? Кто он / она? Then ask about their own grandparents, uncles, aunts and cousins with У вас есть…? Accept short answers, and correct gender slips such as мой бабушка (моя бабушка) or моя дедушка (мой дедушка). Finish with one follow-up question about the relative they mention most.",
@@ -2383,7 +2383,7 @@ const DAY_14: Day = {
           {
             kind: "translate",
             prompt: { en: "I don't understand. Please repeat.", ar: "لا أفهم. أعد من فضلك." },
-            answers: ["Я не понима́ю. Повтори́те, пожа́луйста.", "Не понима́ю. Повтори́те, пожа́луйста.", "Я не понима́ю. Пожа́луйста, повтори́те."],
+            answers: ["Я не понима́ю. Повтори́те, пожа́луйста.", "Не понима́ю. Повтори́те, пожа́луйста.", "Я не понима́ю. Пожа́луйста, повтори́те.", "Я не понима́ю. Повтори́, пожа́луйста."],
             why: { en: "Two phrases worth knowing by heart.", ar: "عبارتان تستحقّان الحفظ عن ظهر قلب." },
           },
           {

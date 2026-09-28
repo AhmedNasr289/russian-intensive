@@ -371,12 +371,12 @@ const DAY_2: Day = {
       id: "d2-g1",
       title: { en: "Eight new consonants: Б Г Д З Й Л П Ф", ar: "ثمانية حروف ساكنة جديدة: Б Г Д З Й Л П Ф" },
       en: [
-        "Most of today's new consonants have an Arabic twin: Б = ب, Д = د, З = ز, Л = ل, Ф = ف. Г is always a hard g, like the Egyptian ج in جمل.",
+        "Most of today's new consonants have an Arabic twin: Б = ب, Д = د, З = ز, Л = ل, Ф = ف. Г is a hard g, like the Egyptian ج in جمل.",
         "Й is a short 'y' that never makes a syllable on its own: ой (oy) — like the ي in بَيْت.",
         "П is p, a sound Arabic doesn't have. Keep your voice off and let out a small puff of air: па́па. If you voice it, п becomes б and the word changes: пока́ (bye) → бока́ (sides).",
       ],
       ar: [
-        "لمعظم الحروف الساكنة الجديدة اليوم توأم في العربية: Б = ب، Д = د، З = ز، Л = ل، Ф = ف. أمّا Г فهو دائمًا g، مثل الجيم المصرية في «جمل».",
+        "لمعظم الحروف الساكنة الجديدة اليوم توأم في العربية: Б = ب، Д = د، З = ز، Л = ل، Ф = ف. أمّا Г فهو g، مثل الجيم المصرية في «جمل».",
         "Й ياء قصيرة لا تكوّن مقطعًا وحدها: ой (oy) — مثل الياء في «بَيْت».",
         "П هو صوت p غير الموجود في العربية. أوقف صوتك وأطلق دفعة هواء صغيرة: па́па. وإذا نطقته مجهورًا صار б وتغيّرت الكلمة: пока́ (إلى اللقاء) ← бока́ (جوانب).",
       ],
@@ -509,7 +509,7 @@ const DAY_2: Day = {
       prompt: { en: "Which letter sounds like the Egyptian ج in جمل?", ar: "أيّ حرف يُنطق مثل الجيم المصرية في «جمل»؟" },
       options: ["Г", "Д", "З", "Й"],
       answer: 0,
-      why: { en: "Г is always a hard g, as in 'go': где.", ar: "Г جيم قاهرية دائمًا (g): где." },
+      why: { en: "Г is a hard g, as in 'go': где.", ar: "Г جيم قاهرية (g): где." },
     },
     {
       kind: "choice",
@@ -587,7 +587,7 @@ const DAY_2: Day = {
     {
       kind: "translate",
       prompt: { en: "Bye, Dad!", ar: "إلى اللقاء يا أبي!" },
-      answers: ["Пока́, па́па!"],
+      answers: ["Пока́, па́па!", "Па́па, пока́!"],
       why: { en: "Пока́ is the friendly goodbye.", ar: "Пока́ وداع ودّي غير رسمي." },
     },
   ],
@@ -614,7 +614,7 @@ const DAY_2: Day = {
   },
   culture: {
     en: "The ёлка (fir tree) is the symbol of New Year in Russia, the biggest holiday of the year. Families decorate it for the night of 31 December, when Дед Моро́з (Grandfather Frost) brings the presents. Orthodox Christmas comes later, on 7 January.",
-    ar: "شجرة ёлка رمز رأس السنة في روسيا، وهو أكبر عيد في العام. تزيّنها العائلات لليلة ٣١ ديسمبر، حين يحمل الهدايا Дед Моро́з (الجدّ الصقيع). أمّا عيد الميلاد الأرثوذكسي فيأتي لاحقًا، في ٧ يناير.",
+    ar: "شجرة ёлка رمز رأس السنة في روسيا، وهو أكبر عيد في العام. تزيّنها العائلات لليلة ٣١ ديسمبر، حين يُحضر Дед Моро́з (جدّ الصقيع) الهدايا. أمّا عيد الميلاد الأرثوذكسي فيأتي لاحقًا، في ٧ يناير.",
   },
 };
 
@@ -629,8 +629,8 @@ const DAY_3: Day = {
       ar: "أن تقرأ آخر ثمانية حروف: Ж Ш Щ Ч Ц Ы والعلامتين Ь و Ъ.",
     },
     {
-      en: "Hear stress and reduction: молоко́ sounds like malakO, and хлеб like khlyep.",
-      ar: "أن تسمع النبر وإضعاف الحروف الصوتية: молоко́ تُنطق malakO، و хлеб تُنطق khlyep.",
+      en: "Hear stress, vowel reduction and final devoicing: молоко́ sounds like malakO, and хлеб like khlyep.",
+      ar: "أن تسمع النبر وإضعاف الحروف الصوتية وهمس الحرف الأخير: молоко́ تُنطق malakO، و хлеб تُنطق khlyep.",
     },
     {
       en: "Be polite in a shop: здра́вствуйте, пожа́луйста, спаси́бо, извини́те, до свида́ния.",
@@ -668,7 +668,7 @@ const DAY_3: Day = {
     { id: "d3-09", ru: "хлеб", say: "khlyep", en: "bread", ar: "خبز", pos: "noun", g: "m", ex: { ru: "Хлеб, пожа́луйста.", en: "Some bread, please.", ar: "خبزًا، من فضلك." } },
     { id: "d3-10", ru: "сыр", say: "syr", en: "cheese", ar: "جبن", pos: "noun", g: "m", ex: { ru: "Э́то сыр?", en: "Is this cheese?", ar: "هل هذا جبن؟" } },
     {
-      id: "d3-11", ru: "маши́на", say: "mashIna", en: "car", ar: "سيارة", pos: "noun", g: "f", forms: "мн. ч. маши́ны",
+      id: "d3-11", ru: "маши́на", say: "mashYna", en: "car", ar: "سيارة", pos: "noun", g: "f", forms: "мн. ч. маши́ны",
       ex: { ru: "Там маши́на.", en: "There's a car over there.", ar: "هناك سيارة." },
     },
     { id: "d3-12", ru: "здесь", say: "zdyes'", en: "here", ar: "هنا", pos: "adv", ex: { ru: "Метро́ здесь.", en: "The metro is here.", ar: "المترو هنا." } },
@@ -692,7 +692,7 @@ const DAY_3: Day = {
       id: "d3-g1",
       title: { en: "The last letters: Ж Ш Щ Ч Ц Ы, Ь and Ъ", ar: "الحروف الأخيرة: Ж Ш Щ Ч Ц Ы و Ь و Ъ" },
       en: [
-        "Today you complete the alphabet. Four new letters are hushing sounds: Ж (zh), Ш (sh), Щ (a long, soft shch) and Ч (ch). Ц is ts, and Ы is a vowel with no English or Arabic match.",
+        "Today you complete the alphabet. Four new letters are hushing sounds: Ж (zh), Ш (sh), Щ (a long, soft sh) and Ч (ch). Ц is ts, and Ы is a vowel with no English or Arabic match.",
         "For Ы, say и and then pull your tongue back without rounding your lips: сыр. For Ж, think of the ج of Beirut or Damascus, not the Egyptian ج.",
         "Ь and Ъ have no sound. The soft sign Ь softens the consonant before it: день (dyen'), ночь. The hard sign Ъ is rare: it adds a tiny break before я, е, ё, ю, as in подъе́зд (a building's entrance).",
       ],
@@ -788,7 +788,7 @@ const DAY_3: Day = {
     title: { ru: "Хлеб, пожа́луйста", en: "Some bread, please", ar: "خبزًا، من فضلك" },
     setting: {
       en: "Ahmed goes into a small shop near his student residence to buy breakfast. Natasha works at the counter.",
-      ar: "يدخل أحمد متجرًا صغيرًا قرب سكن الطلاب ليشتري فطوره. ناتاشا تعمل عند الطاولة.",
+      ar: "يدخل أحمد متجرًا صغيرًا قرب سكن الطلاب ليشتري فطوره. ناتاشا تعمل عند طاولة البيع.",
     },
     lines: [
       { who: "A", name: "Ахме́д", ru: "Здра́вствуйте!", en: "Hello!", ar: "مرحبًا!" },
@@ -1021,8 +1021,8 @@ const DAY_4: Day = {
     {
       id: "d4-18", ru: "Я из Еги́пта.", say: "ya iz yigIpta.", en: "I'm from Egypt.", ar: "أنا من مصر.", pos: "phrase",
       note: {
-        en: "из + the country's name in the genitive case: из Росси́и, из Москвы́. Learn them as set phrases for now.",
-        ar: "из + اسم البلد في حالة الإضافة: из Росси́и، из Москвы́. احفظها الآن كعبارات جاهزة.",
+        en: "из + the name of a country or city in the genitive case: из Росси́и, из Москвы́. Learn them as set phrases for now.",
+        ar: "из + اسم البلد أو المدينة في حالة الإضافة: из Росси́и، из Москвы́. احفظها الآن كعبارات جاهزة.",
       },
     },
   ],
@@ -1031,12 +1031,12 @@ const DAY_4: Day = {
       id: "d4-g1",
       title: { en: "Saying your name: Меня́ зову́т…", ar: "كيف تقول اسمك: Меня́ зову́т…" },
       en: [
-        "Russians don't say 'my name is'. They say Меня́ зову́т… — literally 'they call me…'.",
+        "Russians don't usually say 'my name is'. They say Меня́ зову́т… — literally 'they call me…'.",
         "To ask someone's name, change меня́ (me) to тебя́ (you, informal) or вас (you, formal): Как тебя́ зову́т? / Как вас зову́т?",
         "A short answer with just the name is perfectly natural: — Как тебя́ зову́т? — А́нна.",
       ],
       ar: [
-        "لا يقول الروس «اسمي…»، بل يقولون Меня́ зову́т… ومعناها الحرفي «يدعونني…».",
+        "لا يقول الروس عادةً «اسمي…»، بل يقولون Меня́ зову́т… ومعناها الحرفي «يدعونني…».",
         "للسؤال عن اسم شخص آخر، ضع тебя́ (أنت، غير رسمي) أو вас (حضرتك، رسمي) مكان меня́: Как тебя́ зову́т? / Как вас зову́т?",
         "الإجابة القصيرة بالاسم وحده طبيعية تمامًا: — Как тебя́ зову́т? — А́нна.",
       ],
@@ -1199,7 +1199,7 @@ const DAY_4: Day = {
     {
       kind: "translate",
       prompt: { en: "Where are you from? (formal)", ar: "من أين حضرتك؟" },
-      answers: ["Отку́да вы?"],
+      answers: ["Отку́да вы?", "Вы отку́да?"],
       why: { en: "Formal 'you' is вы.", ar: "صيغة الاحترام هي вы." },
     },
     {
@@ -1234,8 +1234,8 @@ const DAY_4: Day = {
     ar: "اكتب من ٣ إلى ٥ جمل: اسمك، ومن أين أنت، وجملة عن صديق أو أحد أفراد عائلتك (Э́то… Он / Она́ из…).",
   },
   culture: {
-    en: "In formal situations Russians use the first name plus the patronymic — the father's name with -ович (men) or -овна (women): О́льга Петро́вна, Ива́н Серге́евич. Friends use short forms: А́нна → А́ня, Алекса́ндр → Са́ша.",
-    ar: "في المواقف الرسمية يستخدم الروس الاسم الأول مع اسم الأب مضافًا إليه -ович للرجال أو -овна للنساء: О́льга Петро́вна، Ива́н Серге́евич. أمّا الأصدقاء فيستخدمون أسماء مختصرة: А́нна ← А́ня، Алекса́ндр ← Са́ша.",
+    en: "In formal situations Russians use the first name plus the patronymic — the father's name with -ович / -евич (men) or -овна / -евна (women): О́льга Петро́вна, Ива́н Серге́евич. Friends use short forms: А́нна → А́ня, Алекса́ндр → Са́ша.",
+    ar: "في المواقف الرسمية يستخدم الروس الاسم الأول مع اسم الأب مضافًا إليه -ович / -евич للرجال أو -овна / -евна للنساء: О́льга Петро́вна، Ива́н Серге́евич. أمّا الأصدقاء فيستخدمون أسماء مختصرة: А́нна ← А́ня، Алекса́ндр ← Са́ша.",
   },
 };
 
@@ -1728,7 +1728,7 @@ const DAY_6: Day = {
     {
       kind: "translate",
       prompt: { en: "Look! A cartoon!", ar: "انظر! فيلم رسوم متحركة!" },
-      answers: ["Смотри́! Мультфи́льм!", "Смотри́, мультфи́льм!"],
+      answers: ["Смотри́! Мультфи́льм!", "Смотри́, мультфи́льм!", "Смотри́! Э́то мультфи́льм!"],
       why: { en: "Смотри́ is 'look' to a friend.", ar: "Смотри́ تعني «انظر» لصديق." },
     },
   ],

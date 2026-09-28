@@ -229,13 +229,13 @@ const DAY_50: Day = {
     lines: [
       { who: "B", name: "О́льга Петро́вна", ru: "Ахме́д, сего́дня мы повторя́ем все шесть падеже́й.", en: "Ahmed, today we're revising all six cases.", ar: "يا أحمد، اليوم نراجع الحالات الست كلها." },
       { who: "A", name: "Ахме́д", ru: "Отли́чно! Но я ча́сто де́лаю оши́бки в оконча́ниях.", en: "Great! But I often make mistakes in the endings.", ar: "ممتاز! لكنني كثيرًا ما أخطئ في النهايات." },
-      { who: "B", name: "О́льга Петро́вна", ru: "Ничего́, э́то норма́льно. Ну, что ты де́лал вчера́? Отвеча́й по-ру́сски!", en: "Never mind, that's normal. So, what did you do yesterday? Answer in Russian!", ar: "لا بأس، هذا طبيعي. حسنًا، ماذا فعلت أمس؟ أجب بالروسية!" },
+      { who: "B", name: "О́льга Петро́вна", ru: "Ничего́, э́то норма́льно. Ну, что вы де́лали вчера́? Отвеча́йте по-ру́сски!", en: "Never mind, that's normal. So, what did you do yesterday? Answer in Russian!", ar: "لا بأس، هذا طبيعي. حسنًا، ماذا فعلت أمس؟ أجب بالروسية!" },
       { who: "A", name: "Ахме́д", ru: "Вчера́ я звони́л А́нну, и мы гуля́ли в парк.", en: "Yesterday I called Anna, and we walked in the park. (He makes two case mistakes.)", ar: "أمس اتصلتُ بآنا وتمشّينا في الحديقة. (وقع في خطأين في الحالات.)" },
-      { who: "B", name: "О́льга Петро́вна", ru: "Тут две оши́бки. Испра́вь их, пожа́луйста.", en: "There are two mistakes here. Correct them, please.", ar: "هنا خطآن. صحّحهما من فضلك." },
+      { who: "B", name: "О́льга Петро́вна", ru: "Тут две оши́бки. Испра́вьте их, пожа́луйста.", en: "There are two mistakes here. Correct them, please.", ar: "هنا خطآن. صحّحهما من فضلك." },
       { who: "A", name: "Ахме́д", ru: "Извини́те, а что зна́чит «испра́вить»?", en: "Sorry, what does «испра́вить» mean?", ar: "عذرًا، وماذا تعني «испра́вить»؟" },
       { who: "B", name: "О́льга Петро́вна", ru: "Э́то зна́чит сде́лать пра́вильно. Звони́ть — кому́? Гуля́ть — где?", en: "It means to make it right. Call — whom? Walk — where?", ar: "تعني أن تجعله صحيحًا. يتصل — بمن؟ يتمشّى — أين؟" },
       { who: "A", name: "Ахме́д", ru: "Поня́тно! Вчера́ я звони́л А́нне, и мы гуля́ли в па́рке.", en: "I see! Yesterday I called Anna, and we walked in the park.", ar: "فهمت! أمس اتصلتُ بآنا وتمشّينا في الحديقة." },
-      { who: "B", name: "О́льга Петро́вна", ru: "Пра́вильно! Молоде́ц. Запо́мни пра́вило: звони́ть кому́, а ви́деть кого́.", en: "Correct! Well done. Remember the rule: звони́ть takes 'to whom', but ви́деть takes 'whom'.", ar: "صحيح! أحسنت. احفظ القاعدة: звони́ть кому́ (لمن)، أمّا ви́деть فـ кого́ (مَن)." },
+      { who: "B", name: "О́льга Петро́вна", ru: "Пра́вильно! Молоде́ц. Запо́мните пра́вило: звони́ть кому́, а ви́деть кого́.", en: "Correct! Well done. Remember the rule: звони́ть takes 'to whom', but ви́деть takes 'whom'.", ar: "صحيح! أحسنت. احفظ القاعدة: звони́ть кому́ (لمن)، أمّا ви́деть فـ кого́ (مَن)." },
       { who: "A", name: "Ахме́д", ru: "Запо́мнил! Я бу́ду повторя́ть пра́вила ка́ждый день.", en: "Got it! I'll revise the rules every day.", ar: "حفظتها! سأراجع القواعد كل يوم." },
       { who: "B", name: "О́льга Петро́вна", ru: "Хорошо́. А за́втра — но́вое упражне́ние и но́вое объясне́ние.", en: "Good. And tomorrow — a new exercise and a new explanation.", ar: "حسنًا. وغدًا تمرين جديد وشرح جديد." },
     ],
@@ -256,7 +256,7 @@ const DAY_50: Day = {
       { ru: "в окне́", say: "v aknyE", focus: { en: "A stressed ending: the last syllable of окне́ is loud and clear.", ar: "نهاية منبورة: المقطع الأخير من окне́ يُنطق بوضوح وقوة." } },
       { ru: "о письме́", say: "a pis'myE", focus: { en: "The stress moves to the ending: письмо́ → о письме́.", ar: "ينتقل النبر إلى النهاية: письмо́ ← о письме́." } },
       { ru: "с сестро́й", say: "ssistrOy", focus: { en: "The two с sounds merge into one long 's'.", ar: "يندمج صوتا с في صوت «s» واحد طويل." } },
-      { ru: "с бра́том", say: "s brAtam", focus: { en: "Unstressed -ом sounds like '-am'.", ar: "تُنطق -ом غير المنبورة مثل «-am»." } },
+      { ru: "с бра́том", say: "zbrAtam", focus: { en: "Unstressed -ом sounds like '-am'.", ar: "تُنطق -ом غير المنبورة مثل «-am»." } },
     ],
   },
   exercises: [
@@ -582,7 +582,7 @@ const DAY_51: Day = {
       { who: "B", name: "А́нна", ru: "А кро́ме того́, у него́ есть ру́сские друзья́!", en: "And besides, he has Russian friends!", ar: "وفضلًا عن ذلك، لديه أصدقاء روس!" },
       { who: "A", name: "Ахме́д", ru: "Коне́чно! Вы мои́ друзья́, поэ́тому я хочу́ говори́ть с ва́ми по-ру́сски.", en: "Of course! You're my friends, so I want to speak Russian with you.", ar: "طبعًا! أنتم أصدقائي، ولذلك أريد أن أتحدّث معكم بالروسية." },
       { who: "A", name: "Макси́м", ru: "Хоро́шая причи́на! Я ду́маю, что ты вообще́ хорошо́ говори́шь.", en: "A good reason! I think you speak well on the whole.", ar: "سبب وجيه! أعتقد أنك تتكلّم جيدًا عمومًا." },
-      { who: "A", name: "Ахме́д", ru: "Спаси́бо, но я не уве́рен. Паде́жи — э́то тру́дно, хотя́ я занима́юсь ка́ждый день. Зато́ интере́сно!", en: "Thanks, but I'm not sure. Cases are hard, although I study every day. But they're interesting!", ar: "شكرًا، لكنني لست متأكدًا. الحالات صعبة، مع أنني أدرس كل يوم. لكنها في المقابل ممتعة!" },
+      { who: "A", name: "Ахме́д", ru: "Спаси́бо, но я не уве́рен. Падежи́ — э́то тру́дно, хотя́ я занима́юсь ка́ждый день. Зато́ интере́сно!", en: "Thanks, but I'm not sure. Cases are hard, although I study every day. But they're interesting!", ar: "شكرًا، لكنني لست متأكدًا. الحالات صعبة، مع أنني أدرس كل يوم. لكنها في المقابل ممتعة!" },
       { who: "B", name: "А́нна", ru: "Ничего́! Е́сли ты бу́дешь занима́ться ка́ждый день, ты ско́ро бу́дешь говори́ть о́чень хорошо́.", en: "Never mind! If you study every day, you'll soon speak very well.", ar: "لا بأس! إذا واظبت على الدراسة كل يوم فستتكلّم قريبًا جيدًا جدًّا." },
       { who: "A", name: "Ахме́д", ru: "Я наде́юсь. Я смотрю́ ру́сские фи́льмы, что́бы лу́чше понима́ть лю́дей.", en: "I hope so. I watch Russian films to understand people better.", ar: "أرجو ذلك. أشاهد الأفلام الروسية لكي أفهم الناس أفضل." },
       { who: "A", name: "Макси́м", ru: "А что ты бу́дешь де́лать, когда́ у тебя́ бу́дет о́тпуск?", en: "And what will you do when you have a holiday?", ar: "وماذا ستفعل عندما تحصل على إجازة؟" },
@@ -991,7 +991,7 @@ const DAY_52: Day = {
       kind: "fill",
       prompt: { en: "To a friend: Call me in the evening!", ar: "لصديق: اتصل بي في المساء!" },
       ru: "___ мне ве́чером!",
-      answers: ["Позвони́"],
+      answers: ["Позвони́", "Звони́"],
       why: { en: "позвони́ть → позвони́ (ты); to вы it would be позвони́те.", ar: "позвони́ть ← позвони́ (لـ ты)؛ ومع вы تصبح позвони́те." },
     },
     {
@@ -1146,7 +1146,7 @@ const DAY_53: Day = {
       note: { en: "To one friend: Помоги́! — from помо́чь, the perfective partner of помога́ть.", ar: "لصديق واحد: Помоги́! — من помо́чь، وهو الفعل التام المقابل لـ помога́ть." },
     },
     {
-      id: "d53-12", ru: "ближа́йший", say: "blizhAyshiy", en: "the nearest", ar: "الأقرب", pos: "adj", forms: "ближа́йшая, ближа́йшее, ближа́йшие",
+      id: "d53-12", ru: "ближа́йший", say: "blizhAyshyy", en: "the nearest", ar: "الأقرب", pos: "adj", forms: "ближа́йшая, ближа́йшее, ближа́йшие",
       ex: { ru: "Где ближа́йшая ста́нция метро́?", en: "Where is the nearest metro station?", ar: "أين أقرب محطة مترو؟" },
     },
     {
@@ -1359,7 +1359,7 @@ const DAY_53: Day = {
       kind: "order",
       prompt: { en: "Build the question: What time does boarding start?", ar: "كوّن السؤال: في أيّ ساعة يبدأ الصعود؟" },
       tokens: ["начина́ется", "Во", "поса́дка", "ско́лько"],
-      answers: ["Во ско́лько начина́ется поса́дка?"],
+      answers: ["Во ско́лько начина́ется поса́дка?", "Во ско́лько поса́дка начина́ется?"],
       why: { en: "The question phrase во ско́лько comes first.", ar: "عبارة السؤال во ско́лько تأتي أولًا." },
     },
     {
@@ -1484,7 +1484,7 @@ const DAY_54: Day = {
       ex: { ru: "Я не по́нял. Повтори́те, пожа́луйста.", en: "I didn't understand. Please repeat.", ar: "لم أفهم. أعد من فضلك." },
     },
     {
-      id: "d54-09", ru: "реши́ть", say: "rishIt'", en: "to decide; to solve (perfective)", ar: "يقرّر؛ يحلّ (فعل تام)", pos: "verb",
+      id: "d54-09", ru: "реши́ть", say: "rishYt'", en: "to decide; to solve (perfective)", ar: "يقرّر؛ يحلّ (فعل تام)", pos: "verb",
       forms: "решу́, реши́шь; impf. реша́ть",
       ex: { ru: "Мы реши́ли пригото́вить у́жин до́ма.", en: "We decided to cook dinner at home.", ar: "قرّرنا أن نطبخ العشاء في البيت." },
     },
@@ -1673,14 +1673,14 @@ const DAY_54: Day = {
       kind: "fill",
       prompt: { en: "Complete: First I thought, and then I decided to buy a new phone.", ar: "أكمل: في البداية فكّرت، ثم قرّرت أن أشتري هاتفًا جديدًا." },
       ru: "Снача́ла я ду́мал, а пото́м ___ купи́ть но́вый телефо́н.",
-      answers: ["реши́л", "реши́ла"],
+      answers: ["реши́л"],
       why: { en: "The decision is one completed event: реши́л (perfective).", ar: "القرار حدث واحد مكتمل: реши́л (فعل تام)." },
     },
     {
       kind: "fill",
       prompt: { en: "Report it: «I live in Cairo.» → He said he lived in Cairo.", ar: "انقل الكلام: «أعيش في القاهرة» ← قال إنه يعيش في القاهرة." },
       ru: "Он ___, что живёт в Каи́ре.",
-      answers: ["сказа́л"],
+      answers: ["сказа́л", "говори́л"],
       why: { en: "сказа́л, что… and the verb stays in the present: живёт.", ar: "сказа́л, что… ويبقى الفعل في المضارع: живёт." },
     },
     {
@@ -1813,7 +1813,7 @@ const DAY_55: Day = {
       ex: { ru: "Актёры игра́ют о́чень хорошо́.", en: "The actors are very good. (literally: play very well)", ar: "الممثّلون يؤدّون أدوارهم جيدًا جدًّا." },
     },
     {
-      id: "d55-06", ru: "режиссёр", say: "rizhissyOr", en: "film director", ar: "مخرج (سينمائي)", pos: "noun", g: "m",
+      id: "d55-06", ru: "режиссёр", say: "rizhyssyOr", en: "film director", ar: "مخرج (سينمائي)", pos: "noun", g: "m",
       ex: { ru: "Режиссёр фи́льма — Эльда́р Ряза́нов.", en: "The film's director is Eldar Ryazanov.", ar: "مخرج الفيلم هو إلدار ريازانوف." },
     },
     {
@@ -1908,7 +1908,7 @@ const DAY_55: Day = {
       kind: "order",
       prompt: { en: "Build the sentence: The actors are very good.", ar: "كوّن الجملة: الممثّلون يؤدّون أدوارهم جيدًا جدًّا." },
       tokens: ["игра́ют", "Актёры", "хорошо́", "о́чень"],
-      answers: ["Актёры игра́ют о́чень хорошо́."],
+      answers: ["Актёры игра́ют о́чень хорошо́.", "Актёры о́чень хорошо́ игра́ют."],
       why: { en: "Actors 'play' their roles: игра́ть.", ar: "الممثّلون «يلعبون» أدوارهم: игра́ть." },
     },
     {
@@ -2301,7 +2301,7 @@ const DAY_56: Day = {
             kind: "order",
             prompt: { en: "Build the sentence: I'm at home because it's raining.", ar: "كوّن الجملة: أنا في البيت لأن المطر يهطل." },
             tokens: ["потому́", "что", "до́ма", "Я", "идёт", "дождь"],
-            answers: ["Я до́ма, потому́ что идёт дождь."],
+            answers: ["Я до́ма, потому́ что идёт дождь.", "Я до́ма, потому́ что дождь идёт."],
             why: { en: "The reason comes after потому́ что.", ar: "يأتي السبب بعد потому́ что." },
           },
           {

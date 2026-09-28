@@ -33,7 +33,7 @@ export const ALPHABET: readonly Letter[] = [
   {
     upper: "Ж", lower: "ж", name: "жэ", group: "new", ipa: "ʐ",
     sound: { en: "zh, like the s in pleasure but harder.", ar: "مثل الجيم الفرنسية (j في jour): جيم معطّشة بلا دال." },
-    example: { ru: "жена́", say: "zhinA", en: "wife", ar: "زوجة" },
+    example: { ru: "жена́", say: "zhynA", en: "wife", ar: "زوجة" },
   },
   { upper: "З", lower: "з", name: "зэ", group: "new", ipa: "z", sound: { en: "z as in zoo.", ar: "مثل حرف الزاي." }, example: { ru: "зонт", say: "zont", en: "umbrella", ar: "مظلّة" } },
   { upper: "И", lower: "и", name: "и", group: "new", ipa: "i", sound: { en: "ee as in meet.", ar: "مثل الياء الممدودة في «فيل»." }, example: { ru: "и", say: "i", en: "and", ar: "و" } },

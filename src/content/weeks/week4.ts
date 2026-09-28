@@ -478,7 +478,7 @@ const DAY_23: Day = {
       id: "d23-12", ru: "обе́д", say: "abyEt", en: "lunch (the main midday meal)", ar: "غداء", pos: "noun", g: "m",
       ex: { ru: "Сейча́с обе́д, я хочу́ есть!", en: "It's lunchtime and I'm hungry!", ar: "إنه وقت الغداء، وأنا جائع!" },
     },
-    { id: "d23-13", ru: "у́жин", say: "Uzhin", en: "dinner, supper", ar: "عشاء", pos: "noun", g: "m" },
+    { id: "d23-13", ru: "у́жин", say: "Uzhyn", en: "dinner, supper", ar: "عشاء", pos: "noun", g: "m" },
     {
       id: "d23-14", ru: "вку́сно", say: "fkUsna", en: "tasty, delicious (it's tasty)", ar: "لذيذ", pos: "adv",
       ex: { ru: "О́чень вку́сно!", en: "Very tasty!", ar: "لذيذ جدًّا!" },
@@ -623,11 +623,11 @@ const DAY_23: Day = {
     title: { en: "The hidden 'y': е at the start, ь before a vowel", ar: "صوت «ي» الخفيّ: حرف е في أول الكلمة و ь قبل حرف العلّة" },
     en: [
       "At the start of a word е is pronounced 'ye': ем [yem], ешь [yesh], ест [yest]. When it is unstressed it becomes a short 'yi': еди́м [yidIm].",
-      "A soft sign before a vowel works like a small 'y' between the consonant and the vowel: пью [p'yu], пьёт [p'yot]. Without it, пью would sound like 'pu'.",
+      "A soft sign before a vowel works like a small 'y' between the consonant and the vowel: пью [p'yu], пьёт [p'yot]. Without the ь you would not hear this separate 'y'.",
     ],
     ar: [
       "في أول الكلمة يُنطق حرف е «يِه»: ем [yem]، ешь [yesh]، ест [yest]. وإذا لم يكن منبورًا صار «يِ» قصيرة: еди́м [yidIm].",
-      "العلامة اللينة قبل حرف العلّة تعمل مثل «ي» صغيرة بين الساكن وحرف العلّة: пью [p'yu]، пьёт [p'yot]. ومن دونها كانت пью ستُنطق «pu».",
+      "العلامة اللينة قبل حرف العلّة تعمل مثل «ي» صغيرة بين الساكن وحرف العلّة: пью [p'yu]، пьёт [p'yot]. ومن دون ь لا يُسمع صوت «ي» هذا منفصلًا.",
     ],
     drills: [
       { ru: "Я ем.", say: "ya yem.", focus: { en: "е at the start of a word: 'yem'.", ar: "حرف е في أول الكلمة: «يِم»." } },
@@ -712,7 +712,7 @@ const DAY_23: Day = {
     {
       kind: "translate",
       prompt: { en: "I don't eat pork.", ar: "أنا لا آكل لحم الخنزير." },
-      answers: ["Я не ем свини́ну.", "Я не ем свини́ны."],
+      answers: ["Я не ем свини́ну.", "Я не ем свини́ны.", "Не ем свини́ну."],
       why: { en: "не comes before the verb; свини́на is feminine: свини́ну.", ar: "تأتي не قبل الفعل، و свини́на مؤنّثة: свини́ну." },
     },
     {
@@ -796,7 +796,7 @@ const DAY_24: Day = {
     {
       id: "d24-03", ru: "меню́", say: "minyU", en: "menu", ar: "قائمة الطعام", pos: "noun", g: "n",
       ex: { ru: "Вот меню́.", en: "Here is the menu.", ar: "ها هي قائمة الطعام." },
-      note: { en: "Neuter, and it never changes, like ко́фе.", ar: "كلمة محايدة لا تتغيّر أبدًا، مثل ко́фе." },
+      note: { en: "Neuter. Like ко́фе, it never changes.", ar: "كلمة محايدة، ومثل ко́фе لا تتغيّر أبدًا." },
     },
     {
       id: "d24-04", ru: "счёт", say: "shchot", en: "bill, check", ar: "الحساب (الفاتورة)", pos: "noun", g: "m",
@@ -1082,13 +1082,13 @@ const DAY_24: Day = {
     {
       kind: "translate",
       prompt: { en: "I'll have the soup and a salad.", ar: "سآخذ الحساء والسلطة." },
-      answers: ["Я бу́ду суп и сала́т."],
+      answers: ["Я бу́ду суп и сала́т.", "Бу́ду суп и сала́т.", "Я беру́ суп и сала́т."],
       why: { en: "Я бу́ду… is the normal way to order.", ar: "Я бу́ду… هي الطريقة العادية للطلب." },
     },
     {
       kind: "translate",
       prompt: { en: "Can I have the menu?", ar: "هل يمكن أن أحصل على قائمة الطعام؟" },
-      answers: ["Мо́жно меню́?", "Мо́жно меню́, пожа́луйста?", "Да́йте, пожа́луйста, меню́."],
+      answers: ["Мо́жно меню́?", "Мо́жно меню́, пожа́луйста?", "Да́йте, пожа́луйста, меню́.", "Да́йте меню́, пожа́луйста."],
       why: { en: "Мо́жно + the thing: Мо́жно меню́?", ar: "Мо́жно + الشيء المطلوب: Мо́жно меню́?" },
     },
     {
@@ -1164,7 +1164,7 @@ const DAY_25: Day = {
       },
     },
     {
-      id: "d25-02", ru: "спра́шивать", say: "sprAshivat'", en: "to ask (a question)", ar: "يسأل", pos: "verb",
+      id: "d25-02", ru: "спра́шивать", say: "sprAshyvat'", en: "to ask (a question)", ar: "يسأل", pos: "verb",
       forms: "спра́шиваю, спра́шиваешь",
       ex: { ru: "Учи́тель спра́шивает студе́нта.", en: "The teacher asks the student.", ar: "المعلّم يسأل الطالب." },
     },
@@ -1485,7 +1485,7 @@ const DAY_25: Day = {
     {
       kind: "translate",
       prompt: { en: "I'm waiting for my brother.", ar: "أنتظر أخي." },
-      answers: ["Я жду бра́та.", "Я жду моего́ бра́та."],
+      answers: ["Я жду бра́та.", "Я жду моего́ бра́та.", "Жду бра́та."],
       why: { en: "No preposition after ждать; брат → бра́та.", ar: "لا حرف جر بعد ждать، و брат تصبح бра́та." },
     },
     {
@@ -1578,7 +1578,7 @@ const DAY_26: Day = {
       ex: { ru: "У меня́ ма́ленькая кварти́ра.", en: "I have a small flat.", ar: "عندي شقّة صغيرة." },
     },
     {
-      id: "d26-05", ru: "хоро́ший", say: "kharOshiy", en: "good", ar: "جيّد", pos: "adj",
+      id: "d26-05", ru: "хоро́ший", say: "kharOshyy", en: "good", ar: "جيّد", pos: "adj",
       forms: "хоро́шая, хоро́шее, хоро́шие",
       ex: { ru: "Она́ хоро́ший врач.", en: "She's a good doctor.", ar: "هي طبيبة جيّدة." },
     },
@@ -1960,14 +1960,14 @@ const DAY_27: Day = {
     },
     {
       id: "d27-05", ru: "сда́ча", say: "zdAcha", en: "change (money you get back)", ar: "الباقي (من النقود)", pos: "noun", g: "f",
-      ex: { ru: "Ва́ша сда́ча — три́дцать рубле́й.", en: "Your change is thirty rubles.", ar: "الباقي لك ثلاثون روبلًا." },
+      ex: { ru: "Ва́ша сда́ча — три́дцать рубле́й.", en: "Your change is thirty roubles.", ar: "الباقي لك ثلاثون روبلًا." },
     },
     {
       id: "d27-06", ru: "о́чередь", say: "Ochirit'", en: "queue, line", ar: "طابور", pos: "noun", g: "f",
       ex: { ru: "Тут больша́я о́чередь.", en: "There's a long queue here.", ar: "هنا طابور طويل." },
     },
     {
-      id: "d27-07", ru: "све́жий", say: "svyEzhiy", en: "fresh", ar: "طازج", pos: "adj",
+      id: "d27-07", ru: "све́жий", say: "svyEzhyy", en: "fresh", ar: "طازج", pos: "adj",
       forms: "све́жая, све́жее, све́жие",
       ex: { ru: "Тут всё о́чень све́жее.", en: "Everything here is very fresh.", ar: "كل شيء هنا طازج جدًّا." },
     },
@@ -2012,7 +2012,7 @@ const DAY_27: Day = {
       { who: "A", name: "Ахме́д", ru: "Здра́вствуйте! Ско́лько сто́ят я́блоки?", en: "Hello! How much are the apples?", ar: "مرحبًا! بكم التفاح؟" },
       {
         who: "B", name: "Ни́на", ru: "Сто рубле́й. Они́ о́чень све́жие! А вы отку́да?",
-        en: "A hundred rubles. They're very fresh! And where are you from?", ar: "مئة روبل. إنه طازج جدًّا! ومن أين أنت؟",
+        en: "A hundred roubles. They're very fresh! And where are you from?", ar: "مئة روبل. إنه طازج جدًّا! ومن أين أنت؟",
       },
       {
         who: "A", name: "Ахме́д", ru: "Я из Еги́пта. Я беру́ я́блоки и карто́шку.",
@@ -2020,7 +2020,7 @@ const DAY_27: Day = {
       },
       {
         who: "B", name: "Ни́на", ru: "Из Еги́пта? Вы наш гость! Сто пятьдеся́т рубле́й, но для вас ски́дка: сто два́дцать.",
-        en: "From Egypt? You're our guest! A hundred and fifty rubles, but there's a discount for you: a hundred and twenty.",
+        en: "From Egypt? You're our guest! A hundred and fifty roubles, but there's a discount for you: a hundred and twenty.",
         ar: "من مصر؟ أنت ضيفنا! مئة وخمسون روبلًا، لكنّ لك خصمًا: مئة وعشرون.",
       },
       { who: "A", name: "Ахме́д", ru: "Спаси́бо! А где ка́сса?", en: "Thank you! And where's the cash desk?", ar: "شكرًا! وأين صندوق الدفع؟" },
@@ -2028,7 +2028,7 @@ const DAY_27: Day = {
       { who: "A", name: "Ахме́д", ru: "Хорошо́. Вот сто пятьдеся́т.", en: "OK. Here's a hundred and fifty.", ar: "حسنًا. تفضّلي، هذه مئة وخمسون." },
       {
         who: "B", name: "Ни́на", ru: "Ва́ша сда́ча — три́дцать рубле́й. Прия́тного аппети́та!",
-        en: "Your change is thirty rubles. Enjoy your food!", ar: "الباقي لك ثلاثون روبلًا. بالهناء والشفاء!",
+        en: "Your change is thirty roubles. Enjoy your food!", ar: "الباقي لك ثلاثون روبلًا. بالهناء والشفاء!",
       },
       { who: "A", name: "Ахме́д", ru: "Спаси́бо! До свида́ния!", en: "Thank you! Goodbye!", ar: "شكرًا! مع السلامة!" },
       { who: "B", name: "А́нна", ru: "Ахме́д, ты о́чень хоро́ший покупа́тель!", en: "Ahmed, you're a very good customer!", ar: "يا أحمد، أنت زبون ممتاز!" },
@@ -2045,7 +2045,7 @@ const DAY_27: Day = {
     },
     {
       kind: "fill",
-      prompt: { en: "Complete: Your change is thirty rubles.", ar: "أكمل: الباقي لك ثلاثون روبلًا." },
+      prompt: { en: "Complete: Your change is thirty roubles.", ar: "أكمل: الباقي لك ثلاثون روبلًا." },
       ru: "Ва́ша ___ — три́дцать рубле́й.",
       answers: ["сда́ча"],
       why: { en: "сда́ча = the change you get back.", ar: "сда́ча تعني الباقي من النقود." },
@@ -2094,7 +2094,7 @@ const DAY_27: Day = {
       { ru: "Ско́лько сто́ят я́блоки?", en: "How much are the apples?", ar: "بكم التفاح؟" },
       { ru: "Я беру́ фру́кты и о́вощи.", en: "I'll take fruit and vegetables.", ar: "سآخذ الفواكه والخضروات." },
       { ru: "А ски́дка есть?", en: "Is there a discount?", ar: "وهل يوجد خصم؟" },
-      { ru: "Спаси́бо! Вот сто рубле́й.", en: "Thank you! Here's a hundred rubles.", ar: "شكرًا! تفضّل، هذه مئة روبل." },
+      { ru: "Спаси́бо! Вот сто рубле́й.", en: "Thank you! Here's a hundred roubles.", ar: "شكرًا! تفضّل، هذه مئة روبل." },
     ],
   },
   journal: {
@@ -2131,7 +2131,7 @@ const DAY_27: Day = {
       {
         kind: "choice",
         prompt: { en: "How much are the apples?", ar: "بكم التفاح؟" },
-        options: ["50 rubles · ٥٠ روبلًا", "120 rubles · ١٢٠ روبلًا", "100 rubles · ١٠٠ روبل"],
+        options: ["50 roubles · ٥٠ روبلًا", "120 roubles · ١٢٠ روبلًا", "100 roubles · ١٠٠ روبل"],
         answer: 2,
         why: { en: "Nina says: Сто рубле́й.", ar: "تقول نينا: Сто рубле́й." },
       },
@@ -2154,7 +2154,7 @@ const DAY_27: Day = {
       {
         kind: "choice",
         prompt: { en: "How much change does Ahmed get?", ar: "كم الباقي الذي يأخذه أحمد؟" },
-        options: ["20 rubles · ٢٠ روبلًا", "50 rubles · ٥٠ روبلًا", "30 rubles · ٣٠ روبلًا"],
+        options: ["20 roubles · ٢٠ روبلًا", "50 roubles · ٥٠ روبلًا", "30 roubles · ٣٠ روبلًا"],
         answer: 2,
         why: { en: "He pays 150 for 120: Ва́ша сда́ча — три́дцать рубле́й.", ar: "يدفع ١٥٠ عن ١٢٠: Ва́ша сда́ча — три́дцать рубле́й." },
       },
@@ -2506,7 +2506,7 @@ const DAY_28: Day = {
           {
             kind: "translate",
             prompt: { en: "Nice to meet you.", ar: "تشرّفنا." },
-            answers: ["О́чень прия́тно."],
+            answers: ["О́чень прия́тно.", "Прия́тно познако́миться."],
             why: { en: "О́чень прия́тно — literally 'very pleasant'.", ar: "О́чень прия́тно — حرفيًا «لطيف جدًّا»." },
           },
           {
@@ -2518,7 +2518,7 @@ const DAY_28: Day = {
           {
             kind: "translate",
             prompt: { en: "I work in an office.", ar: "أعمل في مكتب." },
-            answers: ["Я рабо́таю в о́фисе."],
+            answers: ["Я рабо́таю в о́фисе.", "Рабо́таю в о́фисе."],
             why: { en: "в + prepositional: в о́фисе.", ar: "в + حالة حرف الجر: в о́фисе." },
           },
           {
@@ -2530,7 +2530,7 @@ const DAY_28: Day = {
           {
             kind: "translate",
             prompt: { en: "I love you.", ar: "أحبّك." },
-            answers: ["Я тебя́ люблю́.", "Я люблю́ тебя́.", "Я вас люблю́.", "Я люблю́ вас."],
+            answers: ["Я тебя́ люблю́.", "Я люблю́ тебя́.", "Я вас люблю́.", "Я люблю́ вас.", "Люблю́ тебя́."],
             why: { en: "The pronoun usually comes before the verb: Я тебя́ люблю́.", ar: "يأتي الضمير عادةً قبل الفعل: Я тебя́ люблю́." },
           },
         ],
