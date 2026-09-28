@@ -36,6 +36,16 @@ export type StressIssue = { token: string; problem: StressProblem };
 /** Prepositions that are written unstressed before the word they lean on (обо мне́). */
 const UNSTRESSED_CLITICS = new Set(["обо", "ото", "изо", "подо", "передо", "предо"]);
 
+/** The particle не takes the stress before the past of быть: не́ был, не́ было, не́ были. */
+function isStressedParticle(plain: string, next: string | undefined): boolean {
+  return plain.toLowerCase() === "не" && next !== undefined && /^был[оиа]?$/i.test(stripStress(next));
+}
+
+/** After a stressed не́ the form of быть is unstressed: не́ было, не́ были. */
+function followsStressedNe(previous: string | undefined, plain: string): boolean {
+  return previous !== undefined && previous.toLowerCase() === "не" + ACUTE && /^был[оиа]?$/i.test(plain);
+}
+
 function isExempt(plain: string, next: string | undefined): boolean {
   const lower = plain.toLowerCase();
   if (UNSTRESSED_CLITICS.has(lower)) return true;
@@ -64,8 +74,10 @@ export function checkStress(s: string): StressIssue[] {
     if (misplaced) issues.push({ token, problem: "misplaced" });
     else if (marks > 1) issues.push({ token, problem: "multiple" });
     else if (hasYo && marks > 0) issues.push({ token, problem: "with-yo" });
-    else if (marks === 1 && vowels < 2) issues.push({ token, problem: "monosyllable" });
-    else if (marks === 0 && vowels >= 2 && !hasYo && !fragment && !isExempt(plain, tokens[i + 1])) {
+    else if (marks === 1 && vowels < 2 && !fragment && !isStressedParticle(plain, tokens[i + 1])) {
+      issues.push({ token, problem: "monosyllable" });
+    }
+    else if (marks === 0 && vowels >= 2 && !hasYo && !fragment && !isExempt(plain, tokens[i + 1]) && !followsStressedNe(tokens[i - 1], plain)) {
       issues.push({ token, problem: "missing" });
     }
   });

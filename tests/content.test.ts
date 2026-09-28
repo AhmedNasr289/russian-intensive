@@ -107,6 +107,22 @@ test("an Arabic field must contain Arabic", () => {
   assert.ok(has(errorsOf([d]), "has no Arabic letters"));
 });
 
+test("Arabic-Indic digits alone do not count as Arabic", () => {
+  const d = base();
+  const goal = d.goals[0];
+  assert.ok(goal);
+  goal.ar = "١٢٣";
+  assert.ok(has(errorsOf([d]), "has no Arabic letters"));
+});
+
+test("a half-written day is reported, not a crash", () => {
+  const d = base() as unknown as Record<string, unknown>;
+  delete d["exercises"];
+  delete d["journal"];
+  const errors = errorsOf([d as unknown as Day]);
+  assert.ok(has(errors, "incomplete day: missing exercises, journal"));
+});
+
 test("topics must come from the controlled list", () => {
   const d = base();
   d.topics.push("astronomy");

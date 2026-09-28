@@ -22,7 +22,9 @@ export type ValidationResult = { days: number; errors: string[]; warnings: strin
 export const COURSE_DAYS = 56;
 export const MIN_UNIQUE_WORDS = 700;
 const POS = new Set(["noun", "verb", "adj", "adv", "pron", "num", "prep", "conj", "part", "interj", "phrase"]);
-const ARABIC = /[؀-ۿ]/;
+// Arabic LETTERS (not digits or punctuation): a field of Arabic-Indic digits alone is not a translation.
+const isArabicLetter = (cp: number): boolean => (cp >= 0x0621 && cp <= 0x063a) || (cp >= 0x0641 && cp <= 0x064a);
+const hasArabic = (s: string): boolean => [...s].some((ch) => isArabicLetter(ch.codePointAt(0) ?? 0));
 const GAP = "___";
 
 export { kindOf, weekOf };
@@ -60,7 +62,7 @@ class Collector {
     if (!v) return this.err(where, "missing");
     if (this.text(`${where}.en`, v.en)) this.stress(`${where}.en`, v.en);
     if (this.text(`${where}.ar`, v.ar)) {
-      if (!ARABIC.test(v.ar)) this.err(`${where}.ar`, "has no Arabic letters");
+      if (!hasArabic(v.ar)) this.err(`${where}.ar`, "has no Arabic letters");
       this.stress(`${where}.ar`, v.ar);
     }
   }
@@ -151,6 +153,14 @@ function checkWord(c: Collector, where: string, w: Word, n: number): void {
 
 function checkDay(c: Collector, d: Day, seen: Map<string, number>, opts: ValidateOptions): void {
   const at = `d${d.n}`;
+  // A file that is mid-edit can hold a half-built day; report it instead of crashing the whole run.
+  const loose = d as unknown as Record<string, unknown>;
+  const missing = ["goals", "words", "grammar", "exercises", "topics", "search"].filter((k) => !Array.isArray(loose[k]));
+  const sp = loose["speaking"] as Record<string, unknown> | undefined;
+  if (typeof sp !== "object" || sp === null || !Array.isArray(sp["prompts"])) missing.push("speaking");
+  if (typeof loose["journal"] !== "object" || loose["journal"] === null) missing.push("journal");
+  if (typeof loose["title"] !== "object" || loose["title"] === null) missing.push("title");
+  if (missing.length) return c.err(at, `incomplete day: missing ${missing.join(", ")}`);
   if (!Number.isInteger(d.n) || d.n < 1 || d.n > COURSE_DAYS) return c.err(at, `day number ${d.n} out of range`);
   if (d.week !== weekOf(d.n)) c.err(at, `week must be ${weekOf(d.n)}`);
   if (d.kind !== kindOf(d.n)) c.err(at, `kind must be ${kindOf(d.n)}`);
@@ -185,7 +195,7 @@ function checkDay(c: Collector, d: Day, seen: Map<string, number>, opts: Validat
     });
     g.ar.forEach((p, k) => {
       if (c.text(`${where}.ar[${k}]`, p)) {
-        if (!ARABIC.test(p)) c.err(`${where}.ar[${k}]`, "has no Arabic letters");
+        if (!hasArabic(p)) c.err(`${where}.ar[${k}]`, "has no Arabic letters");
         c.stress(`${where}.ar[${k}]`, p);
       }
     });

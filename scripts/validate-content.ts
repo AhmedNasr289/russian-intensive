@@ -11,7 +11,7 @@ import { join, resolve } from "node:path";
 import type { Day } from "../src/content/types.ts";
 import { MEDIA } from "../src/content/media.ts";
 import { SYLLABUS } from "../src/content/syllabus.ts";
-import { validateDays, weekOf } from "../src/core/validate.ts";
+import { validateDays, weekOf, wordKey } from "../src/core/validate.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const args = process.argv.slice(2);
@@ -56,6 +56,30 @@ if (week !== null) {
   const warnings = [...r.warnings];
   if (mine.error) errors.push(mine.error);
   for (const d of mine.days) if (weekOf(d.n) !== week) errors.push(`d${d.n}: does not belong to week ${week}`);
+  // Duplicates against LATER weeks: validateDays blames the later day, but in a per-week run the
+  // author of this week is the one adding words now. An extra word that a later week already
+  // teaches is this week's error; a syllabus word that a later week also teaches is the later
+  // week's problem, reported here as a warning.
+  const plannedByDay = new Map(SYLLABUS.map((s) => [s.n, new Set(s.words.map(wordKey))]));
+  const firstLater = new Map<string, number>();
+  for (const o of others) {
+    for (const d of o.days) {
+      for (const w of d.words) {
+        const key = wordKey(w.ru);
+        const prev = firstLater.get(key);
+        if (prev === undefined || d.n < prev) firstLater.set(key, d.n);
+      }
+    }
+  }
+  for (const d of mine.days) {
+    d.words.forEach((w, i) => {
+      const key = wordKey(w.ru);
+      const other = firstLater.get(key);
+      if (other === undefined || other < d.n) return;
+      if (plannedByDay.get(d.n)?.has(key)) warnings.push(`d${d.n} words[${i}] ${w.ru}: also taught later on day ${other}; that day must drop it`);
+      else errors.push(`d${d.n} words[${i}] ${w.ru}: already taught on day ${other} (another week); choose a different word`);
+    });
+  }
   if (mine.days.length !== 7) errors.push(`week ${week}: has ${mine.days.length} days; needs 7`);
   for (const o of others) if (o.error) warnings.push(`${o.error} (another author's file; duplicates against it were not checked)`);
   report(errors, warnings);

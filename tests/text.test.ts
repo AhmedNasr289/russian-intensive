@@ -65,6 +65,13 @@ test("checkStress exempts word fragments and unstressed clitics", () => {
   assert.deepEqual(checkStress("СССР и ООН"), []);
 });
 
+test("a stressed ending may carry its mark, and не takes the stress before был", () => {
+  assert.deepEqual(checkStress("го́род → города́: the stressed ending -а́, also -ы́"), []);
+  assert.deepEqual(checkStress("Я не́ был до́ма. Её не́ было. Мы не́ были там."), []);
+  assert.equal(checkStress("Я не́ знаю.")[0]?.problem, "monosyllable");
+  assert.equal(checkStress("-а́ы́")[0]?.problem, "multiple");
+});
+
 test("normalizeAnswer ignores case, stress, ё and edge punctuation", () => {
   assert.equal(normalizeAnswer("  Ещё́ РАЗ! "), "еще раз");
   assert.equal(normalizeAnswer("«По-ру́сски», пожа́луйста…"), "по-русски пожалуйста");
