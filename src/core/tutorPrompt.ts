@@ -125,3 +125,29 @@ export function parseJournalCorrection(x: unknown): JournalCorrection | null {
   const score = Math.max(0, Math.min(10, Math.round(o["score"])));
   return { corrected: o["corrected"], score, errors, praise: o["praise"], next: o["next"] };
 }
+
+// ── Translate for the pronunciation box ──────────────────────────────────────
+
+export const TRANSLATE_LIMIT = 300;
+
+/** Ask for simple, stress-marked Russian for a short English or Arabic text. */
+export function buildTranslatePrompt(text: string): string {
+  return [
+    "You help a beginner learner of Russian whose own languages are English and Arabic.",
+    "Translate the text below into natural, simple, everyday Russian, as a native speaker would say it.",
+    "Mark the stress: put U+0301 (combining acute accent) right after the stressed vowel of every word that has two or more vowels. One-vowel words and words with ё get no mark.",
+    'Reply with JSON only, no prose: {"ru": "<the Russian>"}',
+    "",
+    "Text:",
+    text.slice(0, TRANSLATE_LIMIT),
+  ].join("\n");
+}
+
+/** The Russian from a translation reply, or null when the reply is not usable. */
+export function parseTranslation(x: unknown): string | null {
+  if (typeof x !== "object" || x === null) return null;
+  const ru = (x as Record<string, unknown>)["ru"];
+  if (typeof ru !== "string") return null;
+  const text = ru.trim();
+  return text && /[А-Яа-яЁё]/.test(text) && text.length <= TRANSLATE_LIMIT * 2 ? text : null;
+}

@@ -10,6 +10,7 @@ import type { Ctx } from "../context.ts";
 import { tr } from "../context.ts";
 import { h } from "../dom.ts";
 import { buildId, PAGES_URL, REPO_URL } from "../env.ts";
+import { soundCheck } from "../components/soundcheck.ts";
 import { biCtx, btn, confirmDialog, icon, saveFile, sectionTitle } from "../ui.ts";
 
 function setSetting<K extends keyof Settings>(ctx: Ctx, key: K, value: Settings[K], rerender = true): void {
@@ -20,7 +21,7 @@ function field(label: string, control: HTMLElement, hint?: Node): HTMLElement {
   return h("label", { class: "field" }, h("span", { class: "field-label" }, label), control, hint ? h("span", { class: "field-hint" }, hint) : null);
 }
 
-function toggle(ctx: Ctx, key: "showSay" | "sounds" | "autoplay", label: { en: string; ar: string }): HTMLElement {
+function toggle(ctx: Ctx, key: "showSay" | "sounds" | "autoplay" | "recordings", label: { en: string; ar: string }): HTMLElement {
   const on = ctx.store.progress.settings[key];
   return h(
     "button",
@@ -135,12 +136,11 @@ export function settingsView(ctx: Ctx): HTMLElement {
     ),
     h(
       "section",
-      { class: "card" },
-      h("h3", null, tr(ctx, { en: "Russian voice", ar: "الصوت الروسي" })),
-      voices.length
-        ? h("div", { class: "fields" }, field(tr(ctx, { en: "Voice", ar: "الصوت" }), voiceSelect), field(tr(ctx, { en: "Speed", ar: "السرعة" }), h("div", { class: "range-row" }, rate, rateOut)))
-        : h("p", { class: "verdict bad" }, icon("x", 18), biCtx(ctx, { en: "No Russian voice is installed in this browser. Add one (see Library → Set up your device), then reload.", ar: "لا يوجد صوت روسي مثبّت في هذا المتصفح. أضف صوتًا (المكتبة ← جهّز جهازك) ثم أعد التحميل." }, "span")),
-      btn([icon("speaker", 18), tr(ctx, { en: "Test the voice", ar: "جرّب الصوت" })], { class: "ghost", onClick: () => void ctx.speak("Приве́т! Меня́ зову́т Ка́тя. Дава́й говори́ть по-ру́сски!") }),
+      { class: "card", id: "sound" },
+      h("h3", null, tr(ctx, { en: "Sound and voice", ar: "الصوت والنطق" })),
+      soundCheck(ctx),
+      h("div", { class: "switches" }, toggle(ctx, "recordings", { en: "Native-speaker recordings for single words", ar: "تسجيلات متحدثين أصليين للكلمات المفردة" })),
+      voices.length ? h("div", { class: "fields" }, field(tr(ctx, { en: "Voice for sentences", ar: "صوت الجمل" }), voiceSelect), field(tr(ctx, { en: "Speed", ar: "السرعة" }), h("div", { class: "range-row" }, rate, rateOut))) : null,
     ),
     h(
       "section",

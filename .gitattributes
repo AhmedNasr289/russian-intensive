@@ -1,3 +1,4 @@
 # One line ending everywhere, so a build on any machine produces the same build id.
 * text=auto eol=lf
 *.png binary
+*.mp3 binary

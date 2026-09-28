@@ -6,6 +6,7 @@
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { RECORDING_PACKS } from "../src/content/recordings.ts";
 
 type Verdict = { step: string; pass: boolean; detail: string };
 type RunResult = { code: number; out: string; error: string };
@@ -113,6 +114,8 @@ function build(): Verdict {
   if (!/<title>[^<]{3,}<\/title>/.test(frag.slice(0, 8192))) return verdict("build", false, "artifact <title> not in first 8 KB");
   if (!/^<!doctype html>/i.test(index.trimStart())) return verdict("build", false, "index.html lacks doctype");
   if (!readFileSync(join(dist, "sw.js"), "utf8").includes(idIndex)) return verdict("build", false, "sw.js cache not keyed by build id");
+  const missingPacks = RECORDING_PACKS.filter((p) => !existsSync(join(dist, p)));
+  if (missingPacks.length) return verdict("build", false, `recording packs missing from dist: ${missingPacks.join(",")}`);
   try {
     const manifest: unknown = JSON.parse(readFileSync(join(dist, "manifest.webmanifest"), "utf8"));
     if (typeof manifest !== "object" || manifest === null || !("icons" in manifest)) throw new Error("no icons");

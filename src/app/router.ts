@@ -7,7 +7,7 @@ export const SECTIONS = ["words", "grammar", "dialogue", "practice", "speak", "w
 export type Section = (typeof SECTIONS)[number];
 
 const MODES: readonly TutorMode[] = ["chat", "roleplay", "explain", "check"];
-const PLAIN = ["today", "course", "review", "alphabet", "progress", "library", "settings"] as const;
+const PLAIN = ["today", "course", "review", "alphabet", "pronounce", "progress", "library", "settings"] as const;
 type PlainView = (typeof PLAIN)[number];
 
 export type Route =

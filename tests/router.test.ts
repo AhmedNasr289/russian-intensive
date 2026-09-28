@@ -7,6 +7,7 @@ test("plain view tokens parse, with or without the hash", () => {
   assert.deepEqual(parseRoute("#today"), { view: "today" });
   assert.deepEqual(parseRoute("#review"), { view: "review" });
   assert.deepEqual(parseRoute("settings"), { view: "settings" });
+  assert.deepEqual(parseRoute("#pronounce"), { view: "pronounce" });
 });
 
 test("day routes carry the number and an optional section", () => {
@@ -38,6 +39,7 @@ test("tokens round-trip and only use characters claude.ai forwards", () => {
   const routes = [
     { view: "today" },
     { view: "course" },
+    { view: "pronounce" },
     { view: "day", n: 5, section: null },
     { view: "day", n: 56, section: "test" },
     { view: "tutor", mode: "explain" },

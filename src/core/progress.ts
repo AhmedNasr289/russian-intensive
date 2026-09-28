@@ -21,6 +21,8 @@ export type Settings = {
   theme: Theme;
   /** Speak each flashcard as it appears. */
   autoplay: boolean;
+  /** Play native-speaker recordings for single words when the course has one. */
+  recordings: boolean;
 };
 
 export type Score = { best: number; last: number; total: number; at: number };
@@ -63,6 +65,7 @@ export function defaultSettings(): Settings {
     sounds: true,
     theme: "system",
     autoplay: true,
+    recordings: true,
   };
 }
 
@@ -252,7 +255,7 @@ function readSettings(x: unknown): Settings {
     if (!isNum(x["rate"]) || x["rate"] < 0.5 || x["rate"] > 1.5) fail("settings.rate is not valid");
     s.rate = x["rate"] as number;
   }
-  for (const k of ["showSay", "sounds", "autoplay"] as const) {
+  for (const k of ["showSay", "sounds", "autoplay", "recordings"] as const) {
     if (x[k] === undefined) continue;
     if (typeof x[k] !== "boolean") fail(`settings.${k} is not valid`);
     s[k] = x[k] as boolean;

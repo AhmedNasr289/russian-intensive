@@ -61,7 +61,13 @@ function setupChecklist(ctx: Ctx): HTMLElement {
     h(
       "ul",
       { class: "checklist" },
-      item(hasVoice, hasVoice ? { en: `Russian voice ready: ${ctx.voices.main?.name ?? ""}`, ar: `الصوت الروسي جاهز: ${ctx.voices.main?.name ?? ""}` } : { en: "Add a Russian voice so the app can speak", ar: "أضف صوتًا روسيًا ليتمكن التطبيق من النطق" }, hasVoice ? "settings" : "library"),
+      item(
+        hasVoice,
+        hasVoice
+          ? { en: `Sound is ready: recordings for words, ${ctx.voices.main?.name ?? ""} for sentences`, ar: `الصوت جاهز: تسجيلات للكلمات و${ctx.voices.main?.name ?? ""} للجمل` }
+          : { en: "Words play from recordings; get a Russian voice for sentences", ar: "الكلمات تُسمع من التسجيلات؛ احصل على صوت روسي للجمل" },
+        "settings",
+      ),
       item(false, { en: "Add a Russian keyboard (or use the one on screen)", ar: "أضف لوحة مفاتيح روسية (أو استخدم لوحة الشاشة)" }, "library"),
       ctx.host === "artifact" ? null : item(false, { en: "Put the 112 study sessions in your calendar", ar: "أضف جلسات الدراسة الـ ١١٢ إلى تقويمك" }, "settings"),
       item(false, { en: "Learn the 33 letters in the alphabet studio", ar: "تعلّم الحروف الـ ٣٣ في استوديو الأبجدية" }, "alphabet"),

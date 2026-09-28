@@ -3,10 +3,11 @@
 // the icons. One bundle and one stylesheet feed both pages, so they share one build id.
 
 import { createHash } from "node:crypto";
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import * as esbuild from "esbuild-wasm";
 import { emblemSvg } from "../src/app/emblem.ts";
+import { RECORDING_PACKS } from "../src/content/recordings.ts";
 import { iconFiles } from "./icons.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
@@ -82,11 +83,17 @@ function manifest(): string {
   );
 }
 
-/** Offline support: the app shell is cached per build; fonts are kept across builds. */
-function serviceWorker(id: string): string {
+/**
+ * Offline support: the app shell is cached per build; fonts are kept across builds; a recording
+ * pack is kept from the first time one of its words plays (its name holds its hash, so a kept
+ * pack is never stale) until a build stops using it.
+ */
+function serviceWorker(id: string, packs: readonly string[]): string {
   return `// Russian in 56 Days: offline cache for build ${id}.
 const CACHE = "ru56-${id}";
 const FONTS = "ru56fonts-v1";
+const AUDIO = "ru56audio-v1";
+const PACKS = ${JSON.stringify(packs)};
 const CORE = ["./", "index.html", "manifest.webmanifest", "icon.svg", "icon-192.png", "icon-512.png"];
 
 self.addEventListener("install", (event) => {
@@ -97,6 +104,8 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys()
       .then((keys) => Promise.all(keys.filter((k) => k.startsWith("ru56-") && k !== CACHE).map((k) => caches.delete(k))))
+      .then(() => caches.open(AUDIO))
+      .then((audio) => audio.keys().then((requests) => Promise.all(requests.filter((r) => !PACKS.some((p) => r.url.endsWith("/" + p))).map((r) => audio.delete(r)))))
       .then(() => self.clients.claim()),
   );
 });
@@ -113,6 +122,21 @@ self.addEventListener("fetch", (event) => {
           return response;
         })
         .catch(() => caches.match("index.html").then((hit) => hit || caches.match("./"))),
+    );
+    return;
+  }
+  if (url.origin === self.location.origin && PACKS.some((p) => url.pathname.endsWith("/" + p))) {
+    event.respondWith(
+      caches.open(AUDIO).then((audio) =>
+        audio.match(request).then(
+          (hit) =>
+            hit ||
+            fetch(request).then((response) => {
+              if (response.ok && response.status === 200) audio.put(request, response.clone());
+              return response;
+            }),
+        ),
+      ),
     );
     return;
   }
@@ -175,11 +199,23 @@ async function main(): Promise<void> {
   writeFileSync(join(DIST, "index.html"), index);
   writeFileSync(join(DIST, "artifact.html"), artifact);
   writeFileSync(join(DIST, "manifest.webmanifest"), manifest());
-  writeFileSync(join(DIST, "sw.js"), serviceWorker(id));
+  writeFileSync(join(DIST, "sw.js"), serviceWorker(id, RECORDING_PACKS));
   for (const [name, data] of Object.entries(iconFiles())) writeFileSync(join(DIST, name), data);
 
+  // The recording packs and their credits, exactly the ones the index names.
+  let audioBytes = 0;
+  if (RECORDING_PACKS.length) mkdirSync(join(DIST, "audio"), { recursive: true });
+  for (const pack of RECORDING_PACKS) {
+    const from = join(ROOT, "public", pack);
+    if (!existsSync(from)) throw new Error(`recording pack missing: public/${pack} (run node scripts/fetch-recordings.ts --offline)`);
+    copyFileSync(from, join(DIST, pack));
+    audioBytes += statSync(from).size;
+  }
+  const credits = join(ROOT, "public", "audio", "ATTRIBUTION.md");
+  if (RECORDING_PACKS.length && existsSync(credits)) copyFileSync(credits, join(DIST, "audio", "ATTRIBUTION.md"));
+
   const kb = (s: string) => Math.round(Buffer.byteLength(s) / 1024);
-  console.log(`BUILD id=${id} indexKB=${kb(index)} artifactKB=${kb(artifact)} jsKB=${kb(js)} cssKB=${kb(style)}`);
+  console.log(`BUILD id=${id} indexKB=${kb(index)} artifactKB=${kb(artifact)} jsKB=${kb(js)} cssKB=${kb(style)} packs=${RECORDING_PACKS.length} audioKB=${Math.round(audioBytes / 1024)}`);
 }
 
 main().catch((e: unknown) => {

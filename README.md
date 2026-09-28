@@ -14,6 +14,10 @@ It runs in any current browser, installs on your phone, and keeps working offlin
 - **56 daily lessons**: words with audio and painted stress, grammar explained in English and Arabic,
   dialogues read by two voices, drills with instant feedback, speaking practice, videos and a journal task.
 - **More than 800 words and phrases**, each with a pronunciation respelling and an example sentence.
+- **Sound everywhere**: tap any Russian word or sentence to hear it, slowly, **spelled letter by letter**
+  (each letter's name, as a teacher spells it) or word by word. Most words play from **real recordings
+  by native speakers** (Wikimedia Commons), which work in any browser; sentences use your browser's
+  voice, and the Pronounce screen reads anything you type or paste, like a translator's speaker button.
 - **Flashcards with spaced repetition** (SM-2): today's words join your deck and come back just before you
   would forget them.
 - **An alphabet studio**: the 33 letters, printed and handwritten, with sounds explained for Arabic speakers.
@@ -45,8 +49,10 @@ Two blocks a day. Change the times in Settings; download all 112 sessions as a c
 ## Start in five minutes
 
 1. Open the app link above. On a phone, use "Add to Home screen" to install it.
-2. **Add a Russian voice** so the app can speak. The best voices are Edge's "Svetlana / Dmitry Online
-   (Natural)", Chrome's "Google русский", Google Text-to-Speech on Android and "Milena" on iPhone.
+2. **Check the sound** in Settings → Sound and voice. Words already play from recordings; for sentences
+   the best voices are Chrome's "Google русский" (the voice of Google Translate), Edge's "Svetlana /
+   Dmitry Online (Natural)", Google Text-to-Speech on Android and "Milena" on iPhone. An app window such
+   as the Claude desktop app has no Russian voice, so open the course in Chrome or Edge.
    Library → Set up your device gives the steps for Windows, Android, iPhone and Mac.
 3. **Add a Russian keyboard** (Windows: "Russian – Mnemonic"; phones: add Russian), or use the on-screen
    keyboard that appears under every answer box.
@@ -95,13 +101,18 @@ node scripts/verify.ts all
 `src/content` holds the course, `src/core` the tested logic, `src/app` the interface, `scripts` the
 build and checks. Content rules are in `docs/content-style-guide.md`; the design is in
 `docs/superpowers/specs/`. Other checks: `node scripts/check-links.ts` (every link and video) and
-`node scripts/verify-stress.ts` (stress marks against Wiktionary).
+`node scripts/verify-stress.ts` (stress marks against Wiktionary). `node scripts/fetch-recordings.ts`
+finds a native-speaker recording for each word on Wiktionary, checks that it was recorded with the
+course's stress, and packs the MP3s into `public/audio/` (`--offline` rebuilds from its cache).
 
 ## Credits
 
 Fonts from Google Fonts under the SIL Open Font License: Golos Text, Oranienbaum, Marck Script and
 IBM Plex Sans Arabic. Videos, podcasts and sites in the library belong to their creators and are linked,
-not copied. Code and course text: MIT License.
+not copied. The pronunciation recordings come from Wikimedia Commons, most of them from the Shtooka
+Project, and each keeps its own Creative Commons licence: every word, author, licence and file page is
+listed in [public/audio/ATTRIBUTION.md](public/audio/ATTRIBUTION.md) and in the app (Library →
+Native-speaker recordings). Code and course text: MIT License.
 
 ---
 
@@ -121,6 +132,7 @@ not copied. Code and course text: MIT License.
 
 - **٥٦ درسًا يوميًا**: كلمات بالصوت مع تلوين موضع النبر، وقواعد مشروحة بالعربية والإنجليزية، وحوارات بصوتين، وتمارين بتصحيح فوري، وتدريب على النطق، ومقاطع فيديو، ومهمة كتابة يومية.
 - **أكثر من ٨٠٠ كلمة وعبارة**، لكل منها طريقة نطق مكتوبة بالحروف اللاتينية وجملة مثال.
+- **الصوت في كل مكان**: اضغط على أي كلمة أو جملة روسية لتسمعها، أو لتسمعها ببطء، أو **متهجّاة حرفًا حرفًا** (اسم كل حرف كما يتهجّاه المعلّم)، أو كلمة كلمة. معظم الكلمات تُسمع من **تسجيلات حقيقية بأصوات متحدثين أصليين** (من ويكيميديا كومنز) تعمل في أي متصفح، والجمل بصوت متصفحك، وشاشة «النطق» تقرأ أي نص تكتبه أو تلصقه مثل زر السماعة في المترجم.
 - **بطاقات مراجعة متباعدة**: تدخل كلمات اليوم إلى مجموعتك وتعود إليك قبل أن تنساها مباشرة.
 - **استوديو الأبجدية**: الحروف الثلاثة والثلاثون بالخط المطبوع والمكتوب باليد، مع شرح أصواتها لمتحدّثي العربية.
 - **أيام انغماس** مع فيديوهات روسية حقيقية، و**أيام مراجعة** في نهاية كل أسبوع مع اختبار.
@@ -139,7 +151,7 @@ not copied. Code and course text: MIT License.
 
 ١. افتح رابط التطبيق، وعلى الهاتف اختر «إضافة إلى الشاشة الرئيسية» لتثبيته.
 
-٢. **أضف صوتًا روسيًا** حتى يتمكّن التطبيق من النطق: أفضل الأصوات هي Svetlana وDmitry في متصفح Edge، وGoogle русский في Chrome، وخدمة Google لتحويل النص إلى كلام في أندرويد، وصوت Milena في آيفون. ستجد الخطوات في المكتبة ← جهّز جهازك.
+٢. **افحص الصوت** من الإعدادات ← الصوت والنطق. الكلمات تُسمع أصلًا من التسجيلات، أما الجمل فأفضل أصواتها Google русский في Chrome (صوت ترجمة Google نفسه)، وSvetlana وDmitry في متصفح Edge، وخدمة Google لتحويل النص إلى كلام في أندرويد، وصوت Milena في آيفون. نوافذ التطبيقات مثل تطبيق Claude لسطح المكتب لا تحتوي على صوت روسي، فافتح الدورة في Chrome أو Edge. ستجد الخطوات في المكتبة ← جهّز جهازك.
 
 ٣. **أضف لوحة مفاتيح روسية**، أو استخدم لوحة المفاتيح التي تظهر على الشاشة تحت كل خانة إجابة.
 

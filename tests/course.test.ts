@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import type { MediaItem } from "../src/content/types.ts";
 import { findWord, getDay, levelOf, mediaFor, wordsUpTo, youtubeId, youtubeSearchUrl } from "../src/core/course.ts";
-import { buildJournalPrompt, buildTutorRules, knownVocabulary, parseJournalCorrection } from "../src/core/tutorPrompt.ts";
+import { buildJournalPrompt, buildTranslatePrompt, buildTutorRules, knownVocabulary, parseJournalCorrection, parseTranslation, TRANSLATE_LIMIT } from "../src/core/tutorPrompt.ts";
 
 const media = (id: string, kind: MediaItem["kind"], topics: string[], level: MediaItem["level"]): MediaItem => ({
   id, kind, topics, level, title: id, by: "x", url: `https://example.org/${id}`, lang: "en", note: { en: "n", ar: "ن" }, verified: "2026-09-27",
@@ -74,4 +74,16 @@ test("journal corrections are validated and clamped", () => {
   assert.equal(parseJournalCorrection({ ...good, praise: "Good" }), null);
   assert.equal(parseJournalCorrection({ ...good, errors: [{ original: 1 }] }), null);
   assert.equal(parseJournalCorrection(null), null);
+});
+
+test("the translate prompt asks for stress-marked JSON and caps the text; only Russian replies are used", () => {
+  const prompt = buildTranslatePrompt("Where is the metro?" + "x".repeat(TRANSLATE_LIMIT));
+  assert.match(prompt, /U\+0301/);
+  assert.match(prompt, /JSON only/);
+  assert.ok(prompt.length < TRANSLATE_LIMIT + 800);
+  assert.equal(parseTranslation({ ru: " Где метро? " }), "Где метро?");
+  assert.equal(parseTranslation({ ru: "Where is the metro?" }), null);
+  assert.equal(parseTranslation({ text: "Где метро?" }), null);
+  assert.equal(parseTranslation("Где метро?"), null);
+  assert.equal(parseTranslation(null), null);
 });

@@ -3,7 +3,8 @@
 
 /** COMBINING ACUTE ACCENT, written after the stressed vowel: молоко́. */
 export const ACUTE = "́";
-const GRAVE = "̀";
+/** COMBINING GRAVE ACCENT, secondary stress in compounds (ра̀диоста́нция); never used by the course. */
+export const GRAVE = "̀";
 
 const VOWELS = "аеёиоуыэюяАЕЁИОУЫЭЮЯ";
 

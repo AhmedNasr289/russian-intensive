@@ -8,6 +8,7 @@ import type { CardState, Grade } from "../../core/srs.ts";
 import type { Ctx } from "../context.ts";
 import { tr } from "../context.ts";
 import { h, replace } from "../dom.ts";
+import { prefetchRecording } from "../player.ts";
 import { biCtx, btn, icon, playButtons, ru, sectionTitle } from "../ui.ts";
 
 const GRADE_LABEL: Record<Grade, { en: string; ar: string }> = {
@@ -67,6 +68,7 @@ export function reviewView(ctx: Ctx): HTMLElement {
       return next();
     }
     const card = current;
+    prefetchRecording(word.ru);
     const production = card.reps % 2 === 1 && card.phase === "review";
     const settings = ctx.store.progress.settings;
     const front = production

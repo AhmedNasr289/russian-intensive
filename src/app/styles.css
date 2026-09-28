@@ -3270,6 +3270,342 @@ details[open] > summary::before {
   overflow-wrap: anywhere;
 }
 
+/* ── Tap to hear, the listen bar, Pronounce and the sound check ───────────── */
+
+/* Every Russian text outside a control can be tapped to hear it. */
+.main .ru {
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.main :is(a, button, label, summary, [role="button"], [role="checkbox"]) .ru {
+  cursor: inherit;
+}
+
+@media (hover: hover) {
+  .main .ru:hover {
+    background: var(--cobalt-soft);
+    box-shadow: 0 0 0 2px var(--cobalt-soft);
+  }
+
+  .main :is(a, button, label, summary, [role="button"], [role="checkbox"]) .ru:hover {
+    background: transparent;
+    box-shadow: none;
+  }
+}
+
+.main .ru.tapped {
+  animation: tap-glow 0.7s ease-out;
+}
+
+@keyframes tap-glow {
+  from {
+    background: color-mix(in oklab, var(--cobalt) 32%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--cobalt) 32%, transparent);
+  }
+  to {
+    background: transparent;
+    box-shadow: 0 0 0 3px transparent;
+  }
+}
+
+.icon-btn.is-playing {
+  background: var(--cobalt);
+  color: var(--on-cobalt);
+}
+
+.icon-btn.is-playing .icon {
+  animation: breathe 1s ease-in-out infinite;
+}
+
+.icon-btn.spell {
+  color: var(--ink-2);
+}
+
+.icon-btn.spell:hover {
+  color: var(--cobalt);
+}
+
+.listen-bar {
+  position: fixed;
+  inset-inline: 10px;
+  bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 10px);
+  z-index: 44;
+  display: grid;
+  gap: 8px;
+  max-width: 760px;
+  margin-inline: auto;
+  padding: 12px 12px 12px 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: color-mix(in oklab, var(--surface) 95%, transparent);
+  backdrop-filter: saturate(1.4) blur(14px);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px);
+  box-shadow: var(--shadow);
+}
+
+.listen-bar.pulse {
+  animation: pop 0.2s ease-out both;
+}
+
+.lb-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.lb-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-height: 4.2em;
+  overflow-y: auto;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 1.25rem + 2vw, 2.3rem);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+/* Russian reads left to right, but on an Arabic page it stays on the reading side. */
+[dir="rtl"] .lb-text {
+  text-align: right;
+}
+
+.lb-text.long {
+  font-family: var(--font-body);
+  font-size: clamp(1.1rem, 1rem + 0.8vw, 1.35rem);
+  line-height: 1.5;
+}
+
+.lb-word,
+.lb-ch {
+  border-radius: 5px;
+  transition: background-color 0.12s ease, color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.lb-word.on {
+  background: var(--cobalt-soft);
+  box-shadow: 0 0 0 3px var(--cobalt-soft);
+}
+
+.lb-ch {
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .lb-ch:hover {
+    background: var(--surface-2);
+  }
+}
+
+.lb-ch.stress {
+  color: var(--rowan);
+}
+
+.lb-ch.on {
+  background: var(--cobalt);
+  color: var(--on-cobalt);
+  box-shadow: 0 0 0 2px var(--cobalt);
+}
+
+.lb-caption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-height: 24px;
+  color: var(--ink-2);
+  font-size: 0.85rem;
+}
+
+.lb-caption .icon {
+  color: var(--cobalt);
+}
+
+.lb-caption a {
+  color: var(--cobalt);
+  overflow-wrap: anywhere;
+}
+
+.lb-letter {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.lb-dot {
+  color: var(--line-strong);
+}
+
+.lb-warn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--bad);
+}
+
+.lb-warn .icon {
+  color: var(--bad);
+}
+
+.lb-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.lb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.88rem;
+  font-weight: 650;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.lb-btn:hover {
+  background: var(--surface-2);
+}
+
+.lb-btn .icon,
+.lb-rate {
+  color: var(--cobalt);
+}
+
+.lb-rate {
+  font-size: 0.78rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.lb-btn.is-playing {
+  border-color: var(--cobalt);
+  background: var(--cobalt);
+  color: var(--on-cobalt);
+}
+
+.lb-btn.is-playing .icon,
+.lb-btn.is-playing .lb-rate {
+  color: var(--on-cobalt);
+}
+
+.lb-close {
+  flex: none;
+  color: var(--ink-2);
+}
+
+/* While the bar is open the page scrolls clear of it and toasts sit above it. */
+body.listen-open .main {
+  padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 230px);
+}
+
+body.listen-open .toasts {
+  bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 210px);
+}
+
+@media (min-width: 800px) {
+  .listen-bar {
+    inset-inline: calc(224px + 24px) 24px;
+    bottom: 20px;
+  }
+
+  body.listen-open .main {
+    padding-bottom: 230px;
+  }
+
+  body.listen-open .toasts {
+    bottom: 210px;
+  }
+}
+
+.sound-check {
+  display: grid;
+  gap: 12px;
+}
+
+.check-row.ok .tick {
+  background: var(--good-soft);
+  color: var(--good);
+}
+
+.check-row.warn .tick {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+.check-row.bad .tick {
+  background: var(--bad-soft);
+  color: var(--bad);
+}
+
+.pronounce-card {
+  display: grid;
+  gap: 12px;
+}
+
+textarea.pronounce-input {
+  min-height: 112px;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 1.1rem + 1.2vw, 1.8rem);
+  line-height: 1.35;
+}
+
+.counter {
+  font-variant-numeric: tabular-nums;
+}
+
+.try-chips {
+  min-height: 0;
+}
+
+.translate-row .answer {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.credit-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.credit-words {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.credit-words li {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.file-link {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  color: var(--ink-2);
+}
+
+.file-link:hover {
+  background: var(--surface-2);
+  color: var(--cobalt);
+}
+
 /* ── Toasts and the confirm dialog ────────────────────────────────────────── */
 
 .toasts {

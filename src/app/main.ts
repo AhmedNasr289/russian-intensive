@@ -9,11 +9,14 @@ import { defaultProgress } from "../core/progress.ts";
 import type { ExplainLang, Progress, Theme } from "../core/progress.ts";
 import { isoDate } from "../core/schedule.ts";
 import { ArtifactDbStore, LocalStore } from "../core/storage.ts";
+import { hasCyrillic } from "../core/text.ts";
 import { errorCode, useCapability } from "./claude.ts";
-import type { Caps, Ctx, ToastKind, Voices } from "./context.ts";
+import { createListenBar } from "./components/listenbar.ts";
+import type { Caps, Ctx, Spoken, ToastKind, Voices } from "./context.ts";
 import { tr } from "./context.ts";
 import { h, replace } from "./dom.ts";
 import { buildTarget, detectHost, safeLocalStorage } from "./env.ts";
+import { playRecording, recordingInfo, stopRecording } from "./player.ts";
 import { parseRoute } from "./router.ts";
 import type { Route } from "./router.ts";
 import { createShell } from "./shell.ts";
@@ -23,6 +26,7 @@ import { alphabetView } from "./views/alphabet.ts";
 import { courseView } from "./views/course.ts";
 import { dayView } from "./views/day.ts";
 import { libraryView } from "./views/library.ts";
+import { pronounceView } from "./views/pronounce.ts";
 import { progressView } from "./views/progress.ts";
 import { reviewView } from "./views/review.ts";
 import { settingsView } from "./views/settings.ts";
@@ -34,11 +38,15 @@ const TITLES: Record<Exclude<Route["view"], "day">, Bi> = {
   course: { en: "Course", ar: "الدورة" },
   review: { en: "Review cards", ar: "مراجعة البطاقات" },
   alphabet: { en: "Alphabet", ar: "الأبجدية" },
+  pronounce: { en: "Pronounce", ar: "النطق" },
   progress: { en: "Progress", ar: "التقدّم" },
   library: { en: "Library", ar: "المكتبة" },
   settings: { en: "Settings", ar: "الإعدادات" },
   tutor: { en: "Tutor", ar: "المعلّم" },
 };
+
+/** A tap on Russian text inside these is a tap on the control, not a request to hear the text. */
+const NOT_A_TEXT_TAP = "a, button, input, textarea, select, label, summary, dialog, [role='button'], [role='checkbox'], [role='switch'], [data-nosay]";
 
 /** Codes that mean this view can never write to the claude.ai database. */
 const PERMANENT_DB_ERRORS = new Set(["invalid_argument", "not_granted", "revoked", "capability_disabled", "capability_removed"]);
@@ -54,6 +62,8 @@ function viewFor(ctx: Ctx): HTMLElement {
       return reviewView(ctx);
     case "alphabet":
       return alphabetView(ctx);
+    case "pronounce":
+      return pronounceView(ctx);
     case "progress":
       return progressView(ctx);
     case "library":
@@ -82,6 +92,8 @@ async function boot(root: HTMLElement): Promise<void> {
   const initial: Progress = (await local.load()) ?? { ...defaultProgress(Date.now()), updatedAt: 0 };
   const caps: Caps = { sample: null, downloads: null, synced: false };
   let ruVoices: SpeechSynthesisVoice[] = [];
+  let voicesTotal = 0;
+  let lastCtx: Ctx | null = null;
   let leaveFns: Array<() => void> = [];
   let lastRoute = "";
   let lastRenderDate = "";
@@ -135,27 +147,43 @@ async function boot(root: HTMLElement): Promise<void> {
 
   const currentVoices = (): Voices => {
     const pick = pickVoices(ruVoices, store.progress.settings.voiceURI);
-    return { main: pick.main, male: pick.male, female: pick.female, all: ruVoices };
+    return { main: pick.main, male: pick.male, female: pick.female, all: ruVoices, total: voicesTotal };
   };
 
   const stopAudio = () => {
     stopSpeaking();
+    stopRecording();
     for (const finish of [...pendingSpeech]) finish();
   };
 
-  const speakRu = (text: string, opts: { slow?: boolean; who?: "A" | "B" } = {}): Promise<void> => {
-    if (!speechSupported()) {
-      warnOnce("no-speech", { en: "This browser cannot speak. Try Chrome, Edge or Safari.", ar: "هذا المتصفح لا يدعم النطق. جرّب Chrome أو Edge أو Safari." });
-      return Promise.resolve();
-    }
+  const speakRu = async (text: string, opts: { slow?: boolean; who?: "A" | "B" } = {}): Promise<Spoken> => {
     const settings = store.progress.settings;
     const pick = pickVoices(ruVoices, settings.voiceURI);
-    if (!pick.main) {
-      warnOnce("no-voice", { en: "No Russian voice is installed. Library → Set up your device shows how to add one.", ar: "لا يوجد صوت روسي مثبّت. المكتبة ← جهّز جهازك تشرح كيف تضيف صوتًا." });
+    // A native speaker beats a synthetic voice for a word. A slowed word goes to the voice when
+    // there is one: a recording can only slow down by dropping its pitch.
+    const rec = settings.recordings && !opts.who ? recordingInfo(text) : null;
+    if (rec && !(opts.slow && pick.main)) {
+      stopAudio();
+      if (await playRecording(rec)) {
+        return { kind: "recording", author: rec.source.author, license: rec.source.license, licenseUrl: rec.source.licenseUrl, page: rec.page };
+      }
+    }
+    if (!speechSupported()) {
+      warnOnce("no-speech", { en: "This browser cannot speak. Open the course in Chrome or Edge.", ar: "هذا المتصفح لا ينطق. افتح الدورة في Chrome أو Edge." });
+      return { kind: "silent", reason: "unsupported" };
+    }
+    // With the voice list in and no Russian voice on it, the browser would hand Cyrillic to an
+    // English voice, which reads it as silence or noise.
+    if (!pick.main && voicesTotal > 0) {
+      warnOnce("no-voice", {
+        en: "This browser has no Russian voice, so only single words (from recordings) can play here. Settings → Sound and voice shows how to hear everything.",
+        ar: "لا يوجد صوت روسي في هذا المتصفح، لذا تُسمع هنا الكلمات المفردة فقط (من التسجيلات). الإعدادات ← الصوت والنطق تشرح كيف تسمع كل شيء.",
+      });
+      return { kind: "silent", reason: "no-voice" };
     }
     const role = opts.who ? roleVoice(pick, opts.who) : { voice: pick.main, pitch: 1 };
     const rate = Math.min(2, Math.max(0.3, settings.rate * (opts.slow ? 0.65 : 1)));
-    return new Promise<void>((resolve) => {
+    await new Promise<void>((resolve) => {
       let done = false;
       const finish = () => {
         if (done) return;
@@ -169,7 +197,14 @@ async function boot(root: HTMLElement): Promise<void> {
       pendingSpeech.add(finish);
       void say(text, { rate, voice: role.voice, pitch: role.pitch }).then(finish);
     });
+    return { kind: "voice", name: role.voice?.name ?? "ru-RU" };
   };
+
+  const bar = createListenBar(() => {
+    if (!lastCtx) throw new Error("the listen bar opened before the first render");
+    return lastCtx;
+  });
+  root.appendChild(bar.el);
 
   const sfx = (kind: Sfx) => {
     if (store.progress.settings.sounds) playSfx(kind);
@@ -183,7 +218,10 @@ async function boot(root: HTMLElement): Promise<void> {
     const key = changed ? null : focusKey(document.activeElement);
     for (const fn of leaveFns) fn();
     leaveFns = [];
-    if (changed) stopAudio();
+    if (changed) {
+      stopAudio();
+      bar.close();
+    }
 
     const settings = store.progress.settings;
     applyTheme(settings.theme);
@@ -202,6 +240,7 @@ async function boot(root: HTMLElement): Promise<void> {
       rerender: () => render(false),
       toast,
       speak: speakRu,
+      listen: (text, play) => bar.open(text, play),
       onLeave: (fn) => {
         leaveFns.push(fn);
       },
@@ -209,6 +248,7 @@ async function boot(root: HTMLElement): Promise<void> {
       sfx,
       now: () => Date.now(),
     };
+    lastCtx = ctx;
 
     let view: HTMLElement;
     try {
@@ -293,11 +333,29 @@ async function boot(root: HTMLElement): Promise<void> {
   // ── Voices ──────────────────────────────────────────────────────────────────
   const refreshVoices = (list: SpeechSynthesisVoice[]) => {
     const next = list.filter((v) => isRussian(v.lang));
-    const same = next.length === ruVoices.length && next.every((v, i) => v.voiceURI === ruVoices[i]?.voiceURI);
+    const same = next.length === ruVoices.length && next.every((v, i) => v.voiceURI === ruVoices[i]?.voiceURI) && (list.length > 0) === (voicesTotal > 0);
     ruVoices = next;
+    voicesTotal = list.length;
     const view = parseRoute(location.hash).view;
-    if (!same && (view === "today" || view === "settings")) render(false);
+    if (!same && (view === "today" || view === "settings" || view === "pronounce")) render(false);
   };
+
+  // ── Tap any Russian text to hear it ─────────────────────────────────────────
+  shell.main.addEventListener("click", (e) => {
+    const target = e.target;
+    if (!(target instanceof Element)) return;
+    const span = target.closest<HTMLElement>(".ru");
+    if (!span || span.closest(NOT_A_TEXT_TAP)) return;
+    // A drag that selects text is the learner copying, not tapping.
+    const selection = window.getSelection();
+    if (selection && !selection.isCollapsed) return;
+    const text = span.dataset["text"] ?? span.textContent ?? "";
+    if (!hasCyrillic(text)) return;
+    span.classList.remove("tapped");
+    void span.offsetWidth;
+    span.classList.add("tapped");
+    bar.open(text, "say");
+  });
 
   // ── Wiring ──────────────────────────────────────────────────────────────────
   store.subscribe(() => render(false));

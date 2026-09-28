@@ -9,6 +9,7 @@ import { exerciseRunner } from "../components/exercises.ts";
 import type { Ctx } from "../context.ts";
 import { tr } from "../context.ts";
 import { h, replace } from "../dom.ts";
+import { prefetchRecording } from "../player.ts";
 import { biCtx, btn, chip, icon, playButtons, ru, sectionTitle } from "../ui.ts";
 
 const GROUPS: ReadonlyArray<{ id: LetterGroup; title: { en: string; ar: string }; hint: { en: string; ar: string } }> = [
@@ -29,7 +30,7 @@ function detail(ctx: Ctx, l: Letter): HTMLElement {
       h("span", { class: "glyph print", lang: "ru" }, `${l.upper}${l.lower}`),
       h("span", { class: "glyph hand", lang: "ru", "aria-hidden": "true" }, `${l.upper}${l.lower}`),
     ),
-    h("div", { class: "letter-name" }, tr(ctx, { en: "Name:", ar: "الاسم:" }), " ", ru(l.name), playButtons(ctx, l.name, { slow: false }), chip(`/${l.ipa}/`, "ipa")),
+    h("div", { class: "letter-name" }, tr(ctx, { en: "Name:", ar: "الاسم:" }), " ", ru(l.name), playButtons(ctx, l.name, { slow: false, spell: false }), chip(`/${l.ipa}/`, "ipa")),
     h("div", { class: "letter-sound" }, biCtx(ctx, l.sound)),
     h(
       "div",
@@ -79,7 +80,10 @@ export function alphabetView(ctx: Ctx): HTMLElement {
     }
   };
   const first = ALPHABET[0];
-  if (first) replace(panel, detail(ctx, first));
+  if (first) {
+    replace(panel, detail(ctx, first));
+    prefetchRecording(first.example.ru);
+  }
 
   const quizHost = h("div", { class: "quiz-host" });
   let quizRound = 0;

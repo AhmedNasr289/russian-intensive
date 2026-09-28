@@ -19,10 +19,22 @@ export type Voices = {
   main: SpeechSynthesisVoice | null;
   male: SpeechSynthesisVoice | null;
   female: SpeechSynthesisVoice | null;
+  /** The Russian voices. */
   all: SpeechSynthesisVoice[];
+  /** Every voice the browser reported, any language: 0 means the list has not arrived (or there is none). */
+  total: number;
 };
 
 export type ToastKind = "ok" | "info" | "error";
+
+/** What actually sounded: a native-speaker recording, the browser's voice, or nothing. */
+export type Spoken =
+  | { kind: "recording"; author: string; license: string; licenseUrl: string; page: string }
+  | { kind: "voice"; name: string }
+  | { kind: "silent"; reason: "no-voice" | "unsupported" };
+
+/** How the listen bar plays a text: as it is, slowly, letter by letter, or word by word. */
+export type ListenMode = "say" | "slow" | "spell" | "words";
 
 export type Ctx = {
   store: Store;
@@ -33,8 +45,13 @@ export type Ctx = {
   navigate(token: string): void;
   rerender(): void;
   toast(message: Bi, kind?: ToastKind): void;
-  /** Speak Russian with the learner's voice and rate (slow = 0.65×). */
-  speak(text: string, opts?: { slow?: boolean; who?: "A" | "B" }): Promise<void>;
+  /**
+   * Speak Russian: a native-speaker recording when the course has one for this word, otherwise
+   * the learner's voice and rate (slow = 0.65×). Resolves when it has finished, with what sounded.
+   */
+  speak(text: string, opts?: { slow?: boolean; who?: "A" | "B" }): Promise<Spoken>;
+  /** Open the listen bar for a Russian text and play it the given way (nothing plays when omitted). */
+  listen(text: string, play?: ListenMode): void;
   /** Run when the learner leaves the current screen (detach listeners, stop timers). */
   onLeave(cleanup: () => void): void;
   stopAudio(): void;

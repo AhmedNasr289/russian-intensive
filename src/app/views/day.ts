@@ -14,6 +14,7 @@ import { exerciseRunner, wordQuestions } from "../components/exercises.ts";
 import { keyboardFor } from "../components/keyboard.ts";
 import { emptyMedia, mediaCard, searchLink } from "../components/media.ts";
 import { speakCard } from "../components/speak.ts";
+import { prefetchRecording } from "../player.ts";
 import type { Ctx } from "../context.ts";
 import { explainOf, tr } from "../context.ts";
 import { h, replace } from "../dom.ts";
@@ -86,6 +87,8 @@ function wordsSection(ctx: Ctx, day: Day, today: number): HTMLElement {
     ctx.store.update((p) => introduceDay(p, day.n, day.words.map((w) => w.id), ctx.now()));
   }
   const inDeck = ctx.store.progress.introduced[`d${day.n}`] !== undefined;
+  // A day's words sit together in the recording packs: fetch them before the first tap.
+  if (day.words[0]) prefetchRecording(day.words[0].ru);
   let playing = false;
   const playAll = btn([icon("play", 18), tr(ctx, { en: "Play all", ar: "شغّل الكل" })], {
     class: "ghost",

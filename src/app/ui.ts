@@ -3,6 +3,7 @@
 
 import type { Bi } from "../content/types.ts";
 import type { ExplainLang } from "../core/progress.ts";
+import { canSpell } from "../core/spelling.ts";
 import { splitStress } from "../core/text.ts";
 import type { Ctx, ToastKind } from "./context.ts";
 import { explainOf, tr } from "./context.ts";
@@ -13,6 +14,7 @@ import type { Attrs, Child } from "./dom.ts";
 
 const ICONS = {
   speaker: "M11 5 6 9H3v6h3l5 4V5z M15.5 8.5a5 5 0 0 1 0 7 M18.5 5.5a9 9 0 0 1 0 13",
+  wave: "M4 10v4 M8 7v10 M12 4v16 M16 7v10 M20 10v4",
   mic: "M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z M5 11a7 7 0 0 0 14 0 M12 18v3",
   stop: "M7 7h10v10H7z",
   play: "M8 5v14l11-7z",
@@ -62,9 +64,13 @@ export function icon(name: IconName, size = 20): SVGSVGElement {
 
 // ── Text ──────────────────────────────────────────────────────────────────────
 
-/** Russian with the stressed vowel painted (class "stress"), as learner textbooks mark stress. */
+/**
+ * Russian with the stressed vowel painted (class "stress"), as learner textbooks mark stress.
+ * `data-text` keeps the marked text: a tap on it opens the listen bar (see main.ts).
+ */
 export function ru(text: string, cls = ""): HTMLSpanElement {
-  const span = h("span", { lang: "ru", class: `ru ${cls}`.trim() });
+  // dir="ltr" isolates the Russian, so its punctuation stays put inside Arabic text ("Кто там?", not "?Кто там").
+  const span = h("span", { lang: "ru", dir: "ltr", class: `ru ${cls}`.trim(), "data-text": text });
   for (const seg of splitStress(text)) {
     span.appendChild(seg.stressed ? h("span", { class: "stress" }, seg.text) : document.createTextNode(seg.text));
   }
@@ -112,18 +118,38 @@ export function iconBtn(name: IconName, label: string, attrs: Attrs = {}): HTMLB
   return h("button", { type: "button", title: label, "aria-label": label, ...attrs, class: `icon-btn ${cls}`.trim() }, icon(name));
 }
 
-/** Speaker button (and an optional slow-speed button) for a Russian text. */
-export function playButtons(ctx: Ctx, text: string, opts: { slow?: boolean; who?: "A" | "B" } = {}): HTMLSpanElement {
+/**
+ * Speaker button for a Russian text, plus a slow-speed button and, for a word or a short phrase,
+ * a "spell it" button that opens the listen bar. A button shows while its sound plays; pressing it
+ * again stops the sound.
+ */
+export function playButtons(ctx: Ctx, text: string, opts: { slow?: boolean; who?: "A" | "B"; spell?: boolean } = {}): HTMLSpanElement {
   const wrap = h("span", { class: "play-group" });
-  const play = iconBtn("speaker", tr(ctx, { en: "Listen", ar: "استمع" }), {
-    class: "play",
-    onClick: () => void ctx.speak(text, opts.who ? { who: opts.who } : {}),
-  });
+  const playing = (button: HTMLButtonElement, speakOpts: { slow?: boolean; who?: "A" | "B" }) => async () => {
+    if (button.classList.contains("is-playing")) {
+      ctx.stopAudio();
+      return;
+    }
+    button.classList.add("is-playing");
+    button.setAttribute("aria-pressed", "true");
+    try {
+      await ctx.speak(text, speakOpts);
+    } finally {
+      button.classList.remove("is-playing");
+      button.setAttribute("aria-pressed", "false");
+    }
+  };
+  const play = iconBtn("speaker", tr(ctx, { en: "Listen", ar: "استمع" }), { class: "play", "aria-pressed": "false" });
+  play.addEventListener("click", playing(play, opts.who ? { who: opts.who } : {}));
   wrap.appendChild(play);
   if (opts.slow !== false) {
-    wrap.appendChild(
-      h("button", { type: "button", class: "icon-btn slow", title: tr(ctx, { en: "Listen slowly", ar: "استمع ببطء" }), "aria-label": tr(ctx, { en: "Listen slowly", ar: "استمع ببطء" }), onClick: () => void ctx.speak(text, { slow: true }) }, "0.6×"),
-    );
+    const label = tr(ctx, { en: "Listen slowly", ar: "استمع ببطء" });
+    const slow = h("button", { type: "button", class: "icon-btn slow", title: label, "aria-label": label, "aria-pressed": "false" }, "0.6×");
+    slow.addEventListener("click", playing(slow, opts.who ? { slow: true, who: opts.who } : { slow: true }));
+    wrap.appendChild(slow);
+  }
+  if (opts.spell !== false && !opts.who && canSpell(text)) {
+    wrap.appendChild(iconBtn("letters", tr(ctx, { en: "Spell it letter by letter", ar: "تهجَّها حرفًا حرفًا" }), { class: "spell", onClick: () => ctx.listen(text, "spell") }));
   }
   return wrap;
 }

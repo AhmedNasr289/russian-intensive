@@ -23,6 +23,7 @@ const NAV: readonly NavItem[] = [
   { token: "review", icon: "cards", label: { en: "Review", ar: "المراجعة" }, primary: true },
   { token: "tutor", icon: "chat", label: { en: "Tutor", ar: "المعلّم" }, primary: true },
   { token: "alphabet", icon: "letters", label: { en: "Alphabet", ar: "الأبجدية" }, primary: false },
+  { token: "pronounce", icon: "wave", label: { en: "Pronounce", ar: "النطق" }, primary: false },
   { token: "progress", icon: "chart", label: { en: "Progress", ar: "التقدّم" }, primary: false },
   { token: "library", icon: "library", label: { en: "Library", ar: "المكتبة" }, primary: false },
   { token: "settings", icon: "gear", label: { en: "Settings", ar: "الإعدادات" }, primary: false },

@@ -2,7 +2,7 @@
 // synthesized sound effects. Voice ranking is pure and tested; everything that touches the browser
 // is guarded so the module can be imported in Node.
 
-import { stripStress } from "./text.ts";
+import { ACUTE, GRAVE, stripStress } from "./text.ts";
 
 export type VoiceLike = { name: string; lang: string; localService: boolean; voiceURI: string };
 export type Gender = "m" | "f" | "?";
@@ -68,6 +68,90 @@ export function speakableText(s: string): string {
     .replace(/\(([^)]*)\)/g, "$1")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+// ── Where the app is running, and how good its Russian voice is ──────────────
+
+export type BrowserKind = "app" | "edge" | "chrome" | "firefox" | "safari" | "other";
+export type PlatformKind = "windows" | "mac" | "ios" | "android" | "linux" | "other";
+
+/** The browser family from a user-agent string. "app" is an embedded browser such as the Claude desktop app. */
+export function browserOf(ua: string): BrowserKind {
+  if (/\bClaude\/\d|\bElectron\//.test(ua)) return "app";
+  if (/\bEdg(?:e|A|iOS)?\//.test(ua)) return "edge";
+  if (/\bFirefox\/|\bFxiOS\//.test(ua)) return "firefox";
+  if (/\bOPR\/|\bSamsungBrowser\//.test(ua)) return "other";
+  if (/\bCriOS\/|\bChrome\//.test(ua)) return "chrome";
+  if (/\bVersion\/[\d.]+.*\bSafari\//.test(ua)) return "safari";
+  return "other";
+}
+
+export function platformOf(ua: string): PlatformKind {
+  if (/Android/i.test(ua)) return "android";
+  if (/iPhone|iPad|iPod/i.test(ua)) return "ios";
+  if (/Windows/i.test(ua)) return "windows";
+  if (/Mac OS X|Macintosh/i.test(ua)) return "mac";
+  if (/Linux|X11/i.test(ua)) return "linux";
+  return "other";
+}
+
+/** natural: a neural or network voice (Google, Microsoft Natural, Apple Enhanced); standard: an offline system voice. */
+export type VoiceTier = "natural" | "standard" | "none";
+
+export function voiceTier(v: Pick<VoiceLike, "name" | "localService"> | null): VoiceTier {
+  if (!v) return "none";
+  return /natural|neural|premium|enhanced|wavenet|google|online/i.test(v.name) || !v.localService ? "natural" : "standard";
+}
+
+// ── Spelling and word-by-word playback ────────────────────────────────────────
+
+/** A character with any combining stress marks that follow it: one unit on screen. */
+export function graphemes(text: string): string[] {
+  const out: string[] = [];
+  for (const ch of text) {
+    if ((ch === ACUTE || ch === GRAVE) && out.length) out[out.length - 1] += ch;
+    else out.push(ch);
+  }
+  return out;
+}
+
+const isCyrillicLetter = (g: string): boolean => /^[А-Яа-яЁё]/.test(g);
+
+export type SpellStep = { index: number; letter: string; name: string };
+
+/**
+ * The letters of `text` to spell aloud, in order: each with its position in `graphemes(text)`,
+ * the letter itself and the name to say (from `names`, keyed by lower-case letter).
+ */
+export function spellSteps(text: string, names: ReadonlyMap<string, string>): SpellStep[] {
+  const steps: SpellStep[] = [];
+  graphemes(text).forEach((g, index) => {
+    if (!isCyrillicLetter(g)) return;
+    const letter = [...g][0] ?? "";
+    steps.push({ index, letter, name: names.get(letter.toLowerCase()) ?? letter });
+  });
+  return steps;
+}
+
+export type WordSpan = { word: string; start: number; end: number };
+
+/** The Russian words of `text` for word-by-word playback, as grapheme ranges [start, end). */
+export function wordSpans(text: string): WordSpan[] {
+  const gs = graphemes(text);
+  const spans: WordSpan[] = [];
+  let start = -1;
+  const close = (end: number) => {
+    if (start >= 0) spans.push({ word: gs.slice(start, end).join(""), start, end });
+    start = -1;
+  };
+  gs.forEach((g, i) => {
+    const inner = g === "-" && start >= 0 && isCyrillicLetter(gs[i + 1] ?? "");
+    if (isCyrillicLetter(g) || inner) {
+      if (start < 0) start = i;
+    } else close(i);
+  });
+  close(gs.length);
+  return spans;
 }
 
 // ── Browser speech ────────────────────────────────────────────────────────────
@@ -166,13 +250,20 @@ export type Sfx = "ok" | "bad" | "done" | "tap";
 
 let audioCtx: AudioContext | null = null;
 
-function context(): AudioContext | null {
+/** The page's one Web Audio context, shared by the sound effects and the recordings. */
+export function audioContext(): AudioContext | null {
   if (typeof window === "undefined") return null;
   const Ctor = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
   if (!Ctor) return null;
-  audioCtx ??= new Ctor();
+  try {
+    audioCtx ??= new Ctor();
+  } catch {
+    return null;
+  }
   return audioCtx;
 }
+
+const context = audioContext;
 
 function tone(ctx: AudioContext, freq: number, start: number, length: number, type: OscillatorType, peak: number): void {
   const osc = ctx.createOscillator();
