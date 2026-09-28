@@ -425,7 +425,7 @@ const DAY_23: Day = {
       id: "d23-01", ru: "есть", say: "yest'", en: "to eat", ar: "يأكل", pos: "verb",
       forms: "ем, ешь, ест, еди́м, еди́те, едя́т",
       ex: { ru: "Я ем сала́т.", en: "I'm eating a salad.", ar: "أنا آكل سلطة." },
-      note: { en: "Not the same word as есть 'there is' in У меня́ есть…", ar: "ليست هي نفسها есть بمعنى «يوجد» في У меня́ есть…" },
+      note: { en: "Not the same word as есть 'there is' in У меня́ есть…", ar: "هذه ليست كلمة есть التي تعني «يوجد» في У меня́ есть…" },
     },
     {
       id: "d23-02", ru: "пить", say: "pit'", en: "to drink", ar: "يشرب", pos: "verb",
@@ -651,7 +651,7 @@ const DAY_23: Day = {
       prompt: { en: "Complete with пить: you (informal) drink", ar: "أكمل بالفعل пить: أنت تشرب" },
       ru: "Ты ___ ко́фе?",
       answers: ["пьёшь"],
-      why: { en: "ты → пьёшь, with ь and ё.", ar: "مع ты نقول пьёшь، مع ь و ё." },
+      why: { en: "ты → пьёшь, with ь and ё.", ar: "مع ты نقول пьёшь، بالحرفين ь و ё." },
     },
     {
       kind: "fill",
@@ -1120,7 +1120,7 @@ const DAY_24: Day = {
     tutorBrief:
       "Play a polite waiter (официант) in a Moscow café; use вы. Greet the learner (Здравствуйте! Вот меню.), ask Что вы будете? and take a full order: soup or salad, a main dish, a drink. When the learner orders coffee, say Извините, кофе сейчас нет. Есть чай и сок. — so they must choose again. Bring the food with Вот, пожалуйста and Приятного аппетита!, and 'forget' a spoon or a fork so they have to ask (Можно ложку?). Accept Я буду…, Можно…?, Дайте, пожалуйста… with the accusative, and мочь (могу, можете). Speak slowly if asked Вы можете говорить медленно? When they ask for the bill, answer Вот ваш счёт and allow Можно картой? Correct wrong endings briefly after the order, not in the middle of it.",
     prompts: [
-      { ru: "Я бу́ду сала́т и ры́бу.", en: "I'll have a salad and the fish.", ar: "سآخذ سلطة والسمك." },
+      { ru: "Я бу́ду сала́т и ры́бу.", en: "I'll have the salad and the fish.", ar: "سآخذ السلطة والسمك." },
       { ru: "У вас есть сок?", en: "Do you have juice?", ar: "هل عندكم عصير؟" },
       { ru: "Вы мо́жете говори́ть ме́дленно?", en: "Can you speak slowly?", ar: "هل يمكنك أن تتكلّم ببطء؟" },
       { ru: "Да́йте, пожа́луйста, ви́лку.", en: "Could I have a fork, please?", ar: "أعطني شوكة من فضلك." },
@@ -1363,7 +1363,7 @@ const DAY_25: Day = {
     title: { ru: "Я тебя́ приглаша́ю!", en: "I'm inviting you!", ar: "أنا أدعوك!" },
     setting: {
       en: "Ahmed meets Anna at a café after class. She is already there, and she has news about Saturday.",
-      ar: "يلتقي أحمد آنا في مقهى بعد الدرس. هي هناك قبله، ولديها خبر عن يوم السبت.",
+      ar: "يلتقي أحمد آنا في مقهى بعد الدرس. لقد سبقته إلى هناك، ولديها خبر عن يوم السبت.",
     },
     lines: [
       { who: "A", name: "Ахме́д", ru: "Приве́т, А́нна! Ты меня́ ждёшь?", en: "Hi, Anna! Are you waiting for me?", ar: "مرحبًا يا آنا! هل تنتظرينني؟" },
@@ -1386,8 +1386,8 @@ const DAY_25: Day = {
       { who: "B", name: "А́нна", ru: "Да! Я ча́сто расска́зываю о тебе́.", en: "Yes! I often talk about you.", ar: "نعم! أنا أتحدّث عنك كثيرًا." },
       { who: "A", name: "Ахме́д", ru: "Интере́сно! А где ты живёшь?", en: "Interesting! And where do you live?", ar: "مثير للاهتمام! وأين تسكنين؟" },
       {
-        who: "B", name: "А́нна", ru: "Недалеко́. В суббо́ту ве́чером я встреча́ю тебя́ у метро́. Приходи́!",
-        en: "Not far. On Saturday evening I'll meet you at the metro. Come!", ar: "ليس بعيدًا. يوم السبت مساءً سأستقبلك عند المترو. تعال!",
+        who: "B", name: "А́нна", ru: "Недалеко́. Приходи́ в суббо́ту ве́чером, я жду тебя́ у метро́.",
+        en: "Not far. Come on Saturday evening — I'll be waiting for you at the metro.", ar: "ليس بعيدًا. تعال يوم السبت مساءً، سأنتظرك عند المترو.",
       },
       { who: "A", name: "Ахме́д", ru: "Отли́чно! Спаси́бо, А́нна!", en: "Great! Thank you, Anna!", ar: "ممتاز! شكرًا يا آنا!" },
     ],
@@ -1894,7 +1894,7 @@ const DAY_26: Day = {
       listen: true,
       options: ["The dress is very expensive. · الفستان غالٍ جدًّا.", "The dress is too small. · الفستان صغير جدًّا.", "The dress is old. · الفستان قديم."],
       answer: 0,
-      why: { en: "дорого́е = expensive.", ar: "дорого́е تعني غاليًا." },
+      why: { en: "дорого́е = expensive.", ar: "дорого́е تعني «غالٍ»." },
     },
   ],
   topics: ["adjectives", "colors", "shopping"],
@@ -2025,7 +2025,7 @@ const DAY_27: Day = {
       },
       { who: "A", name: "Ахме́д", ru: "Спаси́бо! А где ка́сса?", en: "Thank you! And where's the cash desk?", ar: "شكرًا! وأين صندوق الدفع؟" },
       { who: "B", name: "Ни́на", ru: "Ка́сса — э́то я!", en: "I'm the cash desk!", ar: "صندوق الدفع هو أنا!" },
-      { who: "A", name: "Ахме́д", ru: "Хорошо́. Вот сто пятьдеся́т.", en: "OK. Here's a hundred and fifty.", ar: "حسنًا. تفضّلي مئة وخمسين." },
+      { who: "A", name: "Ахме́д", ru: "Хорошо́. Вот сто пятьдеся́т.", en: "OK. Here's a hundred and fifty.", ar: "حسنًا. تفضّلي، هذه مئة وخمسون." },
       {
         who: "B", name: "Ни́на", ru: "Ва́ша сда́ча — три́дцать рубле́й. Прия́тного аппети́та!",
         en: "Your change is thirty rubles. Enjoy your food!", ar: "الباقي لك ثلاثون روبلًا. بالهناء والشفاء!",
@@ -2094,7 +2094,7 @@ const DAY_27: Day = {
       { ru: "Ско́лько сто́ят я́блоки?", en: "How much are the apples?", ar: "بكم التفاح؟" },
       { ru: "Я беру́ фру́кты и о́вощи.", en: "I'll take fruit and vegetables.", ar: "سآخذ الفواكه والخضروات." },
       { ru: "А ски́дка есть?", en: "Is there a discount?", ar: "وهل يوجد خصم؟" },
-      { ru: "Спаси́бо! Вот сто рубле́й.", en: "Thank you! Here's a hundred rubles.", ar: "شكرًا! تفضّل مئة روبل." },
+      { ru: "Спаси́бо! Вот сто рубле́й.", en: "Thank you! Here's a hundred rubles.", ar: "شكرًا! تفضّل، هذه مئة روبل." },
     ],
   },
   journal: {
