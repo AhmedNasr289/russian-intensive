@@ -20,6 +20,16 @@ It runs in any current browser, installs on your phone, and keeps working offlin
   voice, and the Pronounce screen reads anything you type or paste, like a translator's speaker button.
 - **Flashcards with spaced repetition** (SM-2): today's words join your deck and come back just before you
   would forget them.
+- **A study coach**: Today opens with your best next move (a step of the running block, cards due,
+  catching up one missed day a day, a weak-word drill, an upcoming test), with the reason and the minutes.
+- **Guided sessions**: run a whole block hands-free; a bar opens each step, times it, ticks it off and
+  moves on when you are ready.
+- **Weak words**: every wrong answer is remembered against its word, ranked with forgotten and hard cards,
+  and drilled until it sticks.
+- **Search and word pages**: Ctrl+K or / finds any word (Russian with or without stress, English or
+  Arabic) or screen; every word has its own page with sound, forms, example and deck status.
+- **Progress you can plan with**: the cards due over the next seven days and this week's minutes against
+  a steady two hours a day.
 - **An alphabet studio**: the 33 letters, printed and handwritten, with sounds explained for Arabic speakers.
 - **Immersion days** (6, 13, 20 …) with real Russian videos and a story worksheet, and **review days**
   (7, 14 … 56) with a test.
@@ -64,9 +74,12 @@ and Import progress.
 
 ## The AI tutor
 
-- **In the claude.ai version** the tutor runs inside the app: role-play of the day's scene, free
-  conversation, "explain today's grammar", "check my sentence", and journal correction with every error
-  explained in English and Arabic. Your progress is saved to your account there.
+- **In the claude.ai version** the tutor runs inside the app: "Coach me" (Katya reads your progress and
+  plans the next step with you), role-play of the day's scene, free conversation, "explain today's
+  grammar", "check my sentence", and journal correction with every error explained in English and Arabic.
+  Where claude.ai lets a page offer tools, Katya can also act in the app: look up a word, add words to your
+  deck, note a mistake (each with Undo) and offer a button to the right screen, which opens only when you
+  tap it. Your progress is saved to your account there.
 - **On the web version** the same buttons prepare the exact prompt (your day, your known words, today's
   scene). Copy it and paste it into any Claude chat.
 
@@ -134,6 +147,11 @@ Native-speaker recordings). Code and course text: MIT License.
 - **أكثر من ٨٠٠ كلمة وعبارة**، لكل منها طريقة نطق مكتوبة بالحروف اللاتينية وجملة مثال.
 - **الصوت في كل مكان**: اضغط على أي كلمة أو جملة روسية لتسمعها، أو لتسمعها ببطء، أو **متهجّاة حرفًا حرفًا** (اسم كل حرف كما يتهجّاه المعلّم)، أو كلمة كلمة. معظم الكلمات تُسمع من **تسجيلات حقيقية بأصوات متحدثين أصليين** (من ويكيميديا كومنز) تعمل في أي متصفح، والجمل بصوت متصفحك، وشاشة «النطق» تقرأ أي نص تكتبه أو تلصقه مثل زر السماعة في المترجم.
 - **بطاقات مراجعة متباعدة**: تدخل كلمات اليوم إلى مجموعتك وتعود إليك قبل أن تنساها مباشرة.
+- **مدرّب للدراسة**: تبدأ شاشة «اليوم» بأفضل خطوة تالية لك (خطوة من الفترة الجارية، أو بطاقات مستحقة، أو استدراك يوم فائت كل يوم، أو تدريب على الكلمات الضعيفة، أو اختبار قريب) مع السبب والمدة.
+- **جلسات موجَّهة**: شغّل فترة كاملة دون تدخّل؛ يفتح شريطٌ كل خطوة ويحسب وقتها ويعلّمها كمكتملة وينتقل حين تكون مستعدًا.
+- **الكلمات الضعيفة**: يُسجَّل كل خطأ على كلمته، وتُرتَّب مع البطاقات المنسية والصعبة، وتتدرّب عليها حتى تثبت.
+- **بحث وصفحة لكل كلمة**: يجد Ctrl+K أو / أي كلمة (بالروسية مع النبر أو دونه، أو بالإنجليزية أو العربية) أو أي شاشة، ولكل كلمة صفحة بصوتها وصيغها ومثالها وحالتها في مجموعتك.
+- **تقدّم تخطّط به**: البطاقات المستحقة في الأيام السبعة القادمة، ودقائق هذا الأسبوع مقارنةً بساعتين يوميًا.
 - **استوديو الأبجدية**: الحروف الثلاثة والثلاثون بالخط المطبوع والمكتوب باليد، مع شرح أصواتها لمتحدّثي العربية.
 - **أيام انغماس** مع فيديوهات روسية حقيقية، و**أيام مراجعة** في نهاية كل أسبوع مع اختبار.
 - **معلّم ذكي** يعرف يومك وكلماتك، و**وكلاء Claude Code** للعمل من الطرفية.
@@ -163,7 +181,7 @@ Native-speaker recordings). Code and course text: MIT License.
 
 ### المعلّم الذكي
 
-في نسخة claude.ai يعمل المعلّم داخل التطبيق: تمثيل موقف اليوم، ومحادثة حرّة، وشرح قواعد اليوم، والتحقق من جملك، وتصحيح يومياتك مع شرح كل خطأ بالعربية والإنجليزية، ويُحفظ تقدّمك في حسابك. وفي نسخة الويب تُعِدّ الأزرار نفسها التعليمات الكاملة لتنسخها وتلصقها في أي محادثة مع Claude.
+في نسخة claude.ai يعمل المعلّم داخل التطبيق: «درّبني» (تقرأ كاتيا تقدّمك وتخطّط معك الخطوة التالية)، وتمثيل موقف اليوم، ومحادثة حرّة، وشرح قواعد اليوم، والتحقق من جملك، وتصحيح يومياتك مع شرح كل خطأ بالعربية والإنجليزية، وحيث يسمح claude.ai للصفحة بتقديم أدوات، تستطيع كاتيا أيضًا العمل داخل التطبيق: البحث عن كلمة، وإضافة كلمات إلى مجموعتك، وتسجيل خطأ (ولكلٍّ منها زر تراجع)، واقتراح زر إلى الشاشة المناسبة لا يُفتح إلا حين تضغطه. ويُحفظ تقدّمك في حسابك. وفي نسخة الويب تُعِدّ الأزرار نفسها التعليمات الكاملة لتنسخها وتلصقها في أي محادثة مع Claude.
 
 ### وكلاء Claude Code
 

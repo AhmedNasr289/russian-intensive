@@ -27,10 +27,12 @@ Node 24 runs the TypeScript directly (type stripping). Relative imports carry `.
   `media.ts` the verified video and resource library, `alphabet.ts` the 33 letters.
 - `src/core/`: pure logic with tests: stress and answer checking, SM-2 flashcards, the schedule and
   calendar export, progress and storage, speech and spelling, recording lookup, tutor prompts, content
-  validation.
+  validation, and the study companion: `coach.ts` (next moves), `session.ts` (guided blocks), `weak.ts`
+  (missed words), `search.ts`, `forecast.ts`, `tutorTools.ts` (the tutor's page tools, undoable or offered).
 - `src/app/`: the browser app. `main.ts` boots (and turns every Russian text into tap-to-hear),
   `shell.ts` is the frame, `player.ts` plays the recordings with Web Audio, `views/` the screens,
-  `components/` shared widgets (`listenbar.ts`: listen, slow, spell, word by word), `styles.css` the
+  `components/` shared widgets (`listenbar.ts`: listen, slow, spell, word by word; `coach.ts`, `session.ts`,
+  `palette.ts` search, `shortcuts.ts`), `styles.css` the
   Gzhel porcelain design.
 - `scripts/`: build, verify, validator, link checker, stress checker, day and vocabulary printers, icons.
 - `.claude/agents/` and `.claude/commands/`: the study agents and slash commands.
