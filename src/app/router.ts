@@ -7,7 +7,7 @@ import type { TutorMode } from "../core/tutorPrompt.ts";
 export const SECTIONS = ["words", "grammar", "dialogue", "practice", "speak", "watch", "tutor", "journal", "worksheet", "test"] as const;
 export type Section = (typeof SECTIONS)[number];
 
-const MODES: readonly TutorMode[] = ["chat", "roleplay", "explain", "check"];
+const MODES: readonly TutorMode[] = ["coach", "chat", "roleplay", "explain", "check"];
 const PLAIN = ["today", "course", "review", "weak", "alphabet", "pronounce", "progress", "library", "settings"] as const;
 type PlainView = (typeof PLAIN)[number];
 

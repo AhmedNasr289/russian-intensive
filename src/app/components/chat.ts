@@ -5,20 +5,28 @@ import type { Day } from "../../content/types.ts";
 import { wordsUpTo } from "../../core/course.ts";
 import { buildTutorRules } from "../../core/tutorPrompt.ts";
 import type { TutorMode } from "../../core/tutorPrompt.ts";
-import { errorCode, partialText } from "../claude.ts";
-import type { SampleTurn } from "../claude.ts";
+import { learnerStatus, sampleTools, statusText } from "../../core/tutorTools.ts";
+import type { Offer, ToolHost, ToolLog } from "../../core/tutorTools.ts";
+import { errorCode, partialText, toolsAvailable } from "../claude.ts";
+import type { SampleOptions, SampleTurn } from "../claude.ts";
 import type { Ctx } from "../context.ts";
 import { explainOf, tr } from "../context.ts";
 import { h, replace } from "../dom.ts";
 import { ARTIFACT_URL } from "../env.ts";
+import { parseRoute, routeToken } from "../router.ts";
 import { biCtx, btn, copyText, icon, mixed } from "../ui.ts";
 import { keyboardFor } from "./keyboard.ts";
 
-/** Conversations, and any unsent message, survive re-renders and navigation for the life of the page. */
+/** What Katya did or offered with the page tools, placed before the reply at turn index `after`. */
+type Activity = { after: number; log?: ToolLog & { undone?: boolean }; offer?: Offer };
+
+/** Conversations, their tool activity and any unsent message survive re-renders and navigation for the life of the page. */
 const conversations = new Map<string, SampleTurn[]>();
+const activities = new Map<string, Activity[]>();
 const unsent = new Map<string, string>();
 
 const KICKOFF: Record<TutorMode, string> = {
+  coach: "Please look at my progress, tell me the most useful thing to do now and why, then warm me up on my weakest words.",
   roleplay: "Please start the role-play now: greet me in character with your first line.",
   chat: "Please start our conversation with a greeting and one simple question.",
   explain: "Please give me a short overview of today's grammar with two examples, then ask me one question to check.",
@@ -47,10 +55,54 @@ export function errorMessage(code: string): { en: string; ar: string } {
   }
 }
 
+/** The tutor's standing instructions, with the learner's status as it is right now. */
+function rulesFor(ctx: Ctx, day: Day, mode: TutorMode, tools: boolean): string {
+  const status = statusText(learnerStatus(ctx.store.progress, new Date(ctx.now())));
+  return buildTutorRules({ day, known: wordsUpTo(day.n), explain: explainOf(ctx), status }, mode, { tools });
+}
+
 export function tutorPanel(ctx: Ctx, day: Day, mode: TutorMode): HTMLElement {
-  const rules = buildTutorRules({ day, known: wordsUpTo(day.n), explain: explainOf(ctx) }, mode);
-  const sample = ctx.caps.sample;
-  return sample ? liveChat(ctx, day, mode, rules) : handoff(ctx, rules, mode);
+  return ctx.caps.sample ? liveChat(ctx, day, mode) : handoff(ctx, rulesFor(ctx, day, mode, false), mode);
+}
+
+/** A chat line for something Katya did (with Undo) or offered (a button the learner may tap). */
+function activityNode(ctx: Ctx, a: Activity): HTMLElement {
+  if (a.offer) {
+    const offer = a.offer;
+    const label = offer.kind === "screen" ? offer.label : tr(ctx, { en: "Drill your weak words", ar: "تدرّب على كلماتك الضعيفة" });
+    return h(
+      "div",
+      { class: "activity offer" },
+      icon("bolt", 16),
+      h("span", null, tr(ctx, { en: "Katya suggests:", ar: "تقترح كاتيا:" })),
+      btn([h("span", { dir: "auto" }, label), icon("right", 16)], { class: "primary small", onClick: () => ctx.navigate(offer.kind === "screen" ? offer.token : "weak") }),
+    );
+  }
+  const log = a.log;
+  if (!log) return h("div");
+  const node = h("div", { class: `activity${log.undone ? " undone" : ""}` });
+  const draw = () => {
+    replace(
+      node,
+      icon(log.undone ? "repeat" : "check", 16),
+      h("span", { dir: "auto" }, tr(ctx, log.text)),
+      log.undone
+        ? h("span", { class: "muted" }, tr(ctx, { en: "· undone", ar: "· أُلغي" }))
+        : log.undo
+          ? btn(tr(ctx, { en: "Undo", ar: "تراجع" }), {
+              class: "ghost tiny",
+              onClick: () => {
+                log.undo?.();
+                log.undone = true;
+                node.classList.add("undone");
+                draw();
+              },
+            })
+          : null,
+    );
+  };
+  draw();
+  return node;
 }
 
 function handoff(ctx: Ctx, rules: string, mode: TutorMode): HTMLElement {
@@ -77,10 +129,12 @@ function handoff(ctx: Ctx, rules: string, mode: TutorMode): HTMLElement {
   );
 }
 
-function liveChat(ctx: Ctx, day: Day, mode: TutorMode, rules: string): HTMLElement {
+function liveChat(ctx: Ctx, day: Day, mode: TutorMode): HTMLElement {
   const key = `${day.n}:${mode}`;
   const turns = conversations.get(key) ?? [];
   conversations.set(key, turns);
+  const acts = activities.get(key) ?? [];
+  activities.set(key, acts);
   let controller: AbortController | null = null;
 
   const log = h("div", { class: "chat-log", "aria-live": "polite" });
@@ -99,16 +153,25 @@ function liveChat(ctx: Ctx, day: Day, mode: TutorMode, rules: string): HTMLEleme
       log,
       turns.length === 0
         ? h("div", { class: "chat-empty" }, biCtx(ctx, { en: "Press Start and the tutor will begin. Every reply is written for your level.", ar: "اضغط «ابدأ» وسيبدأ المعلّم. كل ردّ مكتوب بمستواك." }))
-        : turns.map((t, i) => bubble(t.role, t.content, i === 0 && t.content === KICKOFF[mode])),
+        : [
+            ...turns.flatMap((t, i) => [...acts.filter((a) => a.after === i).map((a) => activityNode(ctx, a)), bubble(t.role, t.content, i === 0 && t.content === KICKOFF[mode])]),
+            ...acts.filter((a) => a.after >= turns.length).map((a) => activityNode(ctx, a)),
+          ],
     );
     log.scrollTop = log.scrollHeight;
+    startBtn.hidden = turns.length > 0;
   };
 
   const ask = async (message: string) => {
     const sample = ctx.caps.sample;
     if (!sample || controller) return;
     turns.push({ role: "user", content: message });
-    while (turns.length > MAX_TURNS) turns.splice(0, 2);
+    while (turns.length > MAX_TURNS) {
+      turns.splice(0, 2);
+      // Activity lines follow their turns; those of dropped turns go too.
+      for (const a of acts) a.after -= 2;
+      acts.splice(0, acts.length, ...acts.filter((a) => a.after >= 0));
+    }
     redraw();
     const live = h("div", { class: "msg assistant streaming" }, h("div", { class: "msg-body", dir: "auto" }, tr(ctx, { en: "Thinking…", ar: "يفكّر…" })));
     log.appendChild(live);
@@ -117,16 +180,36 @@ function liveChat(ctx: Ctx, day: Day, mode: TutorMode, rules: string): HTMLEleme
     send.disabled = true;
     stop.hidden = false;
     status.textContent = "";
+    const signal = controller.signal;
+    // What a tool did or offered appears above the reply as it happens.
+    const show = (a: Activity) => {
+      acts.push(a);
+      log.insertBefore(activityNode(ctx, a), live);
+      log.scrollTop = log.scrollHeight;
+    };
+    const host: ToolHost = {
+      progress: () => ctx.store.progress,
+      update: (fn) => ctx.store.update(fn),
+      now: () => ctx.now(),
+      offer: (offer) => show({ after: turns.length, offer }),
+      log: (line) => show({ after: turns.length, log: line }),
+      validRoute: (token) => routeToken(parseRoute(`#${token}`)) === token,
+    };
     try {
-      const { text } = await sample([{ role: "user", content: rules }, ...turns], {
-        cache: false,
-        signal: controller.signal,
+      const toolCount = await toolsAvailable(sample);
+      const options: SampleOptions = {
+        signal,
         onText: ({ text: soFar }) => {
           const body = live.querySelector(".msg-body");
           if (body) replace(body, mixed(soFar));
           log.scrollTop = log.scrollHeight;
         },
-      });
+      };
+      // A call with tools is never cached and must not pass `cache`; a plain chat turn opts out of the cache.
+      if (toolCount > 0) options.tools = sampleTools(host).slice(0, toolCount);
+      else options.cache = false;
+      const rules = rulesFor(ctx, day, mode, toolCount > 0);
+      const { text } = await sample([{ role: "user", content: rules }, ...turns], options);
       turns.push({ role: "assistant", content: text });
     } catch (e) {
       const code = errorCode(e);
@@ -162,6 +245,7 @@ function liveChat(ctx: Ctx, day: Day, mode: TutorMode, rules: string): HTMLEleme
     onClick: () => {
       controller?.abort();
       turns.length = 0;
+      acts.length = 0;
       redraw();
     },
   });
@@ -172,7 +256,7 @@ function liveChat(ctx: Ctx, day: Day, mode: TutorMode, rules: string): HTMLEleme
     { class: "card chat" },
     log,
     status,
-    h("div", { class: "chat-compose" }, input, h("div", { class: "row" }, turns.length === 0 ? startBtn : null, send, stop)),
+    h("div", { class: "chat-compose" }, input, h("div", { class: "row" }, startBtn, send, stop)),
     h("div", { class: "row between" }, keyboardFor(ctx, input), resetBtn),
   );
 }

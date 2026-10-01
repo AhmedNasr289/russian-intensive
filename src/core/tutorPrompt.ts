@@ -5,11 +5,13 @@ import type { Bi, Day, Word } from "../content/types.ts";
 import type { ExplainLang } from "./progress.ts";
 import { levelOf } from "./course.ts";
 
-export type TutorMode = "chat" | "roleplay" | "explain" | "check";
+export type TutorMode = "coach" | "chat" | "roleplay" | "explain" | "check";
 
-export type TutorContext = { day: Day; known: readonly Word[]; explain: ExplainLang };
+/** `status`: the learner's progress as one paragraph (see tutorTools.statusText). */
+export type TutorContext = { day: Day; known: readonly Word[]; explain: ExplainLang; status?: string };
 
 export const TUTOR_MODES: ReadonlyArray<{ id: TutorMode; title: Bi; hint: Bi }> = [
+  { id: "coach", title: { en: "Coach me", ar: "درّبني" }, hint: { en: "Katya looks at your progress, plans your next step with you and drills your weak words.", ar: "تنظر كاتيا في تقدّمك وتخطّط معك خطوتك التالية وتدرّبك على كلماتك الضعيفة." } },
   { id: "roleplay", title: { en: "Role-play today's scene", ar: "تمثيل موقف اليوم" }, hint: { en: "The tutor plays a character from today's lesson.", ar: "يؤدّي المعلّم دور شخصية من درس اليوم." } },
   { id: "chat", title: { en: "Free conversation", ar: "محادثة حرّة" }, hint: { en: "Talk about anything, at your level.", ar: "تحدّث عن أي موضوع بمستواك." } },
   { id: "explain", title: { en: "Explain today's grammar", ar: "اشرح قواعد اليوم" }, hint: { en: "Ask about anything in today's lesson.", ar: "اسأل عن أي شيء في درس اليوم." } },
@@ -48,6 +50,12 @@ export function knownVocabulary(known: readonly Word[], maxChars = 24_000): stri
 
 function modeRule(mode: TutorMode, day: Day): string {
   switch (mode) {
+    case "coach":
+      return [
+        "COACH. You are the learner's study coach as well as their tutor. Start from the learner status: say in one or two sentences what matters most today (due cards, unfinished days, weak words, the next step) and why.",
+        "Then run a short warm-up on their weakest words: ask about one word at a time in Russian, wait for the answer, correct it kindly.",
+        "Keep every reply short. Offer a concrete next step at the end of each reply.",
+      ].join("\n");
     case "roleplay":
       return [
         `ROLE-PLAY. Scenario: ${day.speaking.scenario.en}`,
@@ -64,8 +72,17 @@ function modeRule(mode: TutorMode, day: Day): string {
   }
 }
 
-/** The standing instructions for one tutor conversation. */
-export function buildTutorRules(ctx: TutorContext, mode: TutorMode): string {
+const TOOL_RULE = [
+  "You can act in the learner's app with tools. Use them when they help, not to show off:",
+  "get_learner_status for fresh numbers; find_word before talking about a word's id or day;",
+  "record_mistake when the learner gets a course word wrong in this chat;",
+  "add_words_to_deck only when the learner asks for words to be added;",
+  "suggest_screen or suggest_weak_drill to offer a button for the next step (it opens nothing until they tap it).",
+  "Never say you did something a tool did not confirm, and never invent word ids or screens.",
+].join(" ");
+
+/** The standing instructions for one tutor conversation. With `tools`, the page tools are offered too. */
+export function buildTutorRules(ctx: TutorContext, mode: TutorMode, opts: { tools?: boolean } = {}): string {
   const { day } = ctx;
   const todays = day.words.map(wordLine).join("; ");
   return [
@@ -78,9 +95,13 @@ export function buildTutorRules(ctx: TutorContext, mode: TutorMode): string {
     "When the learner writes Russian with mistakes, first answer naturally, then add a line starting with 'Correction:' giving the corrected sentence and a one-line reason. Correct at most two things per reply; praise what is right.",
     "Plain text only: no tables, no emoji, no headings.",
     modeRule(mode, day),
+    ctx.status ? `Learner status: ${ctx.status}` : "",
+    opts.tools ? TOOL_RULE : "",
     `Today's new words: ${todays || "none (review day)"}.`,
     `Known vocabulary (most recent first): ${knownVocabulary(ctx.known)}.`,
-  ].join("\n\n");
+  ]
+    .filter((part) => part !== "")
+    .join("\n\n");
 }
 
 export type ErrorType = "case" | "agreement" | "verb" | "aspect" | "spelling" | "word-choice" | "word-order" | "other";

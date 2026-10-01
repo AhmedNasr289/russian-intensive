@@ -27,6 +27,7 @@ test("word routes name a course word; unknown words fall back to today", () => {
 test("tutor routes carry the mode", () => {
   assert.deepEqual(parseRoute("#tutor"), { view: "tutor", mode: null });
   assert.deepEqual(parseRoute("#tutor-roleplay"), { view: "tutor", mode: "roleplay" });
+  assert.deepEqual(parseRoute("#tutor-coach"), { view: "tutor", mode: "coach" });
   assert.deepEqual(parseRoute("#tutor-sing"), { view: "tutor", mode: null });
 });
 

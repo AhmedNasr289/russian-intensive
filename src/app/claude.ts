@@ -4,17 +4,43 @@
 import type { DbLike } from "../core/storage.ts";
 
 export type SampleTurn = { role: "user" | "assistant"; content: string };
+
+/** A page function Claude may call during a `sample` call (contract 0.2.61). */
+export type SampleTool = {
+  name: string;
+  description: string;
+  inputSchema?: { type: "object"; properties?: Record<string, unknown>; required?: string[] };
+  execute(input: Record<string, unknown>, context: { signal: AbortSignal }): unknown;
+};
+
 export type SampleOptions = {
   onText?: (u: { text: string; delta: string }) => void;
   signal?: AbortSignal;
   modelTier?: "default" | "complex" | "quick";
+  /** Must be left out (or false) when `tools` are passed. */
   cache?: boolean;
+  tools?: SampleTool[];
 };
 export type SampleResult = { text: string; truncated: boolean };
+export type SampleLimits = { maxPromptBytes: number; tools?: { maxCount: number } };
 
 export interface SampleCap {
   (input: string | SampleTurn[], options?: SampleOptions): Promise<SampleResult>;
   json<T = unknown>(input: string | SampleTurn[], options?: SampleOptions): Promise<T>;
+  /** Missing on older viewer apps. */
+  limits?: () => Promise<SampleLimits>;
+}
+
+const toolLimit = new WeakMap<SampleCap, Promise<number>>();
+
+/** How many page tools this view can run (0 when it cannot). Asked once per capability; never prompts. */
+export function toolsAvailable(sample: SampleCap): Promise<number> {
+  let known = toolLimit.get(sample);
+  if (!known) {
+    known = (sample.limits ? sample.limits() : Promise.resolve(null)).then((l) => l?.tools?.maxCount ?? 0).catch(() => 0);
+    toolLimit.set(sample, known);
+  }
+  return known;
 }
 
 export type UserCap = { id(): Promise<string | null>; isOwner(): Promise<boolean> };
