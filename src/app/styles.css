@@ -3846,6 +3846,33 @@ a.count.weak strong {
   color: var(--bad);
 }
 
+/* ── Study companion: week meter ───────────────────────────────────────────── */
+
+.week-meter {
+  position: relative;
+  height: 12px;
+  margin: 6px 0 4px;
+  border-radius: 6px;
+  background: var(--surface-2);
+}
+
+.week-fill {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  border-radius: 6px;
+  background: var(--cobalt);
+}
+
+.week-pace {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  margin-inline-start: -1px;
+  background: var(--ink);
+}
+
 /* ── Study companion: search, word pages, shortcuts ──────────────────────── */
 
 .search-btn {
