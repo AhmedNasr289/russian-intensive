@@ -55,6 +55,8 @@ export type Choice = {
   options: string[];
   answer: number;
   why: Bi;
+  /** Set on generated word quizzes: the course word this item tests. */
+  wordId?: string;
 };
 
 export type Fill = {

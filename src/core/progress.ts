@@ -28,6 +28,8 @@ export type Settings = {
 export type Score = { best: number; last: number; total: number; at: number };
 export type JournalEntry = { day: number; at: number; text: string; corrected?: string; notes?: string };
 export type ReviewDay = { n: number; again: number };
+/** How often a course word was answered wrong, and when it last was (ms). */
+export type Miss = { n: number; last: number };
 
 export type Progress = {
   version: 1;
@@ -45,6 +47,8 @@ export type Progress = {
   studyLog: Record<string, number>;
   /** ISO date → cards reviewed and how many were "Again". */
   reviewLog: Record<string, ReviewDay>;
+  /** Course word id → wrong answers not yet paid back by right ones. */
+  misses: Record<string, Miss>;
   updatedAt: number;
 };
 
@@ -52,6 +56,9 @@ export const DEFAULT_START = "2026-09-28";
 export const JOURNAL_LIMIT = 60;
 export const JOURNAL_TEXT_LIMIT = 4000;
 export const MATURE_DAYS = 21;
+export const MISSES_LIMIT = 400;
+/** A course word id: `d<day>-<2 digits>`. */
+export const WORD_ID = /^d\d{1,2}-\d{2}$/;
 
 export function defaultSettings(): Settings {
   return {
@@ -82,6 +89,7 @@ export function defaultProgress(now: number): Progress {
     streak: { current: 0, best: 0, lastDay: "" },
     studyLog: {},
     reviewLog: {},
+    misses: {},
     updatedAt: now,
   };
 }
@@ -137,6 +145,49 @@ export function introduceDay(p: Progress, day: number, wordIds: readonly string[
   const key = dayKey(day);
   if (added === 0 && p.introduced[key] !== undefined) return p;
   return { ...p, cards, introduced: { ...p.introduced, [key]: p.introduced[key] ?? now }, updatedAt: now };
+}
+
+/** Adds a card for each word not yet in the deck (existing cards are left alone). */
+export function addCards(p: Progress, wordIds: readonly string[], now: number): Progress {
+  const fresh = wordIds.filter((id) => !p.cards[id]);
+  if (fresh.length === 0) return p;
+  const cards = { ...p.cards };
+  for (const id of fresh) cards[id] = newCard(id, now);
+  return { ...p, cards, updatedAt: now };
+}
+
+/** Takes back cards that were added but never reviewed (an undo); any other card stays. */
+export function removeNewCards(p: Progress, wordIds: readonly string[], now: number): Progress {
+  const gone = wordIds.filter((id) => {
+    const c = p.cards[id];
+    return c !== undefined && c.phase === "new" && c.reps === 0;
+  });
+  if (gone.length === 0) return p;
+  const cards = { ...p.cards };
+  for (const id of gone) delete cards[id];
+  return { ...p, cards, updatedAt: now };
+}
+
+/** Remembers a wrong answer on a course word. Only the newest MISSES_LIMIT words are kept. */
+export function recordMiss(p: Progress, wordId: string, now: number): Progress {
+  if (!WORD_ID.test(wordId)) return p;
+  const misses = { ...p.misses, [wordId]: { n: (p.misses[wordId]?.n ?? 0) + 1, last: now } };
+  const keys = Object.keys(misses);
+  if (keys.length > MISSES_LIMIT) {
+    keys.sort((a, b) => (misses[a]?.last ?? 0) - (misses[b]?.last ?? 0) || a.localeCompare(b));
+    for (const k of keys.slice(0, keys.length - MISSES_LIMIT)) delete misses[k];
+  }
+  return { ...p, misses, updatedAt: now };
+}
+
+/** A right answer pays back one miss; the word leaves the memory when none are left. */
+export function recordHit(p: Progress, wordId: string, now: number): Progress {
+  const miss = p.misses[wordId];
+  if (!miss) return p;
+  const misses = { ...p.misses };
+  if (miss.n <= 1) delete misses[wordId];
+  else misses[wordId] = { n: miss.n - 1, last: miss.last };
+  return { ...p, misses, updatedAt: now };
 }
 
 export function applyReview(p: Progress, cardId: string, grade: Grade, now: number): Progress {
@@ -330,6 +381,9 @@ export function validateProgress(x: unknown): ValidationOutcome {
       studyLog: readRecord(x["studyLog"], "studyLog", (v, k) => (isNum(v) ? v : fail(`studyLog.${k} is not a number`))),
       reviewLog: readRecord(x["reviewLog"], "reviewLog", (v, k) =>
         isObj(v) && isNum(v["n"]) && isNum(v["again"]) ? { n: v["n"], again: v["again"] } : fail(`reviewLog.${k} is malformed`),
+      ),
+      misses: readRecord(x["misses"], "misses", (v, k) =>
+        isObj(v) && isNum(v["n"]) && v["n"] >= 1 && isNum(v["last"]) ? { n: v["n"], last: v["last"] } : fail(`misses.${k} is malformed`),
       ),
       updatedAt: isNum(x["updatedAt"]) ? x["updatedAt"] : 0,
     };

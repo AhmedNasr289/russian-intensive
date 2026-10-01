@@ -3,14 +3,15 @@
 
 import type { Day, Dialogue, GrammarPoint, Table, Word } from "../../content/types.ts";
 import { getDay, mediaFor, wordsUpTo, youtubeSearchUrl } from "../../core/course.ts";
-import { addJournal, introduceDay, recordScore, recordTest } from "../../core/progress.ts";
+import { addJournal, introduceDay, recordHit, recordMiss, recordScore, recordTest } from "../../core/progress.ts";
+import { wordQuestions } from "../../core/quiz.ts";
 import { dayNumber, COURSE_DAYS } from "../../core/schedule.ts";
 import { stripStress } from "../../core/text.ts";
 import { buildJournalPrompt, parseJournalCorrection } from "../../core/tutorPrompt.ts";
 import type { JournalCorrection } from "../../core/tutorPrompt.ts";
 import { errorCode } from "../claude.ts";
 import { tutorPanel, errorMessage } from "../components/chat.ts";
-import { exerciseRunner, wordQuestions } from "../components/exercises.ts";
+import { exerciseRunner } from "../components/exercises.ts";
 import { keyboardFor } from "../components/keyboard.ts";
 import { emptyMedia, mediaCard, searchLink } from "../components/media.ts";
 import { speakCard } from "../components/speak.ts";
@@ -384,6 +385,11 @@ export function dayView(ctx: Ctx, n: number, requested: Section | null): HTMLEle
           items: [...day.exercises, ...wordQuestions(day.words, wordsUpTo(day.n), day.n * 31)],
           seed: day.n * 17,
           onDone: (score) => ctx.store.update((p) => recordScore(p, `d${day.n}-practice`, score, ctx.now())),
+          onAnswer: (item, ok) => {
+            if (item.kind !== "choice" || !item.wordId) return;
+            const id = item.wordId;
+            ctx.store.update((p) => (ok ? recordHit : recordMiss)(p, id, ctx.now()));
+          },
         }),
       );
       break;

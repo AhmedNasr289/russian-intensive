@@ -2,13 +2,18 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { checkOrder, checkTyped, shuffle } from "../src/core/answers.ts";
 import {
+  MISSES_LIMIT,
+  addCards,
   addJournal,
   applyReview,
   deckStats,
   defaultProgress,
   dueCards,
   introduceDay,
+  recordHit,
+  recordMiss,
   recordScore,
+  removeNewCards,
   retention,
   toggleStep,
   touchStreak,
@@ -127,4 +132,46 @@ test("scores keep the best and the last attempt; the journal is capped", () => {
   for (let i = 0; i < 70; i++) p = addJournal(p, { day: 4, at: T0 + i, text: `Запись ${i}` });
   assert.equal(p.journal.length, 60);
   assert.equal(p.journal.at(-1)?.text, "Запись 69");
+});
+
+test("a miss is remembered per word and a later right answer pays it back", () => {
+  let p = recordMiss(defaultProgress(T0), "d12-07", T0);
+  p = recordMiss(p, "d12-07", T0 + 5);
+  assert.deepEqual(p.misses["d12-07"], { n: 2, last: T0 + 5 });
+  p = recordHit(p, "d12-07", T0 + 6);
+  assert.deepEqual(p.misses["d12-07"], { n: 1, last: T0 + 5 });
+  p = recordHit(p, "d12-07", T0 + 7);
+  assert.equal("d12-07" in p.misses, false);
+  const same = recordHit(p, "d12-07", T0 + 8);
+  assert.equal(same, p, "a hit on a word never missed changes nothing");
+  assert.equal(recordMiss(p, "not-a-word", T0), p, "only course word ids are stored");
+});
+
+test("the miss memory keeps the most recent entries", () => {
+  let p = defaultProgress(T0);
+  for (let i = 0; i < MISSES_LIMIT + 1; i++) p = recordMiss(p, `d${1 + (i % 56)}-${String(Math.floor(i / 56)).padStart(2, "0")}`, T0 + i);
+  assert.equal(Object.keys(p.misses).length, MISSES_LIMIT);
+  assert.equal("d1-00" in p.misses, false, "the oldest miss was dropped");
+});
+
+test("old saved progress without misses still loads; malformed misses do not", () => {
+  const old = JSON.parse(JSON.stringify(defaultProgress(T0))) as Record<string, unknown>;
+  delete old["misses"];
+  const r = validateProgress(old);
+  assert.equal(r.ok, true);
+  if (r.ok) assert.deepEqual(r.value.misses, {});
+  const kept = validateProgress(recordMiss(defaultProgress(T0), "d3-01", T0));
+  assert.equal(kept.ok && kept.value.misses["d3-01"]?.n, 1);
+  assert.equal(validateProgress({ ...defaultProgress(T0), misses: { "d3-01": { n: "x", last: 1 } } }).ok, false);
+  assert.equal(validateProgress({ ...defaultProgress(T0), misses: [] }).ok, false);
+});
+
+test("words can be added one by one and an untouched addition can be taken back", () => {
+  let p = introduceDay(defaultProgress(T0), 1, ["d1-01"], T0);
+  p = addCards(p, ["d1-01", "d5-02", "d5-03"], T0 + 1);
+  assert.deepEqual(Object.keys(p.cards).sort(), ["d1-01", "d5-02", "d5-03"]);
+  assert.equal(p.cards["d1-01"]?.due, T0, "an existing card is left alone");
+  p = applyReview(p, "d5-03", 3, T0 + 2);
+  p = removeNewCards(p, ["d5-02", "d5-03"], T0 + 3);
+  assert.deepEqual(Object.keys(p.cards).sort(), ["d1-01", "d5-03"], "a reviewed card is never removed");
 });

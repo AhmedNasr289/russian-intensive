@@ -1,7 +1,7 @@
 // The exercise runner used by practice, worksheets and tests: one item at a time, immediate
 // feedback with the bilingual "why", a score at the end and a replay that reshuffles.
 
-import type { Bi, Choice, Exercise, Word } from "../../content/types.ts";
+import type { Bi, Exercise } from "../../content/types.ts";
 import { checkOrder, checkTyped, shuffle } from "../../core/answers.ts";
 import { hasCyrillic, splitBilingual } from "../../core/text.ts";
 import type { Ctx } from "../context.ts";
@@ -15,6 +15,8 @@ export type RunnerOptions = {
   seed: number;
   /** Called once per completed round with the share of correct answers. */
   onDone?: (score: number, correct: number, total: number) => void;
+  /** Called once per answered item ("almost" counts as right, as in the score). */
+  onAnswer?: (item: Exercise, ok: boolean) => void;
   doneLabel?: Bi;
 };
 
@@ -25,30 +27,6 @@ function optionText(ctx: Ctx, s: string): Node {
   const pair = splitBilingual(s);
   if (pair) return biCtx(ctx, pair, "span");
   return hasCyrillic(s) && !/[A-Za-z]/.test(s) ? ru(s) : mixed(s);
-}
-
-/** Meaning and listening questions generated from a day's words. */
-export function wordQuestions(words: readonly Word[], pool: readonly Word[], seed: number, count = 6): Choice[] {
-  const usable = words.filter((w) => w.pos !== "phrase" || w.ru.length <= 24);
-  const picks = shuffle(usable, seed).slice(0, count);
-  return picks.map((w, i) => {
-    const others = shuffle(
-      pool.filter((o) => o.id !== w.id && o.en !== w.en),
-      seed + i + 1,
-    ).slice(0, 3);
-    const listen = i % 2 === 1;
-    const options = listen ? [w.ru, ...others.map((o) => o.ru)] : [`${w.en} · ${w.ar}`, ...others.map((o) => `${o.en} · ${o.ar}`)];
-    const order = shuffle(options.map((_, k) => k), seed * 7 + i);
-    return {
-      kind: "choice",
-      prompt: listen ? { en: "Listen. Which word do you hear?", ar: "استمع. أيّ كلمة تسمع؟" } : { en: "What does it mean?", ar: "ماذا تعني؟" },
-      ru: w.ru,
-      ...(listen ? { listen: true } : {}),
-      options: order.map((k) => options[k] ?? ""),
-      answer: order.indexOf(0),
-      why: { en: `${w.ru} = ${w.en}`, ar: `${w.ru} = ${w.ar}` },
-    } satisfies Choice;
-  });
 }
 
 export function exerciseRunner(ctx: Ctx, opts: RunnerOptions): HTMLElement {
@@ -76,6 +54,7 @@ export function exerciseRunner(ctx: Ctx, opts: RunnerOptions): HTMLElement {
       const finish = (res: Result, reveal: Node | null) => {
         results[index] = res;
         ctx.sfx(res.ok || res.close ? "ok" : "bad");
+        opts.onAnswer?.(ex, res.ok || res.close);
         replace(
           feedback,
           h(
