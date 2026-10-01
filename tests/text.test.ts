@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   ACUTE,
+  arCount,
   checkStress,
   countVowels,
   hasArabic,
@@ -15,6 +16,11 @@ import {
   tokenizeRu,
   wordDiff,
 } from "../src/core/text.ts";
+
+test("Arabic counts agree with their noun: dual for 2, plural for 3 to 10, singular otherwise", () => {
+  const card = { one: "بطاقة", two: "بطاقتان", few: "بطاقات" };
+  assert.deepEqual([1, 2, 3, 10, 11, 19, 100, 103, 111].map((n) => arCount(n, card)), ["1 بطاقة", "بطاقتان", "3 بطاقات", "10 بطاقات", "11 بطاقة", "19 بطاقة", "100 بطاقة", "103 بطاقات", "111 بطاقة"]);
+});
 
 test("stripStress removes the combining acute", () => {
   assert.equal(stripStress("молоко́"), "молоко");

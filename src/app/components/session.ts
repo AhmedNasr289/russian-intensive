@@ -7,6 +7,7 @@ import { getDay } from "../../core/course.ts";
 import { toggleStep } from "../../core/progress.ts";
 import { COURSE_DAYS, dailySteps, dayNumber, isoDate, kindOf } from "../../core/schedule.ts";
 import type { Block, Step } from "../../core/schedule.ts";
+import { arCount } from "../../core/text.ts";
 import { advanceSession, parseSession, pauseSession, remainingMs, resumeSession, sessionStep, startSession, tickCurrent } from "../../core/session.ts";
 import type { SessionState } from "../../core/session.ts";
 import type { Ctx } from "../context.ts";
@@ -83,7 +84,7 @@ export function createSessionBar(getCtx: () => Ctx): SessionBar {
     ctx.sfx("done");
     ctx.toast(
       s.ticked.length
-        ? { en: `${BLOCK_LABEL[s.block].en} finished: ${s.ticked.length} steps, ${minutes} min. Молоде́ц!`, ar: `انتهت ${BLOCK_LABEL[s.block].ar}: ${s.ticked.length} خطوات، ${minutes} دقيقة. أحسنت!` }
+        ? { en: `${BLOCK_LABEL[s.block].en} finished: ${s.ticked.length} steps, ${minutes} min. Молоде́ц!`, ar: `انتهت ${BLOCK_LABEL[s.block].ar}: ${arCount(s.ticked.length, { one: "خطوة", two: "خطوتان", few: "خطوات" })}، ${arCount(minutes, { one: "دقيقة", two: "دقيقتان", few: "دقائق" })}. أحسنت!` }
         : { en: "Session ended.", ar: "انتهت الجلسة." },
       "ok",
     );

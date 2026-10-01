@@ -4,6 +4,7 @@
 import type { Bi } from "../../content/types.ts";
 import { searchScreens, searchWords } from "../../core/search.ts";
 import type { ScreenHit, WordHit } from "../../core/search.ts";
+import { arCount } from "../../core/text.ts";
 import { weakWords } from "../../core/weak.ts";
 import type { Ctx } from "../context.ts";
 import { tr } from "../context.ts";
@@ -106,7 +107,7 @@ export function openPalette(ctx: Ctx): void {
     const order = shown.flatMap((g) => [...g.querySelectorAll<HTMLElement>("[role=option]")].map((n) => n.id));
     options.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
     replace(list, shown.length ? shown : h("p", { class: "palette-empty" }, tr(ctx, { en: "Nothing found. Try the word without endings, or in another language.", ar: "لا نتائج. جرّب الكلمة دون لواحق، أو بلغة أخرى." })));
-    status.textContent = q.trim() === "" ? "" : tr(ctx, { en: `${options.length} results`, ar: `${options.length} نتيجة` });
+    status.textContent = q.trim() === "" ? "" : tr(ctx, { en: `${options.length} results`, ar: arCount(options.length, { one: "نتيجة", two: "نتيجتان", few: "نتائج" }) });
     input.removeAttribute("aria-activedescendant");
     active = 0;
     setActive(0);

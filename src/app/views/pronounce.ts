@@ -64,7 +64,7 @@ export function pronounceView(ctx: Ctx): HTMLElement {
       area.focus();
     },
   });
-  const count = h("span", { class: "muted small counter" });
+  const count = h("span", { class: "muted small counter", dir: "ltr" });
   const sync = () => {
     const text = area.value.trim();
     const ok = hasCyrillic(text);

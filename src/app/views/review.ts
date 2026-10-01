@@ -4,6 +4,7 @@
 import { findWord } from "../../core/course.ts";
 import { applyReview, deckStats, dueCards } from "../../core/progress.ts";
 import { GRADES, formatInterval, previewIntervals } from "../../core/srs.ts";
+import { arCount } from "../../core/text.ts";
 import { weakWords } from "../../core/weak.ts";
 import type { CardState, Grade } from "../../core/srs.ts";
 import type { Ctx } from "../context.ts";
@@ -42,7 +43,7 @@ export function reviewView(ctx: Ctx): HTMLElement {
 
   const weakLink = () => {
     const n = weakWords(ctx.store.progress, 99).length;
-    return n ? h("a", { class: "count weak", href: "#weak" }, h("strong", null, String(n)), tr(ctx, { en: " weak words", ar: " كلمات ضعيفة" })) : null;
+    return n ? h("a", { class: "count weak", href: "#weak" }, tr(ctx, { en: `${n} weak ${n === 1 ? "word" : "words"}`, ar: arCount(n, { one: "كلمة ضعيفة", two: "كلمتان ضعيفتان", few: "كلمات ضعيفة" }) })) : null;
   };
 
   const header = (due: number) => {

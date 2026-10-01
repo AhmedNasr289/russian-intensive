@@ -3,6 +3,7 @@
 
 import { planMoves } from "../../core/coach.ts";
 import type { Move, MoveKind } from "../../core/coach.ts";
+import { arCount } from "../../core/text.ts";
 import { weakWords } from "../../core/weak.ts";
 import type { Ctx } from "../context.ts";
 import { tr } from "../context.ts";
@@ -33,7 +34,7 @@ export function runMove(ctx: Ctx, move: Move): void {
   else ctx.navigate(move.action);
 }
 
-const minutesLabel = (ctx: Ctx, m: number): string => (m ? tr(ctx, { en: `${m} min`, ar: `${m} دقيقة` }) : "");
+const minutesLabel = (ctx: Ctx, m: number): string => (m ? tr(ctx, { en: `${m} min`, ar: arCount(m, { one: "دقيقة", two: "دقيقتان", few: "دقائق" }) }) : "");
 
 export function coachCard(ctx: Ctx, moves: readonly Move[]): HTMLElement | null {
   const [first, ...rest] = moves;

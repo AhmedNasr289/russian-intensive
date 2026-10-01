@@ -4,6 +4,7 @@
 import { dayNumber } from "../../core/schedule.ts";
 import { recordHit, recordMiss } from "../../core/progress.ts";
 import { wordsUpTo } from "../../core/course.ts";
+import { arCount } from "../../core/text.ts";
 import { weakDrillItems, weakWords } from "../../core/weak.ts";
 import type { WeakWord } from "../../core/weak.ts";
 import { exerciseRunner } from "../components/exercises.ts";
@@ -19,8 +20,8 @@ export function reasonChips(ctx: Ctx, w: WeakWord): HTMLElement {
   return h(
     "span",
     { class: "reasons" },
-    w.misses ? chip(tr(ctx, { en: `missed ${w.misses}×`, ar: `أخطأت ${w.misses} مرة` }), "bad") : null,
-    w.lapses ? chip(tr(ctx, { en: `forgotten ${w.lapses}×`, ar: `نُسيت ${w.lapses} مرة` }), "warn") : null,
+    w.misses ? chip(tr(ctx, { en: `missed ${w.misses}×`, ar: `أخطأت ${arCount(w.misses, { one: "مرة", two: "مرتين", few: "مرات" })}` }), "bad") : null,
+    w.lapses ? chip(tr(ctx, { en: `forgotten ${w.lapses}×`, ar: `نُسيت ${arCount(w.lapses, { one: "مرة", two: "مرتين", few: "مرات" })}` }), "warn") : null,
     w.hard && !w.lapses ? chip(tr(ctx, { en: "hard", ar: "صعبة" }), "warn") : null,
   );
 }
@@ -88,7 +89,7 @@ export function weakView(ctx: Ctx): HTMLElement {
     h(
       "section",
       { class: "card" },
-      h("h3", null, tr(ctx, { en: `Drill the ${drillWords.length} weakest`, ar: `تدرّب على أضعف ${drillWords.length} كلمات` })),
+      h("h3", null, tr(ctx, { en: `Drill the ${drillWords.length} weakest`, ar: `تدرّب على أضعف ${arCount(drillWords.length, { one: "كلمة", two: "كلمتين", few: "كلمات" })}` })),
       h("p", { class: "muted" }, tr(ctx, { en: "Each word twice: once for its meaning, once by ear.", ar: "كل كلمة مرتين: مرة لمعناها ومرة بالسمع." })),
       drill,
     ),

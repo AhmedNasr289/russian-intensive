@@ -25,6 +25,19 @@ export function splitBilingual(s: string): { en: string; ar: string } | null {
   return en && hasArabic(ar) && !hasArabic(en) ? { en, ar } : null;
 }
 
+/** The forms of an Arabic noun after a number: singular, dual (which replaces the number) and plural. */
+export type ArForms = { one: string; two: string; few: string };
+
+/**
+ * A count with its Arabic noun as Modern Standard Arabic agrees them: 2 takes the dual alone
+ * ("كلمتان"), 3–10 the plural ("3 كلمات"), every other number the singular ("11 كلمة", "100 كلمة").
+ */
+export function arCount(n: number, forms: ArForms): string {
+  if (n === 2) return forms.two;
+  const r = n % 100;
+  return `${n} ${r >= 3 && r <= 10 ? forms.few : forms.one}`;
+}
+
 export const stripStress = (s: string): string => s.split(ACUTE).join("").split(GRAVE).join("");
 
 export function countVowels(word: string): number {

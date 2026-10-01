@@ -3,6 +3,7 @@
 import type { Day } from "../../content/types.ts";
 import { WEEK_THEMES } from "../../content/syllabus.ts";
 import { stepRoute } from "../../core/coach.ts";
+import { arCount } from "../../core/text.ts";
 import { getDay } from "../../core/course.ts";
 import { deckStats, toggleStep } from "../../core/progress.ts";
 import { COURSE_DAYS, currentStep, dailySteps, dateOfDay, dayNumber, weekOf } from "../../core/schedule.ts";
@@ -127,7 +128,7 @@ export function todayView(ctx: Ctx): HTMLElement {
       "li",
       { class: `step ${isDone ? "is-done" : ""} ${isNow ? "is-now" : ""}`.trim() },
       h("span", { class: "step-time" }, step.start),
-      h("div", { class: "step-main" }, h("span", { class: "step-title" }, tr(ctx, step.title)), h("span", { class: "step-min muted" }, `${step.minutes} ${tr(ctx, { en: "min", ar: "دقيقة" })}`), isNow ? chip(tr(ctx, { en: "now", ar: "الآن" }), "now") : null),
+      h("div", { class: "step-main" }, h("span", { class: "step-title" }, tr(ctx, step.title)), h("span", { class: "step-min muted" }, tr(ctx, { en: `${step.minutes} min`, ar: arCount(step.minutes, { one: "دقيقة", two: "دقيقتان", few: "دقائق" }) })), isNow ? chip(tr(ctx, { en: "now", ar: "الآن" }), "now") : null),
       h(
         "div",
         { class: "step-actions" },

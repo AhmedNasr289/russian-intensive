@@ -43,7 +43,7 @@ export function exerciseRunner(ctx: Ctx, opts: RunnerOptions): HTMLElement {
     const renderItem = () => {
       const ex = items[index];
       if (!ex) return renderEnd();
-      const progress = h("div", { class: "runner-top" }, h("span", { class: "runner-count" }, `${index + 1} / ${items.length}`), h("div", { class: "bar" }, h("span", { style: `width:${(index / items.length) * 100}%` })));
+      const progress = h("div", { class: "runner-top" }, h("span", { class: "runner-count", dir: "ltr" }, `${index + 1} / ${items.length}`), h("div", { class: "bar" }, h("span", { style: `width:${(index / items.length) * 100}%` })));
       const feedback = h("div", { class: "feedback", "aria-live": "polite" });
       const next = btn([tr(ctx, index + 1 === items.length ? { en: "See results", ar: "النتيجة" } : { en: "Next", ar: "التالي" }), icon("right", 18)], {
         class: "primary",

@@ -3842,10 +3842,6 @@ a.count.weak {
   text-decoration: none;
 }
 
-a.count.weak strong {
-  color: var(--bad);
-}
-
 /* ── Study companion: the tutor's actions in the chat ─────────────────────── */
 
 .activity {

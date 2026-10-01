@@ -139,7 +139,8 @@ export function playButtons(ctx: Ctx, text: string, opts: { slow?: boolean; who?
   wrap.appendChild(play);
   if (opts.slow !== false) {
     const label = tr(ctx, { en: "Listen slowly", ar: "استمع ببطء" });
-    const slow = h("button", { type: "button", class: "icon-btn slow", title: label, "aria-label": label, "aria-pressed": "false" }, "0.6×");
+    // dir="ltr": in an Arabic page the "×" would otherwise move to the front ("×0.6").
+    const slow = h("button", { type: "button", class: "icon-btn slow", dir: "ltr", title: label, "aria-label": label, "aria-pressed": "false" }, "0.6×");
     slow.addEventListener("click", playing(slow, opts.who ? { slow: true, who: opts.who } : { slow: true }));
     wrap.appendChild(slow);
   }

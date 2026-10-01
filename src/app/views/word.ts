@@ -76,7 +76,7 @@ export function wordView(ctx: Ctx, id: string): HTMLElement {
       "nav",
       { class: "word-nav", "aria-label": tr(ctx, { en: "Words of this day", ar: "كلمات هذا اليوم" }) },
       h("a", { class: "back", href: `#day-${n}-words` }, icon("left", 18), tr(ctx, { en: `Day ${n}`, ar: `اليوم ${n}` }), " · ", ru(day.title.ru)),
-      h("span", { class: "word-step" }, step(prev, "left", { en: "Previous word", ar: "الكلمة السابقة" }), h("span", { class: "muted" }, `${index + 1} / ${day.words.length}`), step(next, "right", { en: "Next word", ar: "الكلمة التالية" })),
+      h("span", { class: "word-step" }, step(prev, "left", { en: "Previous word", ar: "الكلمة السابقة" }), h("span", { class: "muted", dir: "ltr" }, `${index + 1} / ${day.words.length}`), step(next, "right", { en: "Next word", ar: "الكلمة التالية" })),
     ),
     h(
       "section",

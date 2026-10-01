@@ -3,6 +3,7 @@
 
 import type { Bi, DayKind, Tri } from "../content/types.ts";
 import { getDay } from "./course.ts";
+import { arCount } from "./text.ts";
 import { deckStats } from "./progress.ts";
 import type { Progress } from "./progress.ts";
 import { BLOCK_MINUTES, COURSE_DAYS, addMinutes, currentStep, dailySteps, dateOfDay, dayNumber, kindOf, toMinutes } from "./schedule.ts";
@@ -76,7 +77,7 @@ function reviewMove(due: number): Move {
   return {
     id: "review",
     kind: "review",
-    title: { en: `Review ${plural(due, "card", "cards")}`, ar: `راجع ${due} ${due === 1 ? "بطاقة" : "بطاقات"}` },
+    title: { en: `Review ${plural(due, "card", "cards")}`, ar: `راجع ${arCount(due, { one: "بطاقة", two: "بطاقتين", few: "بطاقات" })}` },
     why: { en: "They are due now; reviewing on time keeps each one easy.", ar: "حان وقتها الآن؛ المراجعة في موعدها تُبقي كل بطاقة سهلة." },
     minutes: Math.max(2, Math.round((due * SECONDS_PER_CARD) / 60)),
     action: "review",
@@ -168,7 +169,7 @@ export function planMoves(input: CoachInput): Move[] {
           ? { en: `Day ${first} has ${doneThere} of 7 steps done; its words and lesson take about half an hour.`, ar: `في اليوم ${first} أنجزت ${doneThere} من ٧ خطوات؛ كلماته ودرسه تأخذ نحو نصف ساعة.` }
           : {
               en: `${missed.length} earlier days are unfinished. One a day: day ${first} today, day ${second} tomorrow${missed.length > 2 ? ", and so on" : ""}.`,
-              ar: `${missed.length} أيام سابقة لم تكتمل. يوم واحد كل يوم: اليوم ${first} اليوم، واليوم ${second} غدًا${missed.length > 2 ? "، وهكذا" : ""}.`,
+              ar: `لم يكتمل ${missed.length} من الأيام السابقة. يوم واحد كل يوم: اليوم ${first} اليوم، واليوم ${second} غدًا${missed.length > 2 ? "، وهكذا" : ""}.`,
             },
       minutes: CATCH_UP_MINUTES,
       action: `day-${first}`,
@@ -187,8 +188,8 @@ export function planMoves(input: CoachInput): Move[] {
       kind: "session",
       title: { en: `Run the ${name.en} session`, ar: `ابدأ جلسة ${name.ar}` },
       why: startsLater
-        ? { en: `Planned for ${blockStart(b)}: ${plural(left.length, "step", "steps")}, ${minutes} min. The app times each step and ticks it off.`, ar: `مقرّرة في ${blockStart(b)}: ${left.length} خطوات، ${minutes} دقيقة. يحسب التطبيق وقت كل خطوة ويعلّمها كمكتملة.` }
-        : { en: `${plural(left.length, "step", "steps")} left, ${minutes} min. Its time has passed, but it still counts today.`, ar: `بقيت ${left.length} خطوات، ${minutes} دقيقة. فات وقتها لكنها ما زالت تُحسب اليوم.` },
+        ? { en: `Planned for ${blockStart(b)}: ${plural(left.length, "step", "steps")}, ${minutes} min. The app times each step and ticks it off.`, ar: `مقرّرة في ${blockStart(b)}: ${arCount(left.length, { one: "خطوة", two: "خطوتان", few: "خطوات" })}، ${arCount(minutes, { one: "دقيقة", two: "دقيقتان", few: "دقائق" })}. يحسب التطبيق وقت كل خطوة ويعلّمها كمكتملة.` }
+        : { en: `${plural(left.length, "step", "steps")} left, ${minutes} min. Its time has passed, but it still counts today.`, ar: `بقي ${arCount(left.length, { one: "خطوة", two: "خطوتان", few: "خطوات" })}، ${arCount(minutes, { one: "دقيقة", two: "دقيقتان", few: "دقائق" })}. فات وقتها لكنها ما زالت تُحسب اليوم.` },
       minutes,
       action: `session-${b}`,
     });

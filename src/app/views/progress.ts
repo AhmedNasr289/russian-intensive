@@ -5,6 +5,7 @@ import { getDay } from "../../core/course.ts";
 import { dueForecast, weekMinutes } from "../../core/forecast.ts";
 import type { WeekMinutes } from "../../core/forecast.ts";
 import { deckStats, retention } from "../../core/progress.ts";
+import { arCount } from "../../core/text.ts";
 import { weakWords } from "../../core/weak.ts";
 import { isoDate } from "../../core/schedule.ts";
 import type { Ctx } from "../context.ts";
@@ -75,7 +76,7 @@ function weekPanel(ctx: Ctx, week: WeekMinutes): HTMLElement {
   const status =
     week.minutes >= pace
       ? { en: `${week.minutes} of ${week.plan} min: on pace (${pace} by today).`, ar: `${week.minutes} من ${week.plan} دقيقة: في الموعد (${pace} حتى اليوم).` }
-      : { en: `${week.minutes} of ${week.plan} min: ${pace - week.minutes} min behind today's pace (${pace}).`, ar: `${week.minutes} من ${week.plan} دقيقة: متأخر ${pace - week.minutes} دقيقة عن وتيرة اليوم (${pace}).` };
+      : { en: `${week.minutes} of ${week.plan} min: ${pace - week.minutes} min behind today's pace (${pace}).`, ar: `${week.minutes} من ${week.plan} دقيقة: متأخر ${arCount(pace - week.minutes, { one: "دقيقة", two: "دقيقتين", few: "دقائق" })} عن وتيرة اليوم (${pace}).` };
   return h(
     "figure",
     { class: "chart week" },
