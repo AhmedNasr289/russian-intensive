@@ -4195,7 +4195,371 @@ dialog.shortcuts h2 {
   font-variant-numeric: tabular-nums;
 }
 
+/* ── Study companion: coach, sessions, celebration ────────────────────────── */
+
+.coach {
+  display: grid;
+  gap: 16px;
+  border-color: var(--cobalt);
+  border-width: 1.5px;
+}
+
+@media (min-width: 880px) {
+  .coach:has(> .coach-more) {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+/* On a phone the next move comes first, above the long day card. */
+@media (max-width: 560px) {
+  .today > .coach {
+    order: -1;
+  }
+}
+
+.coach-main {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+}
+
+.coach .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+
+.coach-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 1.2rem + 1vw, 1.9rem);
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.coach-why {
+  color: var(--ink-2);
+}
+
+.coach-why p {
+  margin: 0;
+}
+
+.coach-actions {
+  align-items: center;
+  margin-top: 4px;
+}
+
+.coach-min {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--ink-2);
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.coach-done {
+  border-color: var(--good);
+}
+
+.coach-done .eyebrow {
+  color: var(--good);
+}
+
+.coach-then {
+  margin: 0 0 6px;
+  color: var(--ink-2);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.move-list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.move {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.move:hover {
+  border-color: var(--cobalt);
+  background: var(--cobalt-soft);
+}
+
+.move-icon {
+  display: grid;
+  place-items: center;
+  color: var(--cobalt);
+}
+
+.move-title {
+  min-width: 0;
+  font-weight: 600;
+}
+
+.move-min {
+  color: var(--ink-2);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.next-move {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 240px;
+  height: 36px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--cobalt);
+  color: var(--on-cobalt);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.next-move:hover {
+  background: var(--cobalt-strong);
+}
+
+.next-move-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .next-move {
+    width: 40px;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .next-move-label {
+    display: none;
+  }
+}
+
+.block-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 34px;
+}
+
+.session-bar {
+  position: fixed;
+  top: calc(var(--topbar-h) + env(safe-area-inset-top, 0px) + 8px);
+  inset-inline: 10px;
+  z-index: 39;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  max-width: 760px;
+  margin-inline: auto;
+  padding: 10px 12px 10px 16px;
+  border: 1.5px solid var(--cobalt);
+  border-radius: var(--radius);
+  background: color-mix(in oklab, var(--surface) 94%, transparent);
+  backdrop-filter: saturate(1.4) blur(14px);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px);
+  box-shadow: var(--shadow);
+}
+
+.session-bar[hidden] {
+  display: none;
+}
+
+.session-info {
+  display: grid;
+  flex: 1 1 200px;
+  gap: 2px;
+  min-width: 0;
+}
+
+.session-eyebrow {
+  color: var(--ink-2);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.session-step {
+  overflow: hidden;
+  color: var(--ink);
+  font-weight: 650;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.session-dots {
+  display: flex;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.session-dots .dot {
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid var(--cobalt);
+  border-radius: 50%;
+}
+
+.session-dots .dot.done {
+  background: var(--cobalt);
+}
+
+.session-dots .dot.now {
+  box-shadow: 0 0 0 2.5px var(--cobalt-soft);
+}
+
+.session-time {
+  min-width: 4.2ch;
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.session-bar.is-over .session-time {
+  color: var(--good);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.session-bar.is-paused .session-time {
+  opacity: 0.5;
+}
+
+.session-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.session-actions .btn {
+  margin-inline: 4px;
+}
+
+.btn.pulse-once {
+  animation: pop 0.4s ease-out 2;
+}
+
+:root.has-session .main {
+  padding-block-start: 112px;
+}
+
+@media (max-width: 520px) {
+  .session-bar {
+    padding: 8px 8px 8px 12px;
+  }
+
+  .session-next-label {
+    display: none;
+  }
+
+  :root.has-session .main {
+    padding-block-start: 150px;
+  }
+}
+
+@media (min-width: 800px) {
+  .session-bar {
+    inset-inline: calc(224px + 24px) 24px;
+  }
+}
+
+.celebrate {
+  border-color: var(--good);
+}
+
+.celebrate-line {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--good-soft);
+  color: var(--good);
+  font-weight: 700;
+}
+
+.confetti {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti span {
+  position: absolute;
+  top: -12px;
+  left: calc(var(--i) * 7% + 3%);
+  width: 8px;
+  height: 14px;
+  border-radius: 2px;
+  background: var(--cobalt);
+  opacity: 0;
+  animation: confetti-fall 1.9s ease-in calc(var(--i) * 0.07s) 1 both;
+}
+
+.confetti span:nth-child(3n) {
+  background: var(--rowan);
+}
+
+.confetti span:nth-child(4n + 1) {
+  background: var(--good);
+}
+
+@keyframes confetti-fall {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(260px) rotate(540deg);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .confetti {
+    display: none;
+  }
+
   *,
   *::before,
   *::after {

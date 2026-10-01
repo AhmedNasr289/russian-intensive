@@ -3,6 +3,7 @@
 import type { Bi } from "../content/types.ts";
 import type { Sfx } from "../core/audio.ts";
 import type { ExplainLang } from "../core/progress.ts";
+import type { Block } from "../core/schedule.ts";
 import type { DownloadsCap, SampleCap } from "./claude.ts";
 import type { Host } from "./env.ts";
 import type { Route } from "./router.ts";
@@ -67,6 +68,8 @@ export type Ctx = {
   stopAudio(): void;
   sfx(kind: Sfx): void;
   now(): number;
+  /** The guided study session (the bar under the header). */
+  session: { start(block: Block): void; active(): boolean };
 };
 
 export const explainOf = (ctx: Ctx): ExplainLang => ctx.store.progress.settings.explain;

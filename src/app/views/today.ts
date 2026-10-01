@@ -2,35 +2,16 @@
 
 import type { Day } from "../../content/types.ts";
 import { WEEK_THEMES } from "../../content/syllabus.ts";
+import { stepRoute } from "../../core/coach.ts";
 import { getDay } from "../../core/course.ts";
 import { deckStats, toggleStep } from "../../core/progress.ts";
 import { COURSE_DAYS, currentStep, dailySteps, dateOfDay, dayNumber, weekOf } from "../../core/schedule.ts";
-import type { Step } from "../../core/schedule.ts";
+import type { Block, Step } from "../../core/schedule.ts";
+import { coachCard, currentMoves } from "../components/coach.ts";
 import type { Ctx } from "../context.ts";
 import { tr } from "../context.ts";
 import { h } from "../dom.ts";
 import { biCtx, btn, chip, icon, ring, ru, sectionTitle } from "../ui.ts";
-
-/** Where each step of the day leads, depending on the kind of day. */
-export function stepTarget(step: Step, day: Day): string {
-  const n = day.n;
-  switch (step.target) {
-    case "review":
-      return "review";
-    case "listen":
-      return day.kind === "review" ? `day-${n}-test` : day.kind === "immersion" ? `day-${n}-worksheet` : `day-${n}-dialogue`;
-    case "words":
-      return day.kind === "review" ? "review" : `day-${n}-words`;
-    case "lesson":
-      return day.kind === "review" ? `day-${n}-test` : day.kind === "immersion" ? `day-${n}-worksheet` : `day-${n}-grammar`;
-    case "practice":
-      return day.kind === "review" ? `day-${n}-test` : `day-${n}-practice`;
-    case "tutor":
-      return `day-${n}-tutor`;
-    case "journal":
-      return `day-${n}-journal`;
-  }
-}
 
 const KIND_LABEL = {
   lesson: { en: "Lesson", ar: "درس" },
@@ -82,6 +63,7 @@ export function todayView(ctx: Ctx): HTMLElement {
   const stats = deckStats(p, ctx.now());
   const streak = p.streak.current;
   const learned = Object.keys(p.cards).length;
+  const coach = coachCard(ctx, currentMoves(ctx));
 
   const tiles = h(
     "div",
@@ -105,6 +87,7 @@ export function todayView(ctx: Ctx): HTMLElement {
         h("p", { class: "lead" }, tr(ctx, { en: `${days} ${days === 1 ? "day" : "days"} to go. Get ready below, or preview the first lessons now.`, ar: `بقي ${days} يوم. استعدّ أدناه أو اطّلع على الدروس الأولى الآن.` })),
         h("div", { class: "row wrap" }, btn(tr(ctx, { en: "Preview day 1", ar: "معاينة اليوم الأول" }), { class: "primary", onClick: () => ctx.navigate("day-1") }), btn(tr(ctx, { en: "Alphabet studio", ar: "استوديو الأبجدية" }), { class: "ghost", onClick: () => ctx.navigate("alphabet") })),
       ),
+      coach,
       setupChecklist(ctx),
       tiles,
     );
@@ -124,6 +107,7 @@ export function todayView(ctx: Ctx): HTMLElement {
         h("p", { class: "lead" }, tr(ctx, { en: `Average best test score: ${Math.round(avg * 100)}%. Keep your words alive with a short daily review.`, ar: `متوسط أفضل نتائج الاختبارات: ${Math.round(avg * 100)}٪. حافظ على كلماتك بمراجعة يومية قصيرة.` })),
         h("div", { class: "row wrap" }, btn(tr(ctx, { en: "Review cards", ar: "راجع البطاقات" }), { class: "primary", onClick: () => ctx.navigate("review") }), btn(tr(ctx, { en: "See progress", ar: "اعرض التقدّم" }), { class: "ghost", onClick: () => ctx.navigate("progress") })),
       ),
+      coach,
       tiles,
     );
   }
@@ -138,7 +122,7 @@ export function todayView(ctx: Ctx): HTMLElement {
   const stepRow = (step: Step) => {
     const isDone = done.has(step.id);
     const isNow = current?.id === step.id;
-    const target = day ? stepTarget(step, day) : `day-${n}`;
+    const target = day ? stepRoute(step.target, n, day.kind) : `day-${n}`;
     return h(
       "li",
       { class: `step ${isDone ? "is-done" : ""} ${isNow ? "is-now" : ""}`.trim() },
@@ -167,23 +151,39 @@ export function todayView(ctx: Ctx): HTMLElement {
     );
   };
 
-  const block = (name: "morning" | "evening") =>
-    h(
+  const block = (name: Block) => {
+    const left = steps.filter((s) => s.block === name && !done.has(s.id)).length;
+    return h(
       "div",
       { class: `block block-${name}` },
-      h("h3", { class: "block-title" }, tr(ctx, name === "morning" ? { en: "Morning · 45 min", ar: "الصباح · ٤٥ دقيقة" } : { en: "Evening · 75 min", ar: "المساء · ٧٥ دقيقة" })),
+      h(
+        "div",
+        { class: "block-head" },
+        h("h3", { class: "block-title" }, tr(ctx, name === "morning" ? { en: "Morning · 45 min", ar: "الصباح · ٤٥ دقيقة" } : { en: "Evening · 75 min", ar: "المساء · ٧٥ دقيقة" })),
+        left && !ctx.session.active()
+          ? btn([icon("play", 16), tr(ctx, { en: "Run session", ar: "ابدأ الجلسة" })], {
+              class: "ghost small",
+              title: tr(ctx, { en: "The app opens each step, times it and ticks it off", ar: "يفتح التطبيق كل خطوة ويحسب وقتها ويعلّمها كمكتملة" }),
+              onClick: () => ctx.session.start(name),
+            })
+          : null,
+      ),
       h("ol", { class: "steps" }, steps.filter((s) => s.block === name).map(stepRow)),
     );
+  };
+  const complete = done.size >= steps.length;
 
   return h(
     "div",
     { class: "view today" },
     h(
       "section",
-      { class: "hero card" },
+      { class: `hero card${complete ? " celebrate" : ""}` },
+      complete ? h("div", { class: "confetti", "aria-hidden": "true" }, Array.from({ length: 14 }, (_, i) => h("span", { style: `--i:${i}` }))) : null,
       h(
         "div",
         { class: "hero-text" },
+        complete ? h("p", { class: "celebrate-line", role: "status" }, ru("Молоде́ц!"), " ", tr(ctx, { en: `All seven steps of day ${n} are done.`, ar: `اكتملت الخطوات السبع لليوم ${n}.` })) : null,
         h("p", { class: "eyebrow" }, tr(ctx, { en: `Day ${n} of ${COURSE_DAYS} · Week ${week}`, ar: `اليوم ${n} من ${COURSE_DAYS} · الأسبوع ${week}` }), theme ? h("span", { class: "eyebrow-theme" }, " · ", tr(ctx, theme)) : null),
         day ? h("h1", { class: "day-title" }, ru(day.title.ru)) : h("h1", null, tr(ctx, { en: "This day's lesson is being prepared", ar: "درس هذا اليوم قيد الإعداد" })),
         day ? h("p", { class: "lead" }, biCtx(ctx, { en: day.title.en, ar: day.title.ar }, "span")) : null,
@@ -193,6 +193,7 @@ export function todayView(ctx: Ctx): HTMLElement {
       ),
       h("div", { class: "hero-ring" }, ring(done.size / steps.length, 104, h("span", null, h("strong", null, `${done.size}/${steps.length}`), h("small", null, tr(ctx, { en: "steps", ar: "خطوات" }))))),
     ),
+    coach,
     tiles,
     h("section", { class: "card timeline" }, sectionTitle(ctx, { en: "Today's plan", ar: "خطة اليوم" }), h("div", { class: "blocks" }, block("morning"), block("evening"))),
     n <= 3 || stats.total === 0 ? setupChecklist(ctx) : null,

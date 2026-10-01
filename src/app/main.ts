@@ -14,6 +14,7 @@ import { findWord } from "../core/course.ts";
 import { errorCode, useCapability } from "./claude.ts";
 import { createListenBar } from "./components/listenbar.ts";
 import { openPalette } from "./components/palette.ts";
+import { createSessionBar } from "./components/session.ts";
 import { installGlobalKeys } from "./components/shortcuts.ts";
 import type { Caps, Ctx, Spoken, ToastKind, Voices } from "./context.ts";
 import { tr } from "./context.ts";
@@ -237,6 +238,12 @@ async function boot(root: HTMLElement): Promise<void> {
   });
   root.appendChild(bar.el);
 
+  const sessionBar = createSessionBar(() => {
+    if (!lastCtx) throw new Error("the session bar was used before the first render");
+    return lastCtx;
+  });
+  root.appendChild(sessionBar.el);
+
   const sfx = (kind: Sfx) => {
     if (store.progress.settings.sounds) playSfx(kind);
   };
@@ -280,6 +287,7 @@ async function boot(root: HTMLElement): Promise<void> {
       stopAudio,
       sfx,
       now: () => Date.now(),
+      session: { start: (block) => sessionBar.start(block), active: () => sessionBar.active() },
     };
     lastCtx = ctx;
 
@@ -302,6 +310,7 @@ async function boot(root: HTMLElement): Promise<void> {
     }
     if (changed) view.classList.add("view-enter");
     shell.update(ctx);
+    sessionBar.refresh();
     replace(shell.main, view);
 
     if (host !== "artifact") {

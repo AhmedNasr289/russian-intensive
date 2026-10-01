@@ -9,6 +9,7 @@ import { tr } from "./context.ts";
 import { h, replace, s } from "./dom.ts";
 import { EMBLEM, EMBLEM_COLORS } from "./emblem.ts";
 import type { Capsule } from "./emblem.ts";
+import { nextMoveButton } from "./components/coach.ts";
 import { navTokenOf } from "./router.ts";
 import { icon, iconBtn, ru } from "./ui.ts";
 import type { IconName } from "./ui.ts";
@@ -78,6 +79,7 @@ function headerContent(ctx: Ctx, actions: ShellActions): HTMLElement[] {
     h(
       "div",
       { class: "topbar-tools" },
+      nextMoveButton(ctx),
       h(
         "button",
         { type: "button", class: "search-btn", "aria-label": tr(ctx, { en: "Search (Ctrl K)", ar: "بحث (Ctrl K)" }), title: tr(ctx, { en: "Search words and screens (Ctrl K or /)", ar: "ابحث عن الكلمات والشاشات (Ctrl K أو /)" }), onClick: actions.openSearch },
