@@ -32,8 +32,7 @@ Node 24 runs the TypeScript directly (type stripping). Relative imports carry `.
 - `src/app/`: the browser app. `main.ts` boots (and turns every Russian text into tap-to-hear),
   `shell.ts` is the frame, `player.ts` plays the recordings with Web Audio, `views/` the screens,
   `components/` shared widgets (`listenbar.ts`: listen, slow, spell, word by word; `coach.ts`, `session.ts`,
-  `palette.ts` search, `shortcuts.ts`), `styles.css` the
-  Gzhel porcelain design.
+  `palette.ts` search, `shortcuts.ts`), `styles.css` the Gzhel porcelain design.
 - `scripts/`: build, verify, validator, link checker, stress checker, day and vocabulary printers, icons.
 - `.claude/agents/` and `.claude/commands/`: the study agents and slash commands.
 
