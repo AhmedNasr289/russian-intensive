@@ -2972,9 +2972,10 @@ details[open] > summary::before {
   font-weight: 600;
 }
 
+/* Bars start after a gutter for the y-axis labels, so a tall first bar never sits under "10" or "60". */
 .bars {
   position: absolute;
-  inset: 0;
+  inset: 0 0 0 28px;
   display: flex;
   align-items: flex-end;
   gap: 2px;
@@ -3039,6 +3040,7 @@ details[open] > summary::before {
 .axis {
   display: flex;
   gap: 2px;
+  padding-left: 28px;
   direction: ltr;
 }
 
