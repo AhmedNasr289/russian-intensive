@@ -42,7 +42,7 @@ export function sectionsFor(day: Day): Section[] {
   return ["words", "grammar", "dialogue", "practice", "speak", "watch", "tutor", "journal"];
 }
 
-const POS_LABEL: Record<Word["pos"], { en: string; ar: string }> = {
+export const POS_LABEL: Record<Word["pos"], { en: string; ar: string }> = {
   noun: { en: "noun", ar: "اسم" },
   verb: { en: "verb", ar: "فعل" },
   adj: { en: "adjective", ar: "صفة" },
@@ -56,7 +56,7 @@ const POS_LABEL: Record<Word["pos"], { en: string; ar: string }> = {
   phrase: { en: "phrase", ar: "عبارة" },
 };
 
-const GENDER_LABEL = { m: { en: "masc.", ar: "مذكّر" }, f: { en: "fem.", ar: "مؤنّث" }, n: { en: "neut.", ar: "محايد" }, pl: { en: "plural", ar: "جمع" } } as const;
+export const GENDER_LABEL = { m: { en: "masc.", ar: "مذكّر" }, f: { en: "fem.", ar: "مؤنّث" }, n: { en: "neut.", ar: "محايد" }, pl: { en: "plural", ar: "جمع" } } as const;
 
 // ── Words ─────────────────────────────────────────────────────────────────────
 
@@ -65,7 +65,13 @@ function wordCard(ctx: Ctx, w: Word): HTMLElement {
   return h(
     "article",
     { class: "word-card", id: w.id },
-    h("div", { class: "word-top" }, ru(w.ru, "word-ru"), playButtons(ctx, w.ru)),
+    h(
+      "div",
+      { class: "word-top" },
+      ru(w.ru, "word-ru"),
+      playButtons(ctx, w.ru),
+      h("a", { class: "word-more", href: `#word-${w.id}`, title: tr(ctx, { en: "Word details", ar: "تفاصيل الكلمة" }), "aria-label": tr(ctx, { en: `Details: ${w.en}`, ar: `التفاصيل: ${w.ar}` }) }, icon("right", 18)),
+    ),
     showSay ? h("div", { class: "say" }, w.say) : null,
     h(
       "div",

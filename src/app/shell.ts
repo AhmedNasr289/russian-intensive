@@ -38,7 +38,7 @@ export type Shell = {
   update(ctx: Ctx): void;
 };
 
-export type ShellActions = { toggleTheme(): void; isDark(): boolean };
+export type ShellActions = { toggleTheme(): void; isDark(): boolean; openSearch(): void };
 
 /** The emblem as inline SVG (the same geometry as the app icons). */
 export function emblemMark(size: number): SVGSVGElement {
@@ -78,6 +78,13 @@ function headerContent(ctx: Ctx, actions: ShellActions): HTMLElement[] {
     h(
       "div",
       { class: "topbar-tools" },
+      h(
+        "button",
+        { type: "button", class: "search-btn", "aria-label": tr(ctx, { en: "Search (Ctrl K)", ar: "بحث (Ctrl K)" }), title: tr(ctx, { en: "Search words and screens (Ctrl K or /)", ar: "ابحث عن الكلمات والشاشات (Ctrl K أو /)" }), onClick: actions.openSearch },
+        icon("search", 20),
+        h("span", { class: "search-label" }, tr(ctx, { en: "Search", ar: "بحث" })),
+        h("kbd", { class: "search-kbd", "aria-hidden": "true" }, "/"),
+      ),
       dayChip(ctx),
       ctx.host === "artifact"
         ? null

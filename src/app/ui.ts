@@ -47,6 +47,10 @@ const ICONS = {
   pencil: "M4 20h4L20 8l-4-4L4 16z M13.5 6.5l4 4",
   book: "M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z M4 21V5",
   trash: "M4 7h16 M9 7V4h6v3 M6 7l1 13h10l1-13",
+  search: "M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14z M20 20l-4.2-4.2",
+  bolt: "M13 3 5 13.5h6L10 21l8-10.5h-6z",
+  pause: "M8 5v14 M16 5v14",
+  help: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z M9.5 9.2a2.6 2.6 0 0 1 5 .8c0 1.8-2.5 2.2-2.5 3.8 M12 17h.01",
 } as const;
 
 export type IconName = keyof typeof ICONS;

@@ -17,6 +17,13 @@ test("day routes carry the number and an optional section", () => {
   assert.deepEqual(parseRoute("#day-3-bogus"), { view: "day", n: 3, section: null });
 });
 
+test("word routes name a course word; unknown words fall back to today", () => {
+  assert.deepEqual(parseRoute("#word-d12-07"), { view: "word", id: "d12-07" });
+  assert.deepEqual(parseRoute("#word-d99-01"), { view: "today" });
+  assert.deepEqual(parseRoute("#word-d1"), { view: "today" });
+  assert.equal(navTokenOf(parseRoute("#word-d2-04")), "course");
+});
+
 test("tutor routes carry the mode", () => {
   assert.deepEqual(parseRoute("#tutor"), { view: "tutor", mode: null });
   assert.deepEqual(parseRoute("#tutor-roleplay"), { view: "tutor", mode: "roleplay" });
@@ -46,6 +53,8 @@ test("tokens round-trip and only use characters claude.ai forwards", () => {
     { view: "day", n: 56, section: "test" },
     { view: "tutor", mode: "explain" },
     { view: "tutor", mode: null },
+    { view: "word", id: "d2-04" },
+    { view: "weak" },
   ] as const;
   for (const r of routes) {
     const token = routeToken(r);

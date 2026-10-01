@@ -9,9 +9,12 @@ import { defaultProgress } from "../core/progress.ts";
 import type { ExplainLang, Progress, Theme } from "../core/progress.ts";
 import { isoDate } from "../core/schedule.ts";
 import { ArtifactDbStore, LocalStore } from "../core/storage.ts";
-import { hasCyrillic } from "../core/text.ts";
+import { hasCyrillic, stripStress } from "../core/text.ts";
+import { findWord } from "../core/course.ts";
 import { errorCode, useCapability } from "./claude.ts";
 import { createListenBar } from "./components/listenbar.ts";
+import { openPalette } from "./components/palette.ts";
+import { installGlobalKeys } from "./components/shortcuts.ts";
 import type { Caps, Ctx, Spoken, ToastKind, Voices } from "./context.ts";
 import { tr } from "./context.ts";
 import { h, replace } from "./dom.ts";
@@ -33,8 +36,9 @@ import { settingsView } from "./views/settings.ts";
 import { todayView } from "./views/today.ts";
 import { tutorView } from "./views/tutor.ts";
 import { weakView } from "./views/weak.ts";
+import { wordView } from "./views/word.ts";
 
-const TITLES: Record<Exclude<Route["view"], "day">, Bi> = {
+const TITLES: Record<Exclude<Route["view"], "day" | "word">, Bi> = {
   today: { en: "Today", ar: "اليوم" },
   course: { en: "Course", ar: "الدورة" },
   review: { en: "Review cards", ar: "مراجعة البطاقات" },
@@ -78,6 +82,8 @@ function viewFor(ctx: Ctx): HTMLElement {
       return tutorView(ctx, r.mode);
     case "day":
       return dayView(ctx, r.n, r.section);
+    case "word":
+      return wordView(ctx, r.id);
   }
 }
 
@@ -128,6 +134,9 @@ async function boot(root: HTMLElement): Promise<void> {
 
   const shell = createShell(root, {
     isDark,
+    openSearch: () => {
+      if (lastCtx) openPalette(lastCtx);
+    },
     toggleTheme: () => {
       const next: Theme = isDark() ? "light" : "dark";
       store.update((p) => ({ ...p, settings: { ...p.settings, theme: next }, updatedAt: Date.now() }), { render: true });
@@ -220,6 +229,8 @@ async function boot(root: HTMLElement): Promise<void> {
     return turn === at;
   };
 
+  installGlobalKeys(() => lastCtx);
+
   const bar = createListenBar(() => {
     if (!lastCtx) throw new Error("the listen bar opened before the first render");
     return lastCtx;
@@ -294,7 +305,13 @@ async function boot(root: HTMLElement): Promise<void> {
     replace(shell.main, view);
 
     if (host !== "artifact") {
-      const title = route.view === "day" ? { en: `Day ${route.n}`, ar: `اليوم ${route.n}` } : TITLES[route.view];
+      const word = route.view === "word" ? findWord(route.id) : undefined;
+      const title =
+        route.view === "day"
+          ? { en: `Day ${route.n}`, ar: `اليوم ${route.n}` }
+          : route.view === "word"
+            ? { en: stripStress(word?.ru ?? ""), ar: stripStress(word?.ru ?? "") }
+            : TITLES[route.view];
       document.title = `${tr(ctx, title)} · Russian in 56 Days`;
     }
     if (changed && lastRoute !== "") {
