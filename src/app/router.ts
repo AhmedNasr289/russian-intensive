@@ -7,7 +7,7 @@ export const SECTIONS = ["words", "grammar", "dialogue", "practice", "speak", "w
 export type Section = (typeof SECTIONS)[number];
 
 const MODES: readonly TutorMode[] = ["chat", "roleplay", "explain", "check"];
-const PLAIN = ["today", "course", "review", "alphabet", "pronounce", "progress", "library", "settings"] as const;
+const PLAIN = ["today", "course", "review", "weak", "alphabet", "pronounce", "progress", "library", "settings"] as const;
 type PlainView = (typeof PLAIN)[number];
 
 export type Route =
@@ -37,9 +37,9 @@ export function parseRoute(hash: string): Route {
   return TODAY;
 }
 
-/** The navigation entry a route belongs to (a lesson day lives under the course). */
+/** The navigation entry a route belongs to (a lesson day lives under the course, weak words under review). */
 export function navTokenOf(r: Route): PlainView | "tutor" {
-  return r.view === "day" ? "course" : r.view;
+  return r.view === "day" ? "course" : r.view === "weak" ? "review" : r.view;
 }
 
 export function routeToken(r: Route): string {

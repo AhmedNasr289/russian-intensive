@@ -18,6 +18,8 @@ export type RunnerOptions = {
   /** Called once per answered item ("almost" counts as right, as in the score). */
   onAnswer?: (item: Exercise, ok: boolean) => void;
   doneLabel?: Bi;
+  /** A second button on the results card (beside "Try again"). */
+  endAction?: { label: Bi; run: () => void };
 };
 
 type Result = { ok: boolean; close: boolean };
@@ -104,6 +106,7 @@ export function exerciseRunner(ctx: Ctx, opts: RunnerOptions): HTMLElement {
                 start();
               },
             }),
+            opts.endAction ? btn(tr(ctx, opts.endAction.label), { class: "ghost", onClick: opts.endAction.run }) : null,
           ),
         ),
       );

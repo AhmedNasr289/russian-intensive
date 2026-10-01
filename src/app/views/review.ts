@@ -4,6 +4,7 @@
 import { findWord } from "../../core/course.ts";
 import { applyReview, deckStats, dueCards } from "../../core/progress.ts";
 import { GRADES, formatInterval, previewIntervals } from "../../core/srs.ts";
+import { weakWords } from "../../core/weak.ts";
 import type { CardState, Grade } from "../../core/srs.ts";
 import type { Ctx } from "../context.ts";
 import { tr } from "../context.ts";
@@ -39,6 +40,11 @@ export function reviewView(ctx: Ctx): HTMLElement {
   document.addEventListener("keydown", onKey);
   ctx.onLeave(() => document.removeEventListener("keydown", onKey));
 
+  const weakLink = () => {
+    const n = weakWords(ctx.store.progress, 99).length;
+    return n ? h("a", { class: "count weak", href: "#weak" }, h("strong", null, String(n)), tr(ctx, { en: " weak words", ar: " كلمات ضعيفة" })) : null;
+  };
+
   const header = (due: number) => {
     const s = deckStats(ctx.store.progress, ctx.now());
     return h(
@@ -52,6 +58,7 @@ export function reviewView(ctx: Ctx): HTMLElement {
         h("span", { class: "count learning" }, h("strong", null, String(s.learning)), tr(ctx, { en: " learning", ar: " قيد التعلّم" })),
         h("span", { class: "count due" }, h("strong", null, String(due)), tr(ctx, { en: " due now", ar: " مستحقة الآن" })),
         reviewed ? h("span", { class: "count done" }, h("strong", null, String(reviewed)), tr(ctx, { en: " done", ar: " تمت" })) : null,
+        weakLink(),
       ),
     );
   };

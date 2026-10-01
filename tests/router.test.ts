@@ -8,6 +8,7 @@ test("plain view tokens parse, with or without the hash", () => {
   assert.deepEqual(parseRoute("#review"), { view: "review" });
   assert.deepEqual(parseRoute("settings"), { view: "settings" });
   assert.deepEqual(parseRoute("#pronounce"), { view: "pronounce" });
+  assert.deepEqual(parseRoute("#weak"), { view: "weak" });
 });
 
 test("day routes carry the number and an optional section", () => {
@@ -32,6 +33,7 @@ test("a lesson day highlights the course in the navigation; other views highligh
   assert.equal(navTokenOf(parseRoute("#day-12-grammar")), "course");
   assert.equal(navTokenOf(parseRoute("#tutor-roleplay")), "tutor");
   assert.equal(navTokenOf(parseRoute("#review")), "review");
+  assert.equal(navTokenOf(parseRoute("#weak")), "review");
   assert.equal(navTokenOf(parseRoute("")), "today");
 });
 

@@ -32,11 +32,13 @@ import { reviewView } from "./views/review.ts";
 import { settingsView } from "./views/settings.ts";
 import { todayView } from "./views/today.ts";
 import { tutorView } from "./views/tutor.ts";
+import { weakView } from "./views/weak.ts";
 
 const TITLES: Record<Exclude<Route["view"], "day">, Bi> = {
   today: { en: "Today", ar: "اليوم" },
   course: { en: "Course", ar: "الدورة" },
   review: { en: "Review cards", ar: "مراجعة البطاقات" },
+  weak: { en: "Weak words", ar: "الكلمات الضعيفة" },
   alphabet: { en: "Alphabet", ar: "الأبجدية" },
   pronounce: { en: "Pronounce", ar: "النطق" },
   progress: { en: "Progress", ar: "التقدّم" },
@@ -60,6 +62,8 @@ function viewFor(ctx: Ctx): HTMLElement {
       return courseView(ctx);
     case "review":
       return reviewView(ctx);
+    case "weak":
+      return weakView(ctx);
     case "alphabet":
       return alphabetView(ctx);
     case "pronounce":

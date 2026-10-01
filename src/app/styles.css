@@ -3746,6 +3746,96 @@ dialog.confirm::backdrop {
   }
 }
 
+/* ── Study companion: weak words ──────────────────────────────────────────── */
+
+.chip.bad {
+  background: var(--bad-soft);
+  color: var(--bad);
+}
+
+.chip.warn {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+.reasons {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.weak-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.weak-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "word open"
+    "meaning open"
+    "reasons open";
+  align-items: center;
+  gap: 4px 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+
+.weak-row:first-child {
+  border-top: 0;
+}
+
+.weak-word {
+  grid-area: word;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.weak-meaning {
+  grid-area: meaning;
+  color: var(--ink-2);
+  min-width: 0;
+}
+
+.weak-meaning .t-ar {
+  margin-inline-start: 8px;
+}
+
+.weak-row .reasons {
+  grid-area: reasons;
+}
+
+.weak-open {
+  grid-area: open;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: var(--cobalt);
+}
+
+.weak-open:hover {
+  background: var(--cobalt-soft);
+}
+
+a.count.weak {
+  border-color: var(--bad);
+  color: var(--bad);
+  text-decoration: none;
+}
+
+a.count.weak strong {
+  color: var(--bad);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
